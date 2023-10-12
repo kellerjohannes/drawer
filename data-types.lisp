@@ -1,7 +1,48 @@
 (in-package :drawer)
 
+
+'(
+  (:type :scalar :id :a :value 15)
+  (:type :scalar :id :b :value 17)
+  (:type :point :id :aa :x-coord (rel :a) :y-coord (rel :b))
+  )
+
+
+
+
+(defparameter *nodes* nil)
+
+(defun get-node (id)
+  (find id *nodes* :key (lambda (item) (getf item :id))))
+
+(defun add-node (new-node)
+  (let ((new-id (getf new-node :id)))
+    (if (get-node new-id)
+        (error "Node with id ~s already exists" new-id)
+        (push new-node *nodes*))))
+
+(defmacro make-scalar (id value)
+  `(add-node '(:type :scalar :id ,id :value ,value)))
+
+(defmacro make-point (id x y)
+  `(add-node '(:type :point :id ,id :x ,x :y ,y)))
+
+(defmacro make-line (id origin destination)
+  `(add-node '(:type :line :id ,id :origin ,origin :destination ,destination)))
+
+
+
+(defun rel (id)
+  ())
+
+
+
+(defun make-scalar (value)
+  (lambda () value))
+
 (defun make-point (x-coord y-coord)
-  (cons x-coord y-coord))
+  (lambda ()
+    ()))
 
 (defun get-x-coord (point)
   (car point))
@@ -38,5 +79,3 @@
 
 (defun get-point-position (text)
   (cdr text))
-
-(defun )
