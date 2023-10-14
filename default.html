@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Canvas experiment</title>
+  </head>
+  <body>
+<canvas id="defaultId" width="1200" height="800"></canvas>
+<script>
+function draw() {
+const canvas = document.getElementById("defaultId");
+const ctx = canvas.getContext("2d");
+ctx.beginPath();
+ctx.arc(100, 50, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(100, 50);
+ctx.lineTo(800, 650);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(100, 100);
+ctx.lineTo(800, 700);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(100, 100, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(900, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(920, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(940, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(960, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(980, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(1000, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(1020, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(1040, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(1060, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(1080, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(1100, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+ctx.beginPath();
+ctx.arc(1120, 700, 50, 0, Math.PI * 2, true);
+ctx.stroke();
+}
+draw();
+</script>
+</body>
+</html>
