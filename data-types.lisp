@@ -5,8 +5,10 @@
   ())
 
 
+(defparameter *global-scale-factor* 1)
+
 (defclass scalar (drawer-object)
-  ((value :initarg :value :accessor value)))
+  ((value :initarg :value :accessor get-value)))
 
 (defmethod print-object ((object scalar) stream)
   (print-unreadable-object (object stream :type t)
@@ -14,6 +16,11 @@
 
 (defmethod make-scalar (value)
   (make-instance 'scalar :value value))
+
+(defmethod value ((sclr scalar))
+  (with-accessors ((val get-value))
+      sclr
+    (* *global-scale-factor* val)))
 
 (defmethod add ((a scalar) (b scalar))
   (make-scalar (+ (value a) (value b))))

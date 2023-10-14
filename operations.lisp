@@ -1,6 +1,6 @@
 (in-package :drawer)
 
-(defgeneric copy-move (drawer-object point))
+(defgeneric copy-move (object anchor target))
 
 (defmethod copy-move ((obj point) (anchor point) (target point))
     (add obj (subtract target anchor)))

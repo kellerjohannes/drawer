@@ -8,4 +8,5 @@
                (:file "backend-generic")
                (:file "backend-text")
                (:file "backend-svg")
-               (:file "backend-html")))
+               (:file "backend-html")
+               (:file "backend-tikz")))

@@ -2,6 +2,7 @@
 
 (let* ((bsvg (make-backend-svg))
        (bhtml (make-backend-html))
+       (btikz (make-backend-tikz))
        (ax (make-scalar 100))
        (ay (make-scalar 50))
        (bx (make-scalar 800))
@@ -16,9 +17,9 @@
        (delta (make-point c0 cy))
        (mini-delta (make-point dd c0))
        (diagonal (make-line p1 p2))
-       (dots (make-obj-array dot 12 o p2 mini-delta))
+       (dots (make-obj-array dot 24 o p1 mini-delta))
        (double-line (make-group (list dot
                                       diagonal
                                       (copy-move diagonal o delta)
                                       (copy-move dot o delta)))))
-  (draw-with-multiple-backends (list bsvg bhtml) (list double-line dots)))
+  (draw-with-multiple-backends (list bsvg bhtml btikz) (list double-line dots)))

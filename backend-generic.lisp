@@ -2,7 +2,8 @@
 
 (defclass drawer-backend ()
   ((filename :initarg :filename :accessor filename)
-   (filestream :accessor filestream)))
+   (filestream :accessor filestream)
+   (scale-factor :initform 1 :accessor scale-factor)))
 
 (defgeneric write-file (drawer-backend))
 
