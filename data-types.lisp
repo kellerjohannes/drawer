@@ -15,6 +15,16 @@
 (defmethod make-scalar (value)
   (make-instance 'scalar :value value))
 
+(defmethod add ((a scalar) (b scalar))
+  (make-scalar (+ (value a) (value b))))
+
+(defmethod subtract ((a scalar) (b scalar))
+  (make-scalar (- (value b) (value a))))
+
+(defmethod scale ((s scalar) factor)
+  (make-scalar (* factor (value s))))
+
+
 
 (defclass point (drawer-object)
   ((x :initarg :x :accessor x)
@@ -26,6 +36,18 @@
 
 (defmethod make-point (x y)
   (make-instance 'point :x x :y y))
+
+(defmethod add ((a point) (b point))
+  (make-point (add (x a) (x b))
+      (add (y a) (y b))))
+
+(defmethod subtract ((a point) (b point))
+  (make-point (subtract (x b) (x a))
+      (subtract (y b) (y a))))
+
+(defmethod scale ((p point) factor)
+  (make-point (scale (x p) factor)
+      (scale (y p) factor)))
 
 
 (defclass visible-object (drawer-object)
@@ -103,23 +125,25 @@
 
 
 
-(defgeneric copy-move (drawer-object line))
+(defgeneric copy-move (drawer-object point))
 
-(defmethod copy-move ((obj point) (delta point))
-  (make-point (make-scalar (+ (value (x obj)) (value (x delta))))
-      (make-scalar (+ (value (y obj)) (value (y delta))))))
+(defmethod copy-move ((obj point) (anchor point) (target point))
+    (add obj (subtract target anchor)))
 
-(defmethod copy-move ((obj line) (delta point))
-  (make-line (copy-move (origin obj) delta)
-      (copy-move (destination obj) delta)))
+(defmethod copy-move ((obj line) (anchor point) (target point))
+  (make-line (copy-move (origin obj) anchor target)
+      (copy-move (destination obj) anchor target)))
 
-(defmethod copy-move ((obj group) (delta point))
-  (make-group (loop for element in (content obj)
-                    collect (copy-move element delta))))
-
-(defmethod copy-move ((obj line-strip) (delta point))
+(defmethod copy-move ((obj line-strip) (anchor point) (target point))
   (make-line-strip (loop for point in (point-list obj)
-                         collect (copy-move point delta))))
+                         collect (copy-move point anchor target))))
+
+(defmethod copy-move ((obj circle) (anchor point) (target point))
+  (make-circle (copy-move (center obj) anchor target) (radius obj)))
+
+(defmethod copy-move ((obj group) (anchor point) (target point))
+  (make-group (loop for element in (content obj)
+                    collect (copy-move element anchor target))))
 
 
 (defmethod above ((origin point) (distance scalar))
@@ -135,22 +159,27 @@
   (make-point (make-scalar (- (value (x origin)) (value distance))) (y origin)))
 
 
+(defmethod make-obj-array ((obj drawer-object) iterations (anchor point) (target point) (delta point))
+  (let ((result (make-array iterations :element-type (type-of obj))))
+    (loop for i from 0 to (1- iterations)
+          do (setf (aref result i) (copy-move obj anchor (add target (scale delta i)))))
+    result))
 
 
 
 
 
 (defclass drawer-backend ()
-  ())
-
-
-(defclass backend-text (drawer-backend)
   ((filename :initarg :filename :accessor filename)))
+
+(defgeneric write-file (drawer-backend))
 
 
 (defgeneric draw (visible-object backend))
 
 
+(defclass backend-text (drawer-backend)
+  ())
 
 (defmethod draw ((obj line) (backend backend-text))
   (format t "~&Drawing a line from (~a,~a) to (~a,~a)"
@@ -159,9 +188,7 @@
           (value (x (destination obj)))
           (value (y (destination obj)))))
 
-(defmethod draw ((obj line-strip) (backend backend-text))
-  )
-
+(defmethod draw ((obj line-strip) (backend backend-text)))
 
 (defmethod draw ((obj group) (backend backend-text))
   (format t "~&Drawing a group of ~a objects:"
@@ -171,25 +198,96 @@
 
 
 
+(defclass backend-svg (drawer-backend)
+  ((scene :accessor scene)
+   (width :initarg :width :accessor width)
+   (height :initarg :height :accessor height)))
 
-(let* ((a (make-scalar 15))
-       (b (make-scalar 17))
-       (p (make-point a b))
-       (c (make-scalar -5))
-       (d (make-scalar -7))
-       (pp (make-point c d))
-       (l (make-line p pp))
-       (dd (make-scalar 300))
-       (ll (make-line (above p dd) (above pp dd)))
-       (g (make-group (list l ll)))
-       (x (make-scalar 1000))
-       (delta (make-point x x))
-       (cg (copy-move g delta))
-       (ls (make-line-strip (list p pp (above p dd) (below pp dd))))
-       (cls (copy-move ls delta))
-       (tb (make-instance 'backend-text)))
-  (format t "~&~a" ls)
-  (format t "~&~a" cls)
-  (draw ll tb)
-  (draw g tb)
-  (draw cg tb))
+(defmethod initialize-instance :after ((backend backend-svg) &key)
+  (setf (scene backend) (svg:make-svg-toplevel 'svg:svg-1.2-toplevel
+                                               :width (width backend)
+                                               :height (height backend)
+                                               :stroke "black" :fill "none")))
+
+(defmethod make-backend-svg (&optional (width 1200) (height 800))
+  (make-instance 'backend-svg :width width :height height :filename "default.svg"))
+
+(defmethod write-file ((backend backend-svg))
+  (with-open-file (svg-file (filename backend)
+                            :direction :output
+                            :if-exists :supersede
+                            :if-does-not-exist :create)
+    (svg:stream-out svg-file (scene backend))))
+
+(defmethod draw ((obj line) (backend backend-svg))
+  (svg:draw (scene backend) (:line :x1 (value (x (origin obj)))
+                                   :y1 (value (y (origin obj)))
+                                   :x2 (value (x (destination obj)))
+                                   :y2 (value (y (destination obj))))))
+
+(defmethod draw ((obj circle) (backend backend-svg))
+  (svg:draw (scene backend) (:circle :cx (value (x (center obj)))
+                                     :cy (value (y (center obj)))
+                                     :r (value (radius obj)))))
+
+(defmethod draw ((obj group) (backend backend-svg))
+  (dolist (element (content obj))
+    (draw element backend)))
+
+(defmethod draw (arr (backend backend-svg))
+  (loop for element across arr
+        do (draw element backend)))
+
+
+
+(defclass backend-html (drawer-backend)
+  ((scene :accessor scene)
+   (width :initarg :width :accessor width)
+   (height :initarg :height :accessor height)))
+
+(defmethod initialize-instance :after ((backend backend-html) &key)
+  (setf (scene backend) (format nil "<canvas width=\"~a\" height=\"~a\">~%"
+                                (width backend) (height backend))))
+
+(defmethod make-backend-html (&optional (width 1200) (height 800))
+  (make-instance 'backend-html :width width :height height :filename "default.html"))
+
+(defmethod write-file ((backend backend-html))
+  (with-open-file (html-file (filename backend)
+                             :direction :output
+                             :if-exists :supersede
+                             :if-does-not-exist :create)
+    (format html-file "~a~%</canvas>" (scene backend))))
+
+(defmethod add-html (expression (backend backend-html))
+  (setf (scene backend) (concatenate 'string (scene backend) "\n" expression)))
+
+(defmethod draw ((obj line) (backend backend-html))
+  (add-html ))
+
+
+
+
+(let* ((bsvg (make-backend-svg))
+       (ax (make-scalar 100))
+       (ay (make-scalar 50))
+       (bx (make-scalar 800))
+       (by (make-scalar 650))
+       (p1 (make-point ax ay))
+       (p2 (make-point bx by))
+       (c0 (make-scalar 0))
+       (cy (make-scalar 50))
+       (dd (make-scalar 20))
+       (o (make-point c0 c0))
+       (dot (make-circle p1 cy))
+       (delta (make-point c0 cy))
+       (mini-delta (make-point dd c0))
+       (diagonal (make-line p1 p2))
+       (dots (make-obj-array dot 12 o p2 mini-delta))
+       (double-line (make-group (list dot
+                                      diagonal
+                                      (copy-move diagonal o delta)
+                                      (copy-move dot o delta)))))
+  (draw double-line bsvg)
+  (draw dots bsvg)
+  (write-file bsvg))
