@@ -170,15 +170,36 @@
 
 
 (defclass drawer-backend ()
-  ((filename :initarg :filename :accessor filename)))
+  ((filename :initarg :filename :accessor filename)
+   (filestream :accessor filestream)))
 
 (defgeneric write-file (drawer-backend))
 
+(defmethod write-file :around ((backend drawer-backend))
+  (setf (filestream backend) (open (filename backend)
+                                   :direction :output
+                                   :if-exists :supersede
+                                   :if-does-not-exist :create))
+  (call-next-method)
+  (close (filestream backend)))
 
 (defgeneric draw (visible-object backend))
 
+(defmethod draw ((obj group) (backend drawer-backend))
+  (dolist (element (content obj))
+    (draw element backend)))
+
+(defmethod draw (arr (backend drawer-backend))
+  (loop for element across arr
+        do (draw element backend)))
+
+
+
 
 (defclass backend-text (drawer-backend)
+  ())
+
+(defmethod write-file ((backend backend-text))
   ())
 
 (defmethod draw ((obj line) (backend backend-text))
@@ -198,6 +219,8 @@
 
 
 
+
+
 (defclass backend-svg (drawer-backend)
   ((scene :accessor scene)
    (width :initarg :width :accessor width)
@@ -213,11 +236,7 @@
   (make-instance 'backend-svg :width width :height height :filename "default.svg"))
 
 (defmethod write-file ((backend backend-svg))
-  (with-open-file (svg-file (filename backend)
-                            :direction :output
-                            :if-exists :supersede
-                            :if-does-not-exist :create)
-    (svg:stream-out svg-file (scene backend))))
+  (svg:stream-out (filestream backend) (scene backend)))
 
 (defmethod draw ((obj line) (backend backend-svg))
   (svg:draw (scene backend) (:line :x1 (value (x (origin obj)))
@@ -230,45 +249,73 @@
                                      :cy (value (y (center obj)))
                                      :r (value (radius obj)))))
 
-(defmethod draw ((obj group) (backend backend-svg))
-  (dolist (element (content obj))
-    (draw element backend)))
 
-(defmethod draw (arr (backend backend-svg))
-  (loop for element across arr
-        do (draw element backend)))
-
-
+(defparameter *html-header*
+  "<!doctype html>
+<html lang=\"en-US\">
+  <head>
+    <meta charset=\"UTF-8\" />
+    <title>Canvas experiment</title>
+  </head>
+  <body>
+")
 
 (defclass backend-html (drawer-backend)
   ((scene :accessor scene)
    (width :initarg :width :accessor width)
    (height :initarg :height :accessor height)))
 
+(defmethod add-script-line (expression (backend backend-html))
+  (setf (scene backend) (concatenate 'string (scene backend) (format nil "~%") expression)))
+
 (defmethod initialize-instance :after ((backend backend-html) &key)
-  (setf (scene backend) (format nil "<canvas width=\"~a\" height=\"~a\">~%"
-                                (width backend) (height backend))))
+  (setf (scene backend)
+        (concatenate 'string *html-header*
+                     (format nil "<canvas id=\"defaultId\" width=\"~a\" height=\"~a\"></canvas>~%<script>"
+                             (width backend) (height backend))))
+  (add-script-line "function draw() {" backend)
+  (add-script-line "const canvas = document.getElementById(\"defaultId\");" backend)
+  (add-script-line "const ctx = canvas.getContext(\"2d\");" backend))
 
 (defmethod make-backend-html (&optional (width 1200) (height 800))
   (make-instance 'backend-html :width width :height height :filename "default.html"))
 
 (defmethod write-file ((backend backend-html))
-  (with-open-file (html-file (filename backend)
-                             :direction :output
-                             :if-exists :supersede
-                             :if-does-not-exist :create)
-    (format html-file "~a~%</canvas>" (scene backend))))
-
-(defmethod add-html (expression (backend backend-html))
-  (setf (scene backend) (concatenate 'string (scene backend) "\n" expression)))
+  (format (filestream backend) "~a~%}~%draw();~%</script>~%</body>~%</html>" (scene backend)))
 
 (defmethod draw ((obj line) (backend backend-html))
-  (add-html ))
+  (add-script-line "ctx.beginPath();" backend)
+  (add-script-line (format nil "ctx.moveTo(~a, ~a);"
+                           (value (x (origin obj)))
+                           (value (y (origin obj))))
+                   backend)
+  (add-script-line (format nil "ctx.lineTo(~a, ~a);"
+                           (value (x (destination obj)))
+                           (value (y (destination obj))))
+                   backend)
+  (add-script-line "ctx.stroke();" backend)
+  )
+
+(defmethod draw ((obj circle) (backend backend-html))
+  (add-script-line "ctx.beginPath();" backend)
+  (add-script-line (format nil "ctx.arc(~a, ~a, ~a, 0, Math.PI * 2, true);"
+                           (value (x (center obj)))
+                           (value (y (center obj)))
+                           (value (radius obj)))
+                   backend)
+  (add-script-line "ctx.stroke();" backend))
 
 
 
+(defun draw-with-multiple-backends (backend-list object-list)
+  (dolist (object object-list)
+    (dolist (backend backend-list)
+      (draw object backend)))
+  (dolist (backend backend-list)
+    (write-file backend)))
 
 (let* ((bsvg (make-backend-svg))
+       (bhtml (make-backend-html))
        (ax (make-scalar 100))
        (ay (make-scalar 50))
        (bx (make-scalar 800))
@@ -288,6 +335,4 @@
                                       diagonal
                                       (copy-move diagonal o delta)
                                       (copy-move dot o delta)))))
-  (draw double-line bsvg)
-  (draw dots bsvg)
-  (write-file bsvg))
+  (draw-with-multiple-backends (list bsvg bhtml) (list double-line dots)))
