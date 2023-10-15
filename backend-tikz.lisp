@@ -16,7 +16,7 @@
   (setf (scene backend) (concatenate 'string (scene backend) (format nil "~%") expression)))
 
 (defmethod initialize-instance :after ((backend backend-tikz) &key)
-  (setf (scale-factor backend) 0.1)
+  (setf (scale-factor backend) 1)
   (setf (scene backend) *tikz-header*))
 
 (defmethod make-backend-tikz (&optional (width 1200) (height 800))
@@ -56,3 +56,5 @@
                            (value (y (center obj)))
                            (value (radius obj)))
                    backend)))
+
+(defmethod draw ((obj text) (backend backend-tikz)))

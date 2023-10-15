@@ -19,6 +19,7 @@
   (setf (scene backend) (concatenate 'string (scene backend) (format nil "~%") expression)))
 
 (defmethod initialize-instance :after ((backend backend-html) &key)
+  (setf (scale-factor backend) 10)
   (setf (scene backend)
         (concatenate 'string *html-header*
                      (format nil "<canvas id=\"defaultId\" width=\"~a\" height=\"~a\"></canvas>~%<script>"
@@ -34,41 +35,46 @@
   (format (filestream backend) "~a~%}~%draw();~%</script>~%</body>~%</html>" (scene backend)))
 
 (defmethod draw ((obj line) (backend backend-html))
-  (with-vertical-flip ((height backend))
-    (add-script-line "ctx.beginPath();" backend)
-    (add-script-line (format nil "ctx.moveTo(~a, ~a);"
-                             (value (x (origin obj)))
-                             (value (y (origin obj))))
-                     backend)
-    (add-script-line (format nil "ctx.lineTo(~a, ~a);"
-                             (value (x (destination obj)))
-                             (value (y (destination obj))))
-                     backend)
-    (add-script-line "ctx.stroke();" backend)))
-
-(defmethod draw ((obj line-strip) (backend backend-html))
-  (with-vertical-flip ((height backend))
-    (with-accessors ((points point-list))
-        obj
+  (let ((*global-scale-factor* (scale-factor backend)))
+    (with-vertical-flip ((height backend) *global-scale-factor*)
       (add-script-line "ctx.beginPath();" backend)
-      (add-script-line (format nil "ctx.moveTo(~a, ~a);"
-                               (value (x (first points)))
-                               (value (y (first points))))
+      (add-script-line (format nil "ctx.moveTo(~f, ~f);"
+                               (value (x (origin obj)))
+                               (value (y (origin obj))))
                        backend)
-      (dolist (point (rest points))
-        (add-script-line (format nil "ctx.lineTo(~a, ~a);"
-                                 (value (x point))
-                                 (value (y point)))
-                         backend))
-      (add-script-line "ctx.closePath();" backend)
+      (add-script-line (format nil "ctx.lineTo(~f, ~f);"
+                               (value (x (destination obj)))
+                               (value (y (destination obj))))
+                       backend)
       (add-script-line "ctx.stroke();" backend))))
 
+(defmethod draw ((obj line-strip) (backend backend-html))
+  (let ((*global-scale-factor* (scale-factor backend)))
+    (with-vertical-flip ((height backend) *global-scale-factor*)
+      (with-accessors ((points point-list))
+          obj
+        (add-script-line "ctx.beginPath();" backend)
+        (add-script-line (format nil "ctx.moveTo(~f, ~f);"
+                                 (value (x (first points)))
+                                 (value (y (first points))))
+                         backend)
+        (dolist (point (rest points))
+          (add-script-line (format nil "ctx.lineTo(~f, ~f);"
+                                   (value (x point))
+                                   (value (y point)))
+                           backend))
+        (add-script-line "ctx.closePath();" backend)
+        (add-script-line "ctx.stroke();" backend)))))
+
 (defmethod draw ((obj circle) (backend backend-html))
-  (with-vertical-flip ((height backend))
-    (add-script-line "ctx.beginPath();" backend)
-    (add-script-line (format nil "ctx.arc(~a, ~a, ~a, 0, Math.PI * 2, true);"
-                             (value (x (center obj)))
-                             (value (y (center obj)))
-                             (value (radius obj)))
-                     backend)
-    (add-script-line "ctx.stroke();" backend)))
+  (let ((*global-scale-factor* (scale-factor backend)))
+    (with-vertical-flip ((height backend) *global-scale-factor*)
+      (add-script-line "ctx.beginPath();" backend)
+      (add-script-line (format nil "ctx.arc(~f, ~f, ~f, 0, Math.PI * 2, true);"
+                               (value (x (center obj)))
+                               (value (y (center obj)))
+                               (value (radius obj)))
+                       backend)
+      (add-script-line "ctx.stroke();" backend))))
+
+(defmethod draw ((obj text) (backend backend-html)))

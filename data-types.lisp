@@ -122,6 +122,25 @@
 
 
 
+
+(defclass text (visible-object)
+  ((text-string :initarg :text-string :accessor text-string)
+   (anchor :initarg :anchor :accessor anchor)
+   (horizontal-alignment :initarg :horizontal-alignment :accessor horizontal-alignment)
+   (vertical-alignment :initarg :vertical-alignment :accessor vertical-alignment)))
+
+(defmethod make-text (text-string (anchor point) &key (h-align :center) (v-align :center))
+  (make-instance 'text :text-string text-string
+                       :anchor anchor
+                       :horizontal-alignment h-align
+                       :vertical-alignment v-align))
+
+
+
+
+
+
+
 (defclass structuring-object (visible-object)
   ())
 
