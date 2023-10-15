@@ -34,23 +34,41 @@
   (format (filestream backend) "~a~%}~%draw();~%</script>~%</body>~%</html>" (scene backend)))
 
 (defmethod draw ((obj line) (backend backend-html))
-  (add-script-line "ctx.beginPath();" backend)
-  (add-script-line (format nil "ctx.moveTo(~a, ~a);"
-                           (value (x (origin obj)))
-                           (value (y (origin obj))))
-                   backend)
-  (add-script-line (format nil "ctx.lineTo(~a, ~a);"
-                           (value (x (destination obj)))
-                           (value (y (destination obj))))
-                   backend)
-  (add-script-line "ctx.stroke();" backend)
-  )
+  (with-vertical-flip ((height backend))
+    (add-script-line "ctx.beginPath();" backend)
+    (add-script-line (format nil "ctx.moveTo(~a, ~a);"
+                             (value (x (origin obj)))
+                             (value (y (origin obj))))
+                     backend)
+    (add-script-line (format nil "ctx.lineTo(~a, ~a);"
+                             (value (x (destination obj)))
+                             (value (y (destination obj))))
+                     backend)
+    (add-script-line "ctx.stroke();" backend)))
+
+(defmethod draw ((obj line-strip) (backend backend-html))
+  (with-vertical-flip ((height backend))
+    (with-accessors ((points point-list))
+        obj
+      (add-script-line "ctx.beginPath();" backend)
+      (add-script-line (format nil "ctx.moveTo(~a, ~a);"
+                               (value (x (first points)))
+                               (value (y (first points))))
+                       backend)
+      (dolist (point (rest points))
+        (add-script-line (format nil "ctx.lineTo(~a, ~a);"
+                                 (value (x point))
+                                 (value (y point)))
+                         backend))
+      (add-script-line "ctx.closePath();" backend)
+      (add-script-line "ctx.stroke();" backend))))
 
 (defmethod draw ((obj circle) (backend backend-html))
-  (add-script-line "ctx.beginPath();" backend)
-  (add-script-line (format nil "ctx.arc(~a, ~a, ~a, 0, Math.PI * 2, true);"
-                           (value (x (center obj)))
-                           (value (y (center obj)))
-                           (value (radius obj)))
-                   backend)
-  (add-script-line "ctx.stroke();" backend))
+  (with-vertical-flip ((height backend))
+    (add-script-line "ctx.beginPath();" backend)
+    (add-script-line (format nil "ctx.arc(~a, ~a, ~a, 0, Math.PI * 2, true);"
+                             (value (x (center obj)))
+                             (value (y (center obj)))
+                             (value (radius obj)))
+                     backend)
+    (add-script-line "ctx.stroke();" backend)))

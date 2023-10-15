@@ -24,3 +24,10 @@
 (defmethod draw (arr (backend drawer-backend))
   (loop for element across arr
         do (draw element backend)))
+
+
+(defmacro with-vertical-flip ((height) &body body)
+  `(let ((*global-point-transformer* (lambda (p)
+                                       (make-point (make-scalar (value (get-x p)))
+                                           (make-scalar (- ,height (value (get-y p))))))))
+     ,@body))

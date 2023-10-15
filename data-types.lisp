@@ -33,9 +33,11 @@
 
 
 
+(defparameter *global-point-transformer* (lambda (x) x))
+
 (defclass point (drawer-object)
-  ((x :initarg :x :accessor x)
-   (y :initarg :y :accessor y)))
+  ((x :initarg :x :accessor get-x)
+   (y :initarg :y :accessor get-y)))
 
 (defmethod print-object ((object point) stream)
   (print-unreadable-object (object stream :type t)
@@ -43,6 +45,12 @@
 
 (defmethod make-point (x y)
   (make-instance 'point :x x :y y))
+
+(defmethod x ((p point))
+  (get-x (funcall *global-point-transformer* p)))
+
+(defmethod y ((p point))
+  (get-y (funcall *global-point-transformer* p)))
 
 (defmethod add ((a point) (b point))
   (make-point (add (x a) (x b))
@@ -80,9 +88,6 @@
   (loop for point in point-list
         append (list (value (x point))
                      (value (y point)))))
-
-(defun get-type-of-elements (element-list)
-  (remove-duplicates (loop for element in element-list collect (type-of element))))
 
 (defclass line-strip (visible-object)
   ((point-list :initarg :point-list :accessor point-list)))

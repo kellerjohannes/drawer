@@ -1,5 +1,5 @@
 (asdf:defsystem "drawer"
-  :depends-on (:cl-svg)
+  :depends-on (:cl-svg :uiop)
   :serial t
   :components ((:file "package")
                (:file "macros")

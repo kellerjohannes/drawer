@@ -18,12 +18,24 @@
   (svg:stream-out (filestream backend) (scene backend)))
 
 (defmethod draw ((obj line) (backend backend-svg))
-  (svg:draw (scene backend) (:line :x1 (value (x (origin obj)))
-                                   :y1 (value (y (origin obj)))
-                                   :x2 (value (x (destination obj)))
-                                   :y2 (value (y (destination obj))))))
+  (with-vertical-flip ((height backend))
+    (svg:draw (scene backend) (:line :x1 (value (x (origin obj)))
+                                     :y1 (value (y (origin obj)))
+                                     :x2 (value (x (destination obj)))
+                                     :y2 (value (y (destination obj)))))))
+
+(defmethod draw ((obj line-strip) (backend backend-svg))
+  (with-vertical-flip ((height backend))
+    (with-accessors ((points point-list))
+        obj
+      (svg:add-element (scene backend)
+                       (format nil "<path d=\"M ~a ~a ~{L ~a ~a ~}Z\"/>"
+                               (value (x (first points)))
+                               (value (y (first points)))
+                               (extract-value-list (rest points)))))))
 
 (defmethod draw ((obj circle) (backend backend-svg))
-  (svg:draw (scene backend) (:circle :cx (value (x (center obj)))
-                                     :cy (value (y (center obj)))
-                                     :r (value (radius obj)))))
+  (with-vertical-flip ((height backend))
+    (svg:draw (scene backend) (:circle :cx (value (x (center obj)))
+                                       :cy (value (y (center obj)))
+                                       :r (value (radius obj))))))
