@@ -20,8 +20,8 @@
        (dots (make-obj-array dot 24 o p1 mini-delta))
        (double-line (make-group (list dot
                                       diagonal
-                                      (copy-move diagonal o delta)
-                                      (copy-move dot o delta))))
+                                      (cp diagonal o delta)
+                                      (cp dot o delta))))
        (lsax (make-scalar 100))
        (lsay (make-scalar 100))
        (lsbx (make-scalar 300))
@@ -34,7 +34,8 @@
        (lspb (make-point lsbx lsby))
        (lspc (make-point lscx lscy))
        (lspd (make-point lsdx lsdy))
-       (ls (make-line-strip (list lspa lspb lspc lspd))))
-  (draw-with-multiple-backends (list bsvg bhtml btikz) (list double-line dots ls))
+       (ls (make-line-strip (list lspa lspb lspc lspd)))
+       (lns (ln-shape p1 '(10 50 -20 50 30 50 -20))))
+  (draw-with-multiple-backends (list bsvg bhtml btikz) (list lns))
   (compile-tikz btikz)
-  )
+  'done)
