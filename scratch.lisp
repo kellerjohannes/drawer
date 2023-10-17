@@ -90,6 +90,37 @@
        (octave-19-joint (gr (list (cp left-tastino-shape origin (right-of anchor (* 6 white-width)))
                                   (cp first-tastino anchor (right-of anchor (* 4 white-width)))
                                   (cp right-tastino-shape origin (right-of anchor (* 7 white-width))))))
+       (lbl-name-primo-stembridge (make-text-array '("C" "D" "E" "F" "G" "A" "B")
+                                                   white-shift-pt (pt white-width 0)))
+       (lbl-num-primo-stembridge (make-text-array '("1" "4" "7" "9" "12" "15" "18")
+                                                   white-shift-pt (pt white-width 0)))
+       (lbl-name-secondo-stembridge (make-text-array '("C♯" "E♭" nil "F♯" "G♯" "B♭")
+                                                   (pt white-width (+ white-front
+                                                                      (* 1/2 black-length)))
+                                                   (pt white-width 0)))
+       (lbl-num-secondo-stembridge (make-text-array '("2" "6" nil "10" "13" "17")
+                                                   (pt white-width (+ white-front
+                                                                      (* 1/2 black-length)))
+                                                   (pt white-width 0)))
+       (lbl-name-terzo-stembridge (make-text-array '("D♭" "D♯" "E♯" "G♭" "A♭" "A♯" "B♯")
+                                                   (pt white-width (+ white-front
+                                                                      (* 3/2 black-length)))
+                                                   (pt white-width 0)))
+       (lbl-num-terzo-stembridge (make-text-array '("3" "5" "8" "11" "14" "16" "19")
+                                                   (pt white-width (+ white-front
+                                                                      (* 3/2 black-length)))
+                                                   (pt white-width 0)))
+       (stembridge (gr (list (cp right-tastino-shape origin anchor)
+                             octave-19-body
+                             (cp left-tastino-shape origin (right-of anchor (* 6 white-width)))
+                             (cp first-tastino anchor (right-of anchor (* 4 white-width)))
+                             (cp lbl-name-primo-stembridge origin (below anchor 1.5))
+                             (cp lbl-num-primo-stembridge origin (above anchor 1.5))
+                             (cp lbl-name-secondo-stembridge origin (below anchor 1.5))
+                             (cp lbl-num-secondo-stembridge origin (above anchor 1.5))
+                             (cp lbl-name-terzo-stembridge origin (below anchor 1.5))
+                             (cp lbl-num-terzo-stembridge origin (above anchor 1.5))
+                             )))
        (keyboard (gr (list (cp lowest-shape origin anchor)
                            octave-19-body
                            octave-19-joint
@@ -119,14 +150,8 @@
                                   (cp lbl-tastini origin anchor)))))
   (draw-with-multiple-backends (list bsvg
                                      bhtml
-                                     btikz
-                                     )
-                               (list keyboard
-                                     keyboard-labels
-                                     (cp keyboard
-                                         anchor
-                                         (above anchor (+ white-front (* 2 black-length))))
-                                     (cp keyboard-labels
-                                         anchor
-                                         (above anchor (+ white-front (* 2 black-length))))))
+                                     btikz)
+                               (list stembridge
+
+                                     ))
   (compile-tikz btikz))

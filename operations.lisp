@@ -85,8 +85,11 @@
   (above origin (get-value distance)))
 
 
+(defmethod below ((origin point) distance)
+  (make-point (get-x origin) (make-scalar (- (get-value (get-y origin)) distance))))
+
 (defmethod below ((origin point) (distance scalar))
-  (make-point (x origin) (make-scalar (- (value (y origin)) (value distance)))))
+  (below origin (get-value distance)))
 
 
 (defmethod right-of ((origin point) distance)
