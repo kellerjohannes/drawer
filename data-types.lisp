@@ -1,6 +1,20 @@
 (in-package :drawer)
 
 
+(defparameter *default-style*
+  '(:line-thickness :normal ; :thick :thin
+    :line-type :normal ; :dashed :dotted
+    :text-size :normal ; :large :small
+    ))
+
+(defun update-style (current-style update)
+  (let ((result (copy-list current-style)))
+    (loop for style-pair on update by #'cddr
+          do (setf (getf result (first style-pair)) (second style-pair)))
+    result))
+
+
+
 (defclass drawer-object ()
   ())
 
@@ -67,7 +81,7 @@
 
 
 (defclass visible-object (drawer-object)
-  ())
+  ((style :initform nil :initarg :style :accessor style)))
 
 
 (defclass line (visible-object)
@@ -76,10 +90,13 @@
 
 (defmethod print-object ((object line) stream)
   (print-unreadable-object (object stream :type t)
-    (format stream "origin: ~a, destination: ~a" (origin object) (destination object))))
+    (format stream "origin: ~a, destination: ~a, style: ~s"
+            (origin object)
+            (destination object)
+            (style object))))
 
-(defmethod make-line (origin destination)
-  (make-instance 'line :origin origin :destination destination))
+(defmethod make-line (origin destination &key (style *default-style*))
+  (make-instance 'line :origin origin :destination destination :style style))
 
 
 
@@ -97,10 +114,10 @@
     (format stream "Line-strip: [~{(~a, ~a) ~}]"
             (extract-value-list (point-list object)))))
 
-(defmethod make-line-strip (point-list)
+(defmethod make-line-strip (point-list &key (style *default-style*))
   (format t "~&~a" (get-type-of-elements point-list))
   (if (equal (get-type-of-elements point-list) (list 'point))
-      (make-instance 'line-strip :point-list point-list)
+      (make-instance 'line-strip :point-list point-list :style style)
       (error "Point-list ~a does not consist of exclusively points." point-list)))
 
 
@@ -117,8 +134,8 @@
             (value (y (center object)))
             (value (radius object)))))
 
-(defmethod make-circle ((center point) (radius scalar))
-  (make-instance 'circle :center center :radius radius))
+(defmethod make-circle ((center point) (radius scalar) &key (style *default-style*))
+  (make-instance 'circle :center center :radius radius :style style))
 
 
 
@@ -129,11 +146,13 @@
    (horizontal-alignment :initarg :horizontal-alignment :accessor horizontal-alignment)
    (vertical-alignment :initarg :vertical-alignment :accessor vertical-alignment)))
 
-(defmethod make-text (text-string (anchor point) &key (h-align :center) (v-align :center))
+(defmethod make-text (text-string (anchor point)
+                      &key (h-align :center) (v-align :center) (style *default-style*))
   (make-instance 'text :text-string text-string
                        :anchor anchor
                        :horizontal-alignment h-align
-                       :vertical-alignment v-align))
+                       :vertical-alignment v-align
+                       :style style))
 
 
 

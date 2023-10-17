@@ -179,7 +179,8 @@
                                                  (get-offset-subscripts system
                                                                         (getf connection :b))))))
                (push (make-line (move-point-towards location-a location-b line-padding)
-                                (move-point-towards location-b location-a line-padding))
+                                (move-point-towards location-b location-a line-padding)
+                                :style (getf connection :style))
                      result)))
     result))
 

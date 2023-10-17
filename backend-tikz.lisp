@@ -40,12 +40,33 @@
 
 (defmethod compile-tikz ((backend backend-tikz))
   (when (compilep backend)
-    (uiop:run-program (list "/usr/bin/pdflatex"
+    (uiop:run-program (list ; "/usr/bin/pdflatex"
+                            "/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
                             "/home/johannes/common-lisp/prototypes/drawer/default.tex"))))
+
+(defparameter *tikz-dictionary*
+  '((:normal . nil)
+    (:thick . "thick")
+    (:thin . "very thin")
+    (:dotted . "dotted")
+    (:dashed . "dashed")))
+
+(defun lookup-style (keyword)
+  (cdr (assoc keyword *tikz-dictionary*)))
+
+(defun combine-line-styles (style)
+  (let ((result (apply #'concatenate 'string
+         (remove-if #'null (mapcar (lambda (id)
+                                     (lookup-style (getf style id)))
+                                   '(:line-thickness :line-type))))))
+    (if (zerop (length result))
+        nil
+        result)))
 
 (defmethod draw ((obj line) (backend backend-tikz))
   (let ((*global-scale-factor* (scale-factor backend)))
-    (add-tikz-line (format nil "\\draw[thick] (~f,~f) -- (~f,~f);"
+    (add-tikz-line (format nil "\\draw~@[[~a]~] (~f,~f) -- (~f,~f);"
+                           (combine-line-styles (style obj))
                            (value (x (origin obj)))
                            (value (y (origin obj)))
                            (value (x (destination obj)))

@@ -35,12 +35,15 @@
     result))
 
 (defmethod get-offset-subscripts ((system tonnetz) subscripts)
+  "Takes human readable subscripts, turns them into 0-based subscripts."
   (if (= (length subscripts) (length (offsets system)))
-      (mapcar (lambda (index offset) (+ index offset)) subscripts (offsets system))
+      (mapcar #'+ subscripts (offsets system))
       (error "Provided subscripts ~a don't match the offsets of the system, ~a."
              subscripts (dimensions system))))
 
-(defparameter *testnetz* (make-tonnetz '(6 4) '(2 2)))
+(defmethod make-offset-subscripts ((system tonnetz) subscripts)
+  "Takes 0-based subscripts, turns them into human readable subscripts."
+  (mapcar #'- subscripts (offsets system)))
 
 (defmethod get-node ((system tonnetz) subscripts)
   (apply #'aref (nodes system) (get-offset-subscripts system subscripts)))
@@ -54,5 +57,53 @@
         do (setf (label (get-node system (construct-subscripts dimension-mask i)))
                  lbl)))
 
-(defmethod add-connection ((system tonsystem) location-a location-b &optional (style :line))
-  (push (list :a location-a :b location-b :style style) (connection-list system)))
+(defun connection-hit-p (location-pair connection)
+  (format t "~&~s" location-pair)
+  (or (and (equal (first location-pair) (getf connection :a))
+           (equal (second location-pair) (getf connection :b)))
+      (and (equal (first location-pair) (getf connection :b))
+           (equal (second location-pair) (getf connection :a)))))
+
+(defmethod find-connection ((system tonnetz) location-a location-b)
+  (find (list location-a location-b) (connection-list system) :test #'connection-hit-p))
+
+(defparameter *testnetz* (make-tonnetz '(5 4 3) '(2 2 1)))
+
+(defmethod in-range ((system tonnetz) location)
+  (loop for element in (mapcar (lambda (coordinate dimension offset)
+                                 (and (>= coordinate (- offset))
+                                      (< coordinate (+ (- offset) dimension))))
+                               location
+                               (dimensions system)
+                               (offsets system))
+        always element))
+
+(defmethod add-connection ((system tonnetz) location-a location-b &key (style-update nil))
+  (unless (find-connection system location-a location-b)
+    (push (list :a location-a :b location-b :style (update-style *default-style* style-update))
+          (connection-list system))))
+
+(defmethod add-connections ((system tonnetz) path &key (style-update nil))
+  (loop for major-index from 0 to (1- (array-total-size (nodes system)))
+        do (let* ((origin (make-offset-subscripts system
+                                                  (alexandria-2:rmajor-to-indices
+                                                   (dimensions system) major-index)))
+                  (target (mapcar #'+ origin path)))
+             (when (and (in-range system target)
+                        (label (get-node system origin))
+                        (label (get-node system target)))
+               (add-connection system origin target :style-update style-update)))))
+
+(defmethod remove-connection ((system tonnetz) location-a location-b)
+  (when (find-connection system location-a location-b)
+    (setf (connection-list system) (remove-if (lambda (connection)
+                                                (connection-hit-p (list location-a location-b)
+                                                                  connection))
+                                              (connection-list system)))))
+
+(defmethod update-connection-style ((system tonnetz) location-a location-b update)
+  (let ((connection (find-connection system location-a location-b)))
+    (when connection
+      (remove-connection system location-a location-b)
+      (add-connection system location-a location-b
+                      :style-update (update-style (getf connection :style) update)))))
