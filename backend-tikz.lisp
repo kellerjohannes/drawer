@@ -71,7 +71,7 @@
 (defmethod draw ((obj text) (backend backend-tikz))
   (when (text-string obj)
     (let ((*global-scale-factor* (scale-factor backend)))
-      (add-tikz-line (format nil "\\node at (~a, ~a) { \\Large ~a };"
+      (add-tikz-line (format nil "\\node at (~a, ~a) { \\large ~a };"
                              (value (x (anchor obj)))
                              (value (y (anchor obj)))
                              (text-string obj))
