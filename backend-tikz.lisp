@@ -45,7 +45,7 @@
 
 (defmethod draw ((obj line) (backend backend-tikz))
   (let ((*global-scale-factor* (scale-factor backend)))
-    (add-tikz-line (format nil "\\draw[thick] (~a,~a) -- (~a,~a);"
+    (add-tikz-line (format nil "\\draw[thick] (~f,~f) -- (~f,~f);"
                            (value (x (origin obj)))
                            (value (y (origin obj)))
                            (value (x (destination obj)))
@@ -56,13 +56,13 @@
   (let ((*global-scale-factor* (scale-factor backend)))
     (with-accessors ((points point-list))
         obj
-      (add-tikz-line (format nil "\\draw[thick] ~{(~a, ~a) -- ~} cycle;"
+      (add-tikz-line (format nil "\\draw[thick] ~{(~f, ~f) -- ~} cycle;"
                              (extract-value-list points))
                      backend))))
 
 (defmethod draw ((obj circle) (backend backend-tikz))
   (let ((*global-scale-factor* (scale-factor backend)))
-    (add-tikz-line (format nil "\\draw[thick] (~a,~a) circle (~a);"
+    (add-tikz-line (format nil "\\draw[thick] (~f,~f) circle (~f);"
                            (value (x (center obj)))
                            (value (y (center obj)))
                            (value (radius obj)))
@@ -71,7 +71,7 @@
 (defmethod draw ((obj text) (backend backend-tikz))
   (when (text-string obj)
     (let ((*global-scale-factor* (scale-factor backend)))
-      (add-tikz-line (format nil "\\node at (~a, ~a) { \\large ~a };"
+      (add-tikz-line (format nil "\\node at (~f, ~f) { \\large ~a };"
                              (value (x (anchor obj)))
                              (value (y (anchor obj)))
                              (text-string obj))

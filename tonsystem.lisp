@@ -16,7 +16,7 @@
   ((dimensions :initform '(1 1) :initarg :dimensions :accessor dimensions)
    (offsets :initform '(0 0) :initarg :offsets :accessor offsets)
    (nodes :accessor nodes)
-   (connection-list :accessor connection-list)))
+   (connection-list :initform nil :accessor connection-list)))
 
 (defmethod initialize-instance :after ((system tonnetz) &key)
   (setf (nodes system) (make-array (dimensions system)))
@@ -53,3 +53,6 @@
         for i from start-position
         do (setf (label (get-node system (construct-subscripts dimension-mask i)))
                  lbl)))
+
+(defmethod add-connection ((system tonsystem) location-a location-b &optional (style :line))
+  (push (list :a location-a :b location-b :style style) (connection-list system)))

@@ -29,6 +29,16 @@
   (make-point (make-scalar (- (get-value (get-x p))))
               (make-scalar (- (get-value (get-y p))))))
 
+(defun deg-to-rad (deg)
+  (* deg (/ PI 180)))
+
+(defmethod rotate-point ((p point) angle-deg)
+  (let ((x (get-value (get-x p)))
+        (y (get-value (get-y p)))
+        (angle (deg-to-rad angle-deg)))
+    (make-point (make-scalar (- (* (cos angle) x) (* (sin angle) y)))
+                (make-scalar (+ (* (sin angle) x) (* (cos angle) y))))))
+
 (defmethod ln-shape ((origin point) distance-list &key (direction-x-p t) shift shift-pt)
   (let ((current-x (get-value (get-x origin)))
         (current-y (get-value (get-y origin))))
@@ -107,6 +117,15 @@
   (make-point (make-scalar (- (value (x origin)) (value distance))) (y origin)))
 
 
+(defmethod vector-length ((p point))
+  (let ((x (get-value (get-x p)))
+        (y (get-value (get-y p))))
+    (sqrt (+ (* x x) (* y y)))))
+
+
+(defmethod move-point-towards ((origin point) (direction point) distance)
+  (let ((v (subtract direction origin)))
+    (add origin (scale v (* distance (/ 1 (vector-length v)))))))
 
 
 
@@ -137,17 +156,34 @@
                         vector-list
                         factor-list)))
 
-(defmethod render ((system tonnetz) (origin point) axis-delta-list)
-  (with-accessors ((dimensions dimensions)
-                   (offsets offsets)
-                   (nodes nodes))
-      system
-    (let ((text-objects nil)
-          (zero-point (vector-path (mapcar #'invert-point axis-delta-list) offsets)))
-      (loop for major-index from 0 to (1- (array-total-size nodes))
-            do (let ((subscripts (alexandria-2:rmajor-to-indices dimensions major-index)))
-                 (format t "~&~a" subscripts)
-                 (push (make-text (label (get-node-0 system subscripts))
-                                  (add zero-point (vector-path axis-delta-list subscripts)))
-                       text-objects)))
-      (make-group text-objects))))
+
+(defmethod generate-text-labels ((system tonnetz) (zero-point point) axis-delta-list)
+  (let ((result nil))
+    (loop for major-index from 0 to (1- (array-total-size (nodes system)))
+          do (let ((subscripts (alexandria-2:rmajor-to-indices (dimensions system) major-index)))
+               (format t "~&~a" subscripts)
+               (push (make-text (label (get-node-0 system subscripts))
+                                (add zero-point (vector-path axis-delta-list subscripts)))
+                     result)))
+    result))
+
+(defmethod generate-connections ((system tonnetz) (zero-point point) axis-delta-list line-padding)
+  (let ((result nil))
+    (loop for connection in (connection-list system)
+          do (let ((location-a (add zero-point
+                                    (vector-path axis-delta-list
+                                                 (get-offset-subscripts system
+                                                                        (getf connection :a)))))
+                   (location-b (add zero-point
+                                    (vector-path axis-delta-list
+                                                 (get-offset-subscripts system
+                                                                        (getf connection :b))))))
+               (push (make-line (move-point-towards location-a location-b line-padding)
+                                (move-point-towards location-b location-a line-padding))
+                     result)))
+    result))
+
+(defmethod render ((system tonnetz) (origin point) axis-delta-list line-padding)
+  (let ((zero-point (vector-path (mapcar #'invert-point axis-delta-list) (offsets system))))
+    (make-group (append (generate-text-labels system zero-point axis-delta-list)
+                        (generate-connections system zero-point axis-delta-list line-padding)))))
