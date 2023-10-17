@@ -45,17 +45,11 @@
 (defmethod get-node ((system tonnetz) subscripts)
   (apply #'aref (nodes system) (get-offset-subscripts system subscripts)))
 
+(defmethod get-node-0 ((system tonnetz) subscripts)
+  (apply #'aref (nodes system) subscripts))
+
 (defmethod init-row ((system tonnetz) dimension-mask start-position label-list)
   (loop for lbl in label-list
         for i from start-position
         do (setf (label (get-node system (construct-subscripts dimension-mask i)))
                  lbl)))
-
-
-
-
-(let ((system (make-tonnetz '(6 4) '(2 2))))
-  (init-row system '(nil 1) -1 '("D♭" "A♭" "E♭" "B♭"))
-  (init-row system '(nil 0) -2 '("B♭" "F" "C" "G" "D" "A"))
-  (init-row system '(nil -1) -2 '("D" "A" "E" "B" "F♯"))
-  (init-row system '(nil -2) -2 '("F♯" "C♯" "G♯" "D♯")))

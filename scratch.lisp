@@ -1,4 +1,15 @@
 (in-package :drawer)
 
 
-(let* (()))
+(let ((system (make-tonnetz '(6 4) '(2 1))))
+  (init-row system '(nil -1) -1 '("D♭" "A♭" "E♭" "B♭"))
+  (init-row system '(nil 0) -2 '("B♭" "F" "C" "G" "D" "A"))
+  (init-row system '(nil 1) -2 '("D" "A" "E" "B" "F♯"))
+  (init-row system '(nil 2) -2 '("F♯" "C♯" "G♯" "D♯"))
+  (let* ((bsvg (make-backend-svg 3100 900))
+         (bhtml (make-backend-html))
+         (btikz (make-backend-tikz))
+         (lbl (render system (pt 20 20) (list (pt 8 0) (pt 0 -8)))))
+    (draw-with-multiple-backends (list bsvg bhtml btikz)
+                                 (list lbl))
+    (compile-tikz btikz)))

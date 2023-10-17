@@ -25,6 +25,10 @@
                       shift-amount
                       shift-pt))
 
+(defmethod invert-point ((p point))
+  (make-point (make-scalar (- (get-value (get-x p))))
+              (make-scalar (- (get-value (get-y p))))))
+
 (defmethod ln-shape ((origin point) distance-list &key (direction-x-p t) shift shift-pt)
   (let ((current-x (get-value (get-x origin)))
         (current-y (get-value (get-y origin))))
@@ -77,7 +81,6 @@
           do (setf (aref result i) (cp (aref obj i) anchor target)))
     result))
 
-;; to be reworked and abstracted
 (defmethod above ((origin point) distance)
   (make-point (get-x origin) (make-scalar (+ (get-value (get-y origin)) distance))))
 
@@ -99,8 +102,12 @@
   (right-of origin (get-value distance)))
 
 
+;; to be reworked and abstracted
 (defmethod left-of ((origin point) (distance scalar))
   (make-point (make-scalar (- (value (x origin)) (value distance))) (y origin)))
+
+
+
 
 
 (defmethod make-obj-array ((obj drawer-object) iterations (anchor point) (target point) (delta point))
@@ -123,3 +130,24 @@
                                                   (* i (get-value (get-y delta))))))
                               :v-align v-align :h-align h-align)))
     result))
+
+(defun vector-path (vector-list factor-list)
+  (reduce #'add (mapcar (lambda (vertex factor)
+                          (scale vertex factor))
+                        vector-list
+                        factor-list)))
+
+(defmethod render ((system tonnetz) (origin point) axis-delta-list)
+  (with-accessors ((dimensions dimensions)
+                   (offsets offsets)
+                   (nodes nodes))
+      system
+    (let ((text-objects nil)
+          (zero-point (vector-path (mapcar #'invert-point axis-delta-list) offsets)))
+      (loop for major-index from 0 to (1- (array-total-size nodes))
+            do (let ((subscripts (alexandria-2:rmajor-to-indices dimensions major-index)))
+                 (format t "~&~a" subscripts)
+                 (push (make-text (label (get-node-0 system subscripts))
+                                  (add zero-point (vector-path axis-delta-list subscripts)))
+                       text-objects)))
+      (make-group text-objects))))
