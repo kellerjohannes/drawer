@@ -19,7 +19,7 @@
   (setf (scene backend) (concatenate 'string (scene backend) (format nil "~%") expression)))
 
 (defmethod initialize-instance :after ((backend backend-html) &key)
-  (setf (scale-factor backend) 10)
+  (setf (scale-factor backend) 3)
   (setf (scene backend)
         (concatenate 'string *html-header*
                      (format nil "<canvas id=\"defaultId\" width=\"~a\" height=\"~a\"></canvas>~%<script>"
@@ -77,4 +77,15 @@
                        backend)
       (add-script-line "ctx.stroke();" backend))))
 
-(defmethod draw ((obj text) (backend backend-html)))
+(defmethod draw ((obj text) (backend backend-html))
+  (when (text-string obj)
+    (let ((*global-scale-factor* (scale-factor backend)))
+      (with-vertical-flip ((height backend) *global-scale-factor*)
+        (add-script-line "ctx.font = \"8px serif\";" backend)
+        (add-script-line "ctx.textBaseline = \"middle\";" backend)
+        (add-script-line "ctx.textAlign = \"center\";" backend)
+        (add-script-line (format nil "ctx.fillText(\"~a\", ~a, ~a);"
+                                 (text-string obj)
+                                 (value (x (anchor obj)))
+                                 (value (y (anchor obj))))
+                         backend)))))
