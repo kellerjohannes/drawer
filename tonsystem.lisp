@@ -107,3 +107,55 @@
       (remove-connection system location-a location-b)
       (add-connection system location-a location-b
                       :style-update (update-style (getf connection :style) update)))))
+
+
+
+
+
+
+(defclass circle-of-fifths (tonsystem)
+  ((label-array :initarg :label-array :accessor label-array)
+   (tick-array :initarg :tick-array :accessor tick-array)
+   (offset :initarg :offset :accessor offset)
+   (circle-line :initarg :circle-line :accessor circle-line)
+   (connection-list :initarg :connection-list :accessor connection-list)))
+
+(defun make-circle-of-fifths (circle-line ticks labels offset)
+  (make-instance 'circle-of-fifths :tick-array ticks :label-array labels :offset offset
+                 :circle-line circle-line))
+
+(defmethod add-connection ((cof-a circle-of-fiths) (cof-b circle-of-fifths)
+                           position-a position-b &key (style-update nil))
+  )
+
+(defmethod add-connections ((cof-a circle-of-fifths) (cof-b circle-of-fifths) delta start
+                            &key (style-update nil))
+
+  )
+
+(defmethod make-circle-position ((center point) radius start-angle end-angle num index)
+  (cp (rotate-point (pt radius 0)
+                    (+ start-angle (* index (/ (- end-angle start-angle) (1- num)))))
+      (pt 0 0)
+      center))
+
+(defmethod generate-ticks ((center point) radius tick num start-angle end-angle)
+  (let ((result (make-array num)))
+    (loop for i from 0 to (1- num)
+          do (setf (aref result i)
+                   (cp tick
+                       (pt 0 0)
+                       (make-circle-position center radius start-angle end-angle num i))))
+    result))
+
+(defmethod generate-labels ((center point) radius label-list start-angle end-angle air)
+  (let ((result (make-array (length label-list))))
+    (loop for i from 0 to (1- (length label-list))
+          for label in label-list
+          do (setf (aref result i)
+                   (make-text label (move-point-towards
+                                     (make-circle-position center radius start-angle end-angle
+                                                           (length label-list) i)
+                                     center
+                                     air))))
+    result))

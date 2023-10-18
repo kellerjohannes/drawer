@@ -207,3 +207,14 @@
   (let ((zero-point (vector-path (mapcar #'invert-point axis-delta-list) (offsets system))))
     (make-group (append (generate-text-labels system zero-point axis-delta-list)
                         (generate-connections system zero-point axis-delta-list line-padding)))))
+
+
+
+
+
+(defmethod cof ((center point) radius start-angle end-angle tick-object lbl-list lbl-offset id-offset)
+  "`tick-object' needs to be relative to (0,0)."
+  (make-circle-of-fifths (arc center radius start-angle end-angle)
+                         (generate-ticks center radius tick-object (length lbl-list) start-angle end-angle)
+                         (generate-labels center radius lbl-list start-angle end-angle lbl-offset)
+                         id-offset))
