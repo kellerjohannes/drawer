@@ -5,6 +5,7 @@
   '(:line-thickness :normal ; :thick :thin
     :line-type :normal ; :dashed :dotted
     :text-size :normal ; :large :small
+    :fill :fill ; :none
     ))
 
 (defun update-style (current-style update)
@@ -115,7 +116,6 @@
             (extract-value-list (point-list object)))))
 
 (defmethod make-line-strip (point-list &key (style *default-style*))
-  (format t "~&~a" (get-type-of-elements point-list))
   (if (equal (get-type-of-elements point-list) (list 'point))
       (make-instance 'line-strip :point-list point-list :style style)
       (error "Point-list ~a does not consist of exclusively points." point-list)))
@@ -137,6 +137,15 @@
 (defmethod make-circle ((center point) (radius scalar) &key (style *default-style*))
   (make-instance 'circle :center center :radius radius :style style))
 
+
+
+(defclass arc (circle)
+  ((start-angle :initarg :start-angle :accessor start-angle)
+   (end-angle :initarg :end-angle :accessor end-angle)))
+
+(defmethod make-arc ((center point) radius start-angle end-angle &key (style *default-style*))
+  (make-instance 'arc :center center :radius (make-scalar radius) :start-angle start-angle :end-angle end-angle
+                 :style style))
 
 
 

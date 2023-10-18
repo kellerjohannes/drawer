@@ -16,6 +16,14 @@
 \\newunicodechar{Ė}{\\stackon[0.8pt]{E}{.}}
 \\newunicodechar{Ḟ}{\\stackon[0.8pt]{F}{.}}
 \\newunicodechar{Ġ}{\\stackon[0.8pt]{G}{.}}
+
+
+\\def\\centerarc[#1](#2)(#3:#4:#5);%
+{
+  \\draw[#1]([shift=(#3:#5)]#2) arc (#3:#4:#5);
+}
+
+
 \\begin{document}
 \\begin{tikzpicture}
 ")
@@ -85,9 +93,20 @@
 
 (defmethod draw ((obj circle) (backend backend-tikz))
   (let ((*global-scale-factor* (scale-factor backend)))
-    (add-tikz-line (format nil "\\draw[thick] (~f,~f) circle (~f);"
+    (add-tikz-line (format nil "\\draw[~a] (~f,~f) circle (~f);"
+                           (if (eq (getf (style obj) :fill) :none) "" "fill")
                            (value (x (center obj)))
                            (value (y (center obj)))
+                           (value (radius obj)))
+                   backend)))
+
+(defmethod draw ((obj arc) (backend backend-tikz))
+  (let ((*global-scale-factor* (scale-factor backend)))
+    (add-tikz-line (format nil "\\centerarc[thick](~a,~a)(~a:~a:~a);"
+                           (value (x (center obj)))
+                           (value (y (center obj)))
+                           (start-angle obj)
+                           (end-angle obj)
                            (value (radius obj)))
                    backend)))
 
@@ -99,3 +118,14 @@
                              (value (y (anchor obj)))
                              (text-string obj))
                      backend))))
+
+
+(defmethod draw ((obj circle-of-fifths) (backend backend-tikz))
+  (when (tick-array obj)
+    (loop for tick across (tick-array obj)
+          do (draw tick backend)))
+  (when (label-array obj)
+    (loop for label across (label-array obj)
+          do (draw label backend)))
+  (when (circle-line obj)
+    (draw (circle-line obj) backend)))

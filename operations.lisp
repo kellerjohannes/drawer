@@ -54,6 +54,19 @@
                        distance-list)))))
 
 
+(defun circ (x-coord y-coord radius &key (style-update nil))
+  (let ((style (if style-update
+                   (update-style *default-style* style-update)
+                   *default-style*)))
+    (make-circle (make-point (make-scalar x-coord) (make-scalar y-coord))
+                 (make-scalar radius) :style style)))
+
+
+(defmethod arc ((center point) radius start-angle-deg end-angle-deg &key (style-update nil))
+  (make-arc center radius start-angle-deg end-angle-deg
+            :style (if style-update (update-style *default-style* style-update) *default-style*)))
+
+
 (defun gr (content-list)
   (make-group content-list))
 
@@ -67,19 +80,23 @@
 
 (defmethod cp ((obj line) (anchor point) (target point))
   (make-line (cp (origin obj) anchor target)
-      (cp (destination obj) anchor target)))
+      (cp (destination obj) anchor target)
+      :style (style obj)))
 
 (defmethod cp ((obj line-strip) (anchor point) (target point))
   (make-line-strip (loop for point in (point-list obj)
-                         collect (cp point anchor target))))
+                         collect (cp point anchor target))
+                   :style (style obj)))
 
 (defmethod cp ((obj circle) (anchor point) (target point))
-  (make-circle (cp (center obj) anchor target) (radius obj)))
+  (make-circle (cp (center obj) anchor target) (radius obj)
+               :style (style obj)))
 
 (defmethod cp ((obj text) (anchor point) (target point))
   (make-text (text-string obj) (cp (anchor obj) anchor target)
              :v-align (vertical-alignment obj)
-             :h-align (horizontal-alignment obj)))
+             :h-align (horizontal-alignment obj)
+             :style (style obj)))
 
 (defmethod cp ((obj group) (anchor point) (target point))
   (make-group (loop for element in (content obj)
@@ -112,9 +129,12 @@
   (right-of origin (get-value distance)))
 
 
-;; to be reworked and abstracted
+(defmethod left-of ((origin point) distance)
+  (make-point (make-scalar (- (get-value (get-x origin)) distance)) (get-y origin)))
+
 (defmethod left-of ((origin point) (distance scalar))
-  (make-point (make-scalar (- (value (x origin)) (value distance))) (y origin)))
+  (left-of origin (get-value distance)))
+
 
 
 (defmethod vector-length ((p point))
@@ -161,7 +181,6 @@
   (let ((result nil))
     (loop for major-index from 0 to (1- (array-total-size (nodes system)))
           do (let ((subscripts (alexandria-2:rmajor-to-indices (dimensions system) major-index)))
-               (format t "~&~a" subscripts)
                (push (make-text (label (get-node-0 system subscripts))
                                 (add zero-point (vector-path axis-delta-list subscripts)))
                      result)))
