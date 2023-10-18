@@ -12,8 +12,8 @@
                                                :height (height backend)
                                                :stroke "black" :fill "none")))
 
-(defmethod make-backend-svg (&optional (width 1200) (height 800))
-  (make-instance 'backend-svg :width width :height height :filename "default.svg"))
+(defmethod make-backend-svg (&key (width 1200) (height 800) (filename "default.svg"))
+  (make-instance 'backend-svg :width width :height height :filename filename))
 
 (defmethod write-file ((backend backend-svg))
   (svg:stream-out (filestream backend) (scene backend)))

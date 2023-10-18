@@ -28,8 +28,8 @@
   (add-script-line "const canvas = document.getElementById(\"defaultId\");" backend)
   (add-script-line "const ctx = canvas.getContext(\"2d\");" backend))
 
-(defmethod make-backend-html (&optional (width 1200) (height 800))
-  (make-instance 'backend-html :width width :height height :filename "default.html"))
+(defmethod make-backend-html (&key (width 1200) (height 800) (filename "default.html"))
+  (make-instance 'backend-html :width width :height height :filename filename))
 
 (defmethod write-file ((backend backend-html))
   (format (filestream backend) "~a~%}~%draw();~%</script>~%</body>~%</html>" (scene backend)))

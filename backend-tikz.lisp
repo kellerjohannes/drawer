@@ -2,6 +2,7 @@
 
 (defparameter *tikz-header*
   "\\documentclass[tikz,border=10pt]{standalone}
+\\usepackage{mathabx}
 \\usepackage{newunicodechar}
 \\newunicodechar{♮}{$\\natural$}
 \\newunicodechar{♭}{$\\flat$}
@@ -32,17 +33,18 @@
   (setf (scale-factor backend) 0.2)
   (setf (scene backend) *tikz-header*))
 
-(defmethod make-backend-tikz (&optional (width 1200) (height 800))
-  (make-instance 'backend-tikz :width width :height height :filename "default.tex"))
+(defmethod make-backend-tikz (&key (width 1200) (height 800) (filename "default.tex"))
+  (make-instance 'backend-tikz :width width :height height :filename filename))
 
 (defmethod write-file ((backend backend-tikz))
   (format (filestream backend) "~a~%\\end{tikzpicture}~%\\end{document}" (scene backend)))
 
 (defmethod compile-tikz ((backend backend-tikz))
   (when (compilep backend)
-    (uiop:run-program (list ; "/usr/bin/pdflatex"
-                            "/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
-                            "/home/johannes/common-lisp/prototypes/drawer/default.tex"))))
+    (uiop:run-program (list "/usr/bin/pdflatex"
+                            ;"/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
+                            (concatenate 'string "/home/johannes/common-lisp/prototypes/drawer/"
+                                           (filename backend))))))
 
 (defparameter *tikz-dictionary*
   '((:normal . nil)
