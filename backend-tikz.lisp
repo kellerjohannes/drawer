@@ -59,7 +59,8 @@
     (:thick . "thick")
     (:thin . "very thin")
     (:dotted . "dotted")
-    (:dashed . "dashed")))
+    (:dashed . "dashed")
+    (:strongly-dotted . "dotted")))
 
 (defun lookup-style (keyword)
   (cdr (assoc keyword *tikz-dictionary*)))
@@ -110,10 +111,20 @@
                            (value (radius obj)))
                    backend)))
 
+
+(defparameter *tikz-h-align*
+  '((:center . "align=center")
+    (:left . "anchor=west")
+    (:right . "anchor=east")))
+
+(defun lookup-h-align (keyword)
+  (cdr (assoc keyword *tikz-h-align*)))
+
 (defmethod draw ((obj text) (backend backend-tikz))
   (when (text-string obj)
     (let ((*global-scale-factor* (scale-factor backend)))
-      (add-tikz-line (format nil "\\node at (~f, ~f) { \\large ~a };"
+      (add-tikz-line (format nil "\\node[~a] at (~f, ~f) { \\large ~a };"
+                             (lookup-h-align (horizontal-alignment obj))
                              (value (x (anchor obj)))
                              (value (y (anchor obj)))
                              (text-string obj))
@@ -121,6 +132,9 @@
 
 
 (defmethod draw ((obj circle-of-fifths) (backend backend-tikz))
+  (when (connection-list obj)
+    (dolist (connection (connection-list obj))
+      (draw connection backend)))
   (when (tick-array obj)
     (loop for tick across (tick-array obj)
           do (draw tick backend)))

@@ -116,32 +116,58 @@
 (defclass circle-of-fifths (tonsystem)
   ((label-array :initarg :label-array :accessor label-array)
    (tick-array :initarg :tick-array :accessor tick-array)
+   (position-array :initarg :position-array :accessor position-array)
    (offset :initarg :offset :accessor offset)
    (circle-line :initarg :circle-line :accessor circle-line)
-   (connection-list :initarg :connection-list :accessor connection-list)))
+   (connection-list :initform nil :accessor connection-list)))
 
-(defun make-circle-of-fifths (circle-line ticks labels offset)
-  (make-instance 'circle-of-fifths :tick-array ticks :label-array labels :offset offset
+(defun make-circle-of-fifths (circle-line positions ticks labels offset)
+  (make-instance 'circle-of-fifths :position-array positions
+                                   :tick-array ticks
+                                   :label-array labels
+                                   :offset offset
                                    :circle-line circle-line))
 
+(defmethod extract-circle-position ((cof circle-of-fifths) index)
+  (aref (position-array cof) (+ index (offset cof))))
 
-(defmethod add-connection ((cof-a circle-of-fiths) index-a index-b
-                           &key (cof-b cof-a) (style-update nil))
+(defmethod index-in-range-p ((cof circle-of-fifths) index)
+  (and (>= index (- (offset cof)))
+       (< index (- (length (position-array cof)) (offset cof)))))
+
+(defmethod add-circle-connection ((cof-a circle-of-fifths) index-a index-b
+                                  &key (cof-b cof-a) (style-update nil))
   "Make a line between ticks of the circle. Optionally a second `circle-of-fifths' can be provided to
 draw connections between two circles. The connections are stored in `cof-a'."
-  (push (make-line position-a position-b &style style) (connection-list cof-a))
-  )
+  (when (and (index-in-range-p cof-a index-a)
+             (index-in-range-p cof-b index-b))
+    (push (make-line (extract-circle-position cof-a index-a)
+                     (extract-circle-position cof-b index-b)
+                     :style (if style-update (update-style *default-style* style-update)
+                                *default-style*))
+          (connection-list cof-a))))
 
-(defmethod add-circle-connections ((cof-a circle-of-fifths) (cof-b circle-of-fifths) delta start
-                                   &key (style-update nil))
-
-  )
+(defmethod add-circle-connections ((cof-a circle-of-fifths) delta start
+                                   &key (cof-b cof-a) (style-update nil)
+                                     (stop (- (length (position-array cof-a)) (offset cof-a))))
+  (loop for i from start to stop
+        do (add-circle-connection cof-a i (+ i delta) :cof-b cof-b :style-update style-update)))
 
 (defmethod make-circle-position ((center point) radius start-angle end-angle num index)
   (cp (rotate-point (pt radius 0)
                     (+ start-angle (* index (/ (- end-angle start-angle) (1- num)))))
       (pt 0 0)
       center))
+
+
+(generate-positions center radius (length lbl-list) start-angle end-angle)
+
+(defmethod generate-positions ((center point) radius num start-angle end-angle)
+  (let ((result (make-array num)))
+    (dotimes (i num)
+      (setf (aref result i) (make-circle-position center radius start-angle end-angle num i)))
+    result))
+
 
 (defmethod generate-ticks ((center point) radius tick num start-angle end-angle)
   (let ((result (make-array num)))

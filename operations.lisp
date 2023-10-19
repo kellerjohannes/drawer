@@ -5,8 +5,9 @@
 (defun pt (x-coord y-coord)
   (make-point (make-scalar x-coord) (make-scalar y-coord)))
 
-(defmethod ln ((a-point point) (b-point point))
-  (make-line a-point b-point))
+(defmethod ln ((a-point point) (b-point point) &key (style-update nil))
+  (make-line a-point b-point
+             :style (if style-update (update-style *default-style* style-update) *default-style*)))
 
 (defun lns (point-list)
   (make-line-strip point-list))
@@ -215,6 +216,7 @@
 (defmethod cof ((center point) radius start-angle end-angle tick-object lbl-list lbl-offset id-offset)
   "`tick-object' needs to be relative to (0,0)."
   (make-circle-of-fifths (arc center radius start-angle end-angle)
+                         (generate-positions center radius (length lbl-list) start-angle end-angle)
                          (generate-ticks center radius tick-object (length lbl-list) start-angle end-angle)
                          (generate-labels center radius lbl-list start-angle end-angle lbl-offset)
                          id-offset))
