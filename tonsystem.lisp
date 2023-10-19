@@ -124,8 +124,12 @@
   (make-instance 'circle-of-fifths :tick-array ticks :label-array labels :offset offset
                  :circle-line circle-line))
 
-(defmethod add-connection ((cof-a circle-of-fiths) (cof-b circle-of-fifths)
-                           position-a position-b &key (style-update nil))
+
+(defmethod add-connection ((cof-a circle-of-fiths) index-a index-b
+                           &key (cof-b cof-a) (style-update nil))
+  "Make a line between ticks of the circle. Optionally a second `circle-of-fifths' can be provided to
+draw connections between two circles. The connections are stored in `cof-a'."
+  (push (make-line position-a position-b &style style) (connection-list cof-a))
   )
 
 (defmethod add-connections ((cof-a circle-of-fifths) (cof-b circle-of-fifths) delta start
