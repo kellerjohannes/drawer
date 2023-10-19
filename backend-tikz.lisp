@@ -49,8 +49,8 @@
 
 (defmethod compile-tikz ((backend backend-tikz))
   (when (compilep backend)
-    (uiop:run-program (list "/usr/bin/pdflatex"
-                            ;"/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
+    (uiop:run-program (list ;"/usr/bin/pdflatex"
+                            "/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
                             (concatenate 'string "/home/johannes/common-lisp/prototypes/drawer/"
                                            (filename backend))))))
 
@@ -103,13 +103,32 @@
 
 (defmethod draw ((obj arc) (backend backend-tikz))
   (let ((*global-scale-factor* (scale-factor backend)))
-    (add-tikz-line (format nil "\\centerarc[thick](~a,~a)(~a:~a:~a);"
-                           (value (x (center obj)))
-                           (value (y (center obj)))
-                           (start-angle obj)
-                           (end-angle obj)
-                           (value (radius obj)))
-                   backend)))
+    (case (mode obj)
+      (:center (add-tikz-line (format nil "\\centerarc[thick](~a,~a)(~a:~a:~a);"
+                                      (value (x (center obj)))
+                                      (value (y (center obj)))
+                                      (start-angle obj)
+                                      (end-angle obj)
+                                      (value (radius obj)))
+                              backend))
+      (:point (add-tikz-line (format nil "\\draw (~a,~a) arc (~a:~a:~a);"
+                                     (value (x (center obj)))
+                                     (value (y (center obj)))
+                                     (start-angle obj)
+                                     (end-angle obj)
+                                     (value (radius obj)))
+                             backend)))))
+
+(defmethod draw ((obj arc-label) (backend backend-tikz))
+  (let ((*global-scale-factor* (scale-factor backend)))
+    (with-accessors ((a point-a)
+                     (b point-b))
+        obj
+        (add-tikz-line (format nil "\\draw(~a,~a) arc[start angle=160, end angle=20, radius=~a];"
+                               (value (x a))
+                               (value (y a))
+                               (* 1/2 (distance-between-points a b)))
+                       backend))))
 
 
 (defparameter *tikz-h-align*

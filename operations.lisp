@@ -63,9 +63,11 @@
                  (make-scalar radius) :style style)))
 
 
-(defmethod arc ((center point) radius start-angle-deg end-angle-deg &key (style-update nil))
+(defmethod arc ((center point) radius start-angle-deg end-angle-deg
+                &key (mode :center) (style-update nil))
   (make-arc center radius start-angle-deg end-angle-deg
-            :style (if style-update (update-style *default-style* style-update) *default-style*)))
+            :style (if style-update (update-style *default-style* style-update) *default-style*)
+            :mode mode))
 
 
 (defun gr (content-list)
@@ -77,12 +79,12 @@
 (defgeneric cp (object anchor target))
 
 (defmethod cp ((obj point) (anchor point) (target point))
-    (add obj (subtract target anchor)))
+  (add obj (subtract target anchor)))
 
 (defmethod cp ((obj line) (anchor point) (target point))
   (make-line (cp (origin obj) anchor target)
-      (cp (destination obj) anchor target)
-      :style (style obj)))
+             (cp (destination obj) anchor target)
+             :style (style obj)))
 
 (defmethod cp ((obj line-strip) (anchor point) (target point))
   (make-line-strip (loop for point in (point-list obj)
@@ -143,6 +145,9 @@
         (y (get-value (get-y p))))
     (sqrt (+ (* x x) (* y y)))))
 
+(defmethod distance-between-points ((a point) (b point))
+  (vector-length (subtract b a)))
+
 
 (defmethod move-point-towards ((origin point) (direction point) distance)
   (let ((v (subtract direction origin)))
@@ -176,47 +181,3 @@
                           (scale vertex factor))
                         vector-list
                         factor-list)))
-
-
-(defmethod generate-text-labels ((system tonnetz) (zero-point point) axis-delta-list)
-  (let ((result nil))
-    (loop for major-index from 0 to (1- (array-total-size (nodes system)))
-          do (let ((subscripts (alexandria-2:rmajor-to-indices (dimensions system) major-index)))
-               (push (make-text (label (get-node-0 system subscripts))
-                                (add zero-point (vector-path axis-delta-list subscripts)))
-                     result)))
-    result))
-
-(defmethod generate-connections ((system tonnetz) (zero-point point) axis-delta-list line-padding)
-  (let ((result nil))
-    (loop for connection in (connection-list system)
-          do (let ((location-a (add zero-point
-                                    (vector-path axis-delta-list
-                                                 (get-offset-subscripts system
-                                                                        (getf connection :a)))))
-                   (location-b (add zero-point
-                                    (vector-path axis-delta-list
-                                                 (get-offset-subscripts system
-                                                                        (getf connection :b))))))
-               (push (make-line (move-point-towards location-a location-b line-padding)
-                                (move-point-towards location-b location-a line-padding)
-                                :style (getf connection :style))
-                     result)))
-    result))
-
-(defmethod render ((system tonnetz) (origin point) axis-delta-list line-padding)
-  (let ((zero-point (vector-path (mapcar #'invert-point axis-delta-list) (offsets system))))
-    (make-group (append (generate-text-labels system zero-point axis-delta-list)
-                        (generate-connections system zero-point axis-delta-list line-padding)))))
-
-
-
-
-
-(defmethod cof ((center point) radius start-angle end-angle tick-object lbl-list lbl-offset id-offset)
-  "`tick-object' needs to be relative to (0,0)."
-  (make-circle-of-fifths (arc center radius start-angle end-angle)
-                         (generate-positions center radius (length lbl-list) start-angle end-angle)
-                         (generate-ticks center radius tick-object (length lbl-list) start-angle end-angle)
-                         (generate-labels center radius lbl-list start-angle end-angle lbl-offset)
-                         id-offset))

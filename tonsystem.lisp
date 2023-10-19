@@ -160,8 +160,6 @@ draw connections between two circles. The connections are stored in `cof-a'."
       center))
 
 
-(generate-positions center radius (length lbl-list) start-angle end-angle)
-
 (defmethod generate-positions ((center point) radius num start-angle end-angle)
   (let ((result (make-array num)))
     (dotimes (i num)
@@ -189,3 +187,96 @@ draw connections between two circles. The connections are stored in `cof-a'."
                                      center
                                      air))))
     result))
+
+
+
+(defmethod generate-text-labels ((system tonnetz) (zero-point point) axis-delta-list)
+  (let ((result nil))
+    (loop for major-index from 0 to (1- (array-total-size (nodes system)))
+          do (let ((subscripts (alexandria-2:rmajor-to-indices (dimensions system) major-index)))
+               (push (make-text (label (get-node-0 system subscripts))
+                                (add zero-point (vector-path axis-delta-list subscripts)))
+                     result)))
+    result))
+
+(defmethod generate-connections ((system tonnetz) (zero-point point) axis-delta-list line-padding)
+  (let ((result nil))
+    (loop for connection in (connection-list system)
+          do (let ((location-a (add zero-point
+                                    (vector-path axis-delta-list
+                                                 (get-offset-subscripts system
+                                                                        (getf connection :a)))))
+                   (location-b (add zero-point
+                                    (vector-path axis-delta-list
+                                                 (get-offset-subscripts system
+                                                                        (getf connection :b))))))
+               (push (make-line (move-point-towards location-a location-b line-padding)
+                                (move-point-towards location-b location-a line-padding)
+                                :style (getf connection :style))
+                     result)))
+    result))
+
+(defmethod render ((system tonnetz) (origin point) axis-delta-list line-padding)
+  (let ((zero-point (vector-path (mapcar #'invert-point axis-delta-list) (offsets system))))
+    (make-group (append (generate-text-labels system zero-point axis-delta-list)
+                        (generate-connections system zero-point axis-delta-list line-padding)))))
+
+
+
+
+
+(defmethod cof ((center point) radius start-angle end-angle tick-object lbl-list lbl-offset id-offset)
+  "`tick-object' needs to be relative to (0,0)."
+  (make-circle-of-fifths (arc center radius start-angle end-angle)
+                         (generate-positions center radius (length lbl-list) start-angle end-angle)
+                         (generate-ticks center radius tick-object (length lbl-list) start-angle end-angle)
+                         (generate-labels center radius lbl-list start-angle end-angle lbl-offset)
+                         id-offset))
+
+
+
+
+
+;; (defun list->array (lst)
+;;   (make-array (length lst) :initial-contents lst))
+
+;; (defun array->list (arr)
+;;   (loop for e across arr collect e))
+
+(defun simplify-ratio-list (ratio-list)
+  (sort (remove-duplicates (mapcar (lambda (int) (/ int (apply #'gcd ratio-list))) ratio-list))
+        #'>))
+
+(defclass monochord (tonsystem)
+  ((ratio-list :initarg :ratio-list :accessor ratio-list)))
+
+(defun make-monochord (ratio-list)
+  (make-instance 'monochord :ratio-list (simplify-ratio-list ratio-list)))
+
+
+(defparameter *testmon* (make-monochord '(2 1)))
+
+(defmethod add-ratio ((mon monochord) ratio &optional index)
+  (setf (ratio-list mon)
+        (simplify-ratio-list (cons (* (numerator ratio) (if index
+                                                            (nth index (ratio-list mon))
+                                                            (car (last (ratio-list mon)))))
+                                   (mapcar (lambda (int)
+                                             (* int (denominator ratio)))
+                                           (ratio-list mon))))))
+
+
+(defmethod render-monochord ((mon monochord) string-length tick-length)
+  (with-accessors ((ratios ratio-list))
+      mon
+
+    (let* ((open-string (ln (pt 0 0) (pt string-length 0)))
+           (locations (loop for int in ratios
+                            collect (pt (- string-length
+                                           (* (/ string-length (first ratios)) int))
+                                        0)))
+           (ticks (loop for location in (cons (pt string-length 0) locations)
+                        collect (ln (below location (* 1/2 tick-length))
+                                    (above location (* 1/2 tick-length)))))
+           (arcs (list (make-arc-label (pt 0 0) (pt (* 1/1 string-length) 0) "a"))))
+      (gr (append (list open-string) ticks arcs)))))

@@ -141,11 +141,26 @@
 
 (defclass arc (circle)
   ((start-angle :initarg :start-angle :accessor start-angle)
-   (end-angle :initarg :end-angle :accessor end-angle)))
+   (end-angle :initarg :end-angle :accessor end-angle)
+   (mode :initarg :mode :initform :center :accessor mode)))
 
-(defmethod make-arc ((center point) radius start-angle end-angle &key (style *default-style*))
-  (make-instance 'arc :center center :radius (make-scalar radius) :start-angle start-angle :end-angle end-angle
-                 :style style))
+(defmethod make-arc ((center point) radius start-angle end-angle
+                     &key (mode :center) (style *default-style*))
+  (make-instance 'arc :center center
+                      :radius (make-scalar radius)
+                      :start-angle start-angle
+                      :end-angle end-angle
+                      :style style
+                      :mode mode))
+
+
+(defclass arc-label (visible-object)
+  ((point-a :initarg :point-a :accessor point-a)
+   (point-b :initarg :point-b :accessor point-b)
+   (label :initarg :label :accessor label)))
+
+(defmethod make-arc-label ((a point) (b point) label)
+  (make-instance 'arc-label :point-a a :point-b b :label label))
 
 
 
