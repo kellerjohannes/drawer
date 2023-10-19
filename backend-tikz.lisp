@@ -41,7 +41,7 @@
   (setf (scale-factor backend) 0.2)
   (setf (scene backend) *tikz-header*))
 
-(defmethod make-backend-tikz (&key (width 1200) (height 800) (filename "default.tex"))
+(defun make-backend-tikz (&key (width 1200) (height 800) (filename "default.tex"))
   (make-instance 'backend-tikz :width width :height height :filename filename))
 
 (defmethod write-file ((backend backend-tikz))

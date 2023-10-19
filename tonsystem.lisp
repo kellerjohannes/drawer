@@ -122,14 +122,14 @@
 
 (defun make-circle-of-fifths (circle-line ticks labels offset)
   (make-instance 'circle-of-fifths :tick-array ticks :label-array labels :offset offset
-                 :circle-line circle-line))
+                                   :circle-line circle-line))
 
-(defmethod add-connection ((cof-a circle-of-fiths) (cof-b circle-of-fifths)
-                           position-a position-b &key (style-update nil))
+(defmethod add-circle-connection ((cof-a circle-of-fifths) (cof-b circle-of-fifths)
+                                  position-a position-b &key (style-update nil))
   )
 
-(defmethod add-connections ((cof-a circle-of-fifths) (cof-b circle-of-fifths) delta start
-                            &key (style-update nil))
+(defmethod add-circle-connections ((cof-a circle-of-fifths) (cof-b circle-of-fifths) delta start
+                                   &key (style-update nil))
 
   )
 

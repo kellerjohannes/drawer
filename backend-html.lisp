@@ -28,7 +28,7 @@
   (add-script-line "const canvas = document.getElementById(\"defaultId\");" backend)
   (add-script-line "const ctx = canvas.getContext(\"2d\");" backend))
 
-(defmethod make-backend-html (&key (width 1200) (height 800) (filename "default.html"))
+(defun make-backend-html (&key (width 1200) (height 800) (filename "default.html"))
   (make-instance 'backend-html :width width :height height :filename filename))
 
 (defmethod write-file ((backend backend-html))
