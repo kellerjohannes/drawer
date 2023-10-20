@@ -269,45 +269,60 @@ draw connections between two circles. The connections are stored in `cof-a'."
   (format nil "~{~a~^:~}" (simplify-ratio-list ratio-list)))
 
 
-(defmethod render-monochord ((mon monochord) string-length tick-length)
+(defmethod render-monochord ((mon monochord) string-length bar-thickness label-steepness
+                             label-width inverse-mode)
   (with-accessors ((ratios ratio-list))
       mon
     (let* ((open-string (ln (pt 0 0) (pt string-length 0)))
-           (open-string-lower (cp open-string (pt 0 0) (pt 0 -2)))
+           (open-string-lower (cp open-string (pt 0 0) (pt 0 (- bar-thickness))))
            (open-string-bar (list open-string open-string-lower))
            (locations (loop for int in ratios
                             collect (pt (- string-length
                                            (* (/ string-length (first ratios)) int))
                                         0)))
-           ;; (ticks (loop for location in (cons (pt string-length 0) locations)
-           ;;              collect (ln (below location tick-length) location)))
-           (tick (ln (below (pt string-length 0) tick-length)
+           (tick (ln (below (pt string-length 0) bar-thickness)
                      (pt string-length 0)))
            (unique-proportions nil)
            (arcs (do ((remainder locations (rest remainder))
                       (num (ratio-list mon) (rest num))
+                      (inverser nil)
                       (result nil) )
                      ((null remainder) (progn (setf unique-proportions
                                                     (remove-duplicates (sort unique-proportions
                                                                              #'>)))
                                          result))
                    (loop for i from 1 to (1- (length remainder))
-                         do (progn (push (make-arc-label (first remainder) (nth i remainder)
-                                                         (proportion-string (list (first num)
-                                                                                  (nth i num)))
-                                                         :height 0.7
-                                                         :inversep (nth (random 2) '(t nil)))
-                                         result)
+                         do (progn
+                              (push (make-arc-label (first remainder)
+                                                    (nth i remainder)
+                                                    (proportion-string (list (first num)
+                                                                             (nth i num)))
+                                                    :height label-width
+                                                    :steepness label-steepness
+                                                    :inverse-thickness bar-thickness
+                                                    :inversep
+                                                    (case inverse-mode
+                                                      (:random (nth (random 2) '(t nil)))
+                                                      (:toggle (setf inverser (not inverser)))
+                                                      (:up nil)
+                                                      (:down t)))
+                                    result)
                                    (push (/ (first num) (nth i num)) unique-proportions)))))
-           ;; (title (make-text (proportion-string (ratio-list mon))
-           ;;                   (add (first locations) (pt (* 3/4 string-length) 2))))
            (titles (loop for num in ratios
                          for location in locations
-                         collect (make-text (format nil "~a" num) (below location 1))))
+                         collect (make-text (format nil "~a" num) (below location
+                                                                         (* 1/2 bar-thickness)))))
            (bridge (lns (list (pt 0 0) (pt 1 1) (pt -1 1))))
            (block-lengths (mapcar (lambda (r) (/ (log r) (log 1.01)))
                                   unique-proportions))
-           (string-offset 30)
+           (string-vspace 5)
+           (dist (distance-between-points (first locations) (car (last locations))))
+           (string-offset (+ bar-thickness
+                             string-vspace
+                             (if (eq inverse-mode :up)
+                                 0
+                                 (+ (hyp (* 1/2 dist) (* label-steepness dist))
+                                    (- (* label-steepness dist))))))
            (string-padding 2.6)
            (strings (loop for location in locations
                           for i from 0

@@ -159,10 +159,15 @@
    (point-b :initarg :point-b :accessor point-b)
    (label :initarg :label :accessor label)
    (height :initarg :height :accessor height)
-   (inversep :initarg :inversep :accessor inversep)))
+   (steepness :initarg :steepness :accessor steepness)
+   (inversep :initarg :inversep :accessor inversep)
+   (inverse-thickness :initarg :inverse-thickness :accessor inverse-thickness)))
 
-(defmethod make-arc-label ((a point) (b point) label &key (height 0.8) (inversep nil))
-  (make-instance 'arc-label :point-a a :point-b b :label label :height height :inversep inversep))
+(defmethod make-arc-label ((a point) (b point) label
+                           &key (height 0.8) (inversep nil) (inverse-thickness 2) (steepness 0.4))
+  (make-instance 'arc-label :point-a a :point-b b :label label :height height :inversep inversep
+                 :inverse-thickness inverse-thickness
+                 :steepness steepness))
 
 
 

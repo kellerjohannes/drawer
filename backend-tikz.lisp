@@ -3,6 +3,7 @@
 (defparameter *tikz-header*
   "\\documentclass[tikz,border=10pt]{standalone}
 \\usepackage{mathabx}
+\\usetikzlibrary{backgrounds}
 \\usepackage{newunicodechar}
 \\newunicodechar{♮}{$\\natural$}
 \\newunicodechar{♭}{$\\flat$}
@@ -28,6 +29,9 @@
 \\begin{tikzpicture}
 ")
 
+
+;; \\begin{tikzpicture}[background rectangle/.style={fill=black}, show background rectangle, draw=white, text=white]
+
 (defclass backend-tikz (drawer-backend)
   ((scene :accessor scene)
    (width :initarg :width :accessor width)
@@ -49,8 +53,8 @@
 
 (defmethod compile-tikz ((backend backend-tikz))
   (when (compilep backend)
-    (uiop:run-program (list "/usr/bin/pdflatex"
-                            ;"/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
+    (uiop:run-program (list ;"/usr/bin/pdflatex"
+                            "/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
                             (concatenate 'string "/home/johannes/common-lisp/prototypes/drawer/"
                                            (filename backend))))))
 
@@ -134,7 +138,7 @@
                      (b point-b))
         obj
       (let* ((dist (distance-between-points a b))
-             (offset-1 (* 0.4 dist))
+             (offset-1 (* (steepness obj) dist))
              (radius-1 (hyp (* 1/2 dist) offset-1))
              (end-angle-1 (rad-to-deg (asin (/ offset-1 radius-1))))
              (start-angle-1 (+ end-angle-1 (* 2 (rad-to-deg (asin (/ (* 1/2 dist) radius-1))))))
@@ -144,12 +148,14 @@
              (end-angle-2 (rad-to-deg (asin (/ offset-2 radius-2))))
              (start-angle-2 (+ end-angle-2 (* 2 (rad-to-deg (asin (/ (* 1/2 dist) radius-2))))))
              (label-y (* (if (inversep obj) -1 1)
-                         (+ (if (inversep obj) (value (make-scalar 2)) 0)
+                         (+ (if (inversep obj) (value (make-scalar (inverse-thickness obj))) 0)
                             (* 1/2 (+ (value (y a)) (- radius-1 offset-1)
                                       (value (y a)) (- radius-2 offset-2)))))))
         (add-tikz-line (format nil "\\draw[fill=white] (~f,~f) arc[start angle=~f, end angle=~f, radius=~f] arc[start angle=~f, end angle=~f, radius=~f] -- cycle;"
                                (value (x a))
-                               (if (inversep obj) (value (y (below a 2))) (value (y a)))
+                               (if (inversep obj)
+                                   (value (y (below a (inverse-thickness obj))))
+                                   (value (y a)))
                                (if (inversep obj) (- start-angle-1) start-angle-1)
                                (if (inversep obj) (- end-angle-1) end-angle-1)
                                radius-1
