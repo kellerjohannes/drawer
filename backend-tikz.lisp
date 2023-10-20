@@ -49,8 +49,8 @@
 
 (defmethod compile-tikz ((backend backend-tikz))
   (when (compilep backend)
-    (uiop:run-program (list ;"/usr/bin/pdflatex"
-                            "/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
+    (uiop:run-program (list "/usr/bin/pdflatex"
+                            ;"/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
                             (concatenate 'string "/home/johannes/common-lisp/prototypes/drawer/"
                                            (filename backend))))))
 
@@ -119,18 +119,6 @@
                                      (value (radius obj)))
                              backend)))))
 
-(defmethod draw ((obj arc-label) (backend backend-tikz))
-  (let ((*global-scale-factor* (scale-factor backend)))
-    (with-accessors ((a point-a)
-                     (b point-b))
-        obj
-        (add-tikz-line (format nil "\\draw(~a,~a) arc[start angle=160, end angle=20, radius=~a];"
-                               (value (x a))
-                               (value (y a))
-                               (* 1/2 (distance-between-points a b)))
-                       backend))))
-
-
 (defparameter *tikz-h-align*
   '((:center . "align=center")
     (:left . "anchor=west")
@@ -138,6 +126,43 @@
 
 (defun lookup-h-align (keyword)
   (cdr (assoc keyword *tikz-h-align*)))
+
+
+(defmethod draw ((obj arc-label) (backend backend-tikz))
+  (let ((*global-scale-factor* (scale-factor backend)))
+    (with-accessors ((a point-a)
+                     (b point-b))
+        obj
+      (let* ((dist (distance-between-points a b))
+             (offset-1 (* 0.4 dist))
+             (radius-1 (hyp (* 1/2 dist) offset-1))
+             (end-angle-1 (rad-to-deg (asin (/ offset-1 radius-1))))
+             (start-angle-1 (+ end-angle-1 (* 2 (rad-to-deg (asin (/ (* 1/2 dist) radius-1))))))
+
+             (offset-2 (+ offset-1 (height obj)))
+             (radius-2 (hyp (* 1/2 dist) offset-2))
+             (end-angle-2 (rad-to-deg (asin (/ offset-2 radius-2))))
+             (start-angle-2 (+ end-angle-2 (* 2 (rad-to-deg (asin (/ (* 1/2 dist) radius-2))))))
+             (label-y (* 1/2 (+ (value (y a)) (- radius-1 offset-1)
+                                (value (y a)) (- radius-2 offset-2)))))
+        (add-tikz-line (format nil "\\draw[fill=white] (~f,~f) arc[start angle=~f, end angle=~f, radius=~f] arc[start angle=~f, end angle=~f, radius=~f] -- cycle;"
+                               (value (x a))
+                               (value (y a))
+                               start-angle-1
+                               end-angle-1
+                               radius-1
+                               end-angle-2
+                               start-angle-2
+                               radius-2)
+                       backend)
+        (add-tikz-line (format nil "\\node[~a] at (~f,~f) { \\tiny ~a };"
+                               (lookup-h-align :center)
+                               (+ (value (x a)) (* 1/2 dist))
+                               label-y
+                               (label obj))
+                       backend)))))
+
+
 
 (defmethod draw ((obj text) (backend backend-tikz))
   (when (text-string obj)

@@ -157,10 +157,11 @@
 (defclass arc-label (visible-object)
   ((point-a :initarg :point-a :accessor point-a)
    (point-b :initarg :point-b :accessor point-b)
-   (label :initarg :label :accessor label)))
+   (label :initarg :label :accessor label)
+   (height :initarg :height :accessor height)))
 
-(defmethod make-arc-label ((a point) (b point) label)
-  (make-instance 'arc-label :point-a a :point-b b :label label))
+(defmethod make-arc-label ((a point) (b point) label &key (height 0.8))
+  (make-instance 'arc-label :point-a a :point-b b :label label :height height))
 
 
 

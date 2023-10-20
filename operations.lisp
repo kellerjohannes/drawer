@@ -1,6 +1,8 @@
 (in-package :drawer)
 
 
+(defun hyp (a b)
+  (sqrt (+ (* a a) (* b b))))
 
 (defun pt (x-coord y-coord)
   (make-point (make-scalar x-coord) (make-scalar y-coord)))
@@ -32,6 +34,9 @@
 
 (defun deg-to-rad (deg)
   (* deg (/ PI 180)))
+
+(defun rad-to-deg (rad)
+  (* rad (/ 180 PI)))
 
 (defmethod rotate-point ((p point) angle-deg)
   (let ((x (get-value (get-x p)))
