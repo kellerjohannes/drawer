@@ -268,29 +268,67 @@ draw connections between two circles. The connections are stored in `cof-a'."
 (defun proportion-string (ratio-list)
   (format nil "~{~a~^:~}" (simplify-ratio-list ratio-list)))
 
+
 (defmethod render-monochord ((mon monochord) string-length tick-length)
   (with-accessors ((ratios ratio-list))
       mon
-
     (let* ((open-string (ln (pt 0 0) (pt string-length 0)))
+           (open-string-lower (cp open-string (pt 0 0) (pt 0 -2)))
+           (open-string-bar (list open-string open-string-lower))
            (locations (loop for int in ratios
                             collect (pt (- string-length
                                            (* (/ string-length (first ratios)) int))
                                         0)))
-           (ticks (loop for location in (cons (pt string-length 0) locations)
-                        collect (ln (below location tick-length) location)))
+           ;; (ticks (loop for location in (cons (pt string-length 0) locations)
+           ;;              collect (ln (below location tick-length) location)))
+           (tick (ln (below (pt string-length 0) tick-length)
+                     (pt string-length 0)))
+           (unique-proportions nil)
            (arcs (do ((remainder locations (rest remainder))
                       (num (ratio-list mon) (rest num))
-                      (result nil))
-                     ((null remainder) result)
+                      (result nil) )
+                     ((null remainder) (progn (setf unique-proportions
+                                                    (remove-duplicates (sort unique-proportions
+                                                                             #'>)))
+                                         result))
                    (loop for i from 1 to (1- (length remainder))
-                         do (push (make-arc-label (first remainder) (nth i remainder)
-                                                  (proportion-string (list (first num)
-                                                                           (nth i num)))
-                                                  :height 0.7)
-                                  result))))
-           (title (make-text (proportion-string (ratio-list mon))
-                             (add (first locations) (pt (* 3/4 string-length) 2))))
-           )
-      (gr (append (list open-string) ticks arcs (list title)
-                  )))))
+                         do (progn (push (make-arc-label (first remainder) (nth i remainder)
+                                                         (proportion-string (list (first num)
+                                                                                  (nth i num)))
+                                                         :height 0.7
+                                                         :inversep (nth (random 2) '(t nil)))
+                                         result)
+                                   (push (/ (first num) (nth i num)) unique-proportions)))))
+           ;; (title (make-text (proportion-string (ratio-list mon))
+           ;;                   (add (first locations) (pt (* 3/4 string-length) 2))))
+           (titles (loop for num in ratios
+                         for location in locations
+                         collect (make-text (format nil "~a" num) (below location 1))))
+           (bridge (lns (list (pt 0 0) (pt 1 1) (pt -1 1))))
+           (block-lengths (mapcar (lambda (r) (/ (log r) (log 1.01)))
+                                  unique-proportions))
+           (string-offset 30)
+           (string-padding 2.6)
+           (strings (loop for location in locations
+                          for i from 0
+                          collect (let ((string-y (+ string-offset (* i string-padding))))
+                                    (gr (list (cp open-string (pt 0 0) (below (pt 0 0) string-y))
+                                              (cp bridge (pt 0 0) (below location string-y))
+                                              (cp bridge (pt 0 0) (below (pt string-length 0)
+                                                                         string-y)))))))
+           (block-offset (+ 3 string-offset (* string-padding (length ratios))))
+           (block-width 1.8)
+           (block-padding 0.8)
+           (blocks (loop for block-length in block-lengths
+                         for ratio in unique-proportions
+                         for i from 0
+                         collect (let ((block-y (- (+ block-offset
+                                                      (* i (+ block-padding block-width))))))
+                                   (gr (list (ln-shape (pt 0 block-y) (list block-length
+                                                                            (- block-width)
+                                                                            (- block-length)))
+                                             (make-text (ratio-to-string ratio)
+                                                        (pt (+ block-length 0.3)
+                                                            (- block-y (* 1/2 block-width)))
+                                                        :h-align :left)))))))
+      (gr (append open-string-bar (list tick) arcs titles strings blocks)))))

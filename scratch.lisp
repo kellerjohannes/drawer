@@ -1,5 +1,6 @@
 (in-package :drawer)
 
+;; build up to ji
 (let* ((mon (make-monochord '(2 1)))
        (string-length 200)
        (m-oct (render-monochord mon string-length 1))
@@ -24,9 +25,34 @@
   (add-ratio mon 9/8 3)
   (add-ratio mon 8/9 4)
   (add-ratio mon 9/10 5)
-  (let ((m-ji (render-monochord mon string-length 1)))
+  (let ((m-ji (render-monochord mon string-length 2)))
     (setf btikz (make-backend-tikz :filename "monochord-ji.tex"))
     (draw-with-multiple-backends (list btikz) (list m-ji))
-    (compile-tikz btikz))
+    (compile-tikz btikz)))
 
-  )
+;; pythagorean
+(let ((mon (make-monochord '(2 1))))
+  (add-ratio mon 8/9 0)
+  (add-ratio mon 8/9 1)
+  (add-ratio mon 3/4 0)
+  (add-ratio mon 2/3 0)
+  (add-ratio mon 8/9 4)
+  (add-ratio mon 8/9 5)
+  (add-ratio mon 9/8 7)
+  (let ((m-pyth (render-monochord mon 200 2))
+        (btikz (make-backend-tikz :filename "monochord-pythagorean.tex")))
+    (draw-with-multiple-backends (list btikz) (list m-pyth))
+    (compile-tikz btikz)))
+
+
+;; playground
+(let ((mon (make-monochord '(1))))
+  (add-ratio mon 4/5 0)
+  (add-ratio mon 4/5 1)
+  (add-ratio mon 4/5 2)
+  (add-ratio mon 1/2 0)
+  (add-ratio mon 2/3 0)
+  (let ((m-pyth (render-monochord mon 250 2))
+        (btikz (make-backend-tikz :filename "monochord-live.tex")))
+    (draw-with-multiple-backends (list btikz) (list m-pyth))
+    (compile-tikz btikz)))

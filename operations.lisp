@@ -186,3 +186,16 @@
                           (scale vertex factor))
                         vector-list
                         factor-list)))
+
+
+(defun without-last (lst)
+  (reverse (rest (reverse lst))))
+
+(defun shuffle-ratio-list (ratio-list)
+  (let ((f (first ratio-list))
+        (l (car (last ratio-list)))
+        (lst (rest (without-last ratio-list))))
+    (append (list f) (alexandria:shuffle lst) (list l))))
+
+(defun ratio-to-string (r)
+  (format nil "~a:~a" (numerator r) (denominator r)))

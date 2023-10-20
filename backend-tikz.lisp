@@ -143,16 +143,18 @@
              (radius-2 (hyp (* 1/2 dist) offset-2))
              (end-angle-2 (rad-to-deg (asin (/ offset-2 radius-2))))
              (start-angle-2 (+ end-angle-2 (* 2 (rad-to-deg (asin (/ (* 1/2 dist) radius-2))))))
-             (label-y (* 1/2 (+ (value (y a)) (- radius-1 offset-1)
-                                (value (y a)) (- radius-2 offset-2)))))
+             (label-y (* (if (inversep obj) -1 1)
+                         (+ (if (inversep obj) (value (make-scalar 2)) 0)
+                            (* 1/2 (+ (value (y a)) (- radius-1 offset-1)
+                                      (value (y a)) (- radius-2 offset-2)))))))
         (add-tikz-line (format nil "\\draw[fill=white] (~f,~f) arc[start angle=~f, end angle=~f, radius=~f] arc[start angle=~f, end angle=~f, radius=~f] -- cycle;"
                                (value (x a))
-                               (value (y a))
-                               start-angle-1
-                               end-angle-1
+                               (if (inversep obj) (value (y (below a 2))) (value (y a)))
+                               (if (inversep obj) (- start-angle-1) start-angle-1)
+                               (if (inversep obj) (- end-angle-1) end-angle-1)
                                radius-1
-                               end-angle-2
-                               start-angle-2
+                               (if (inversep obj) (- end-angle-2) end-angle-2)
+                               (if (inversep obj) (- start-angle-2) start-angle-2)
                                radius-2)
                        backend)
         (add-tikz-line (format nil "\\node[~a] at (~f,~f) { \\tiny ~a };"
