@@ -1,12 +1,10 @@
 (in-package :drawer)
 
 
-
 (let* (
-       (btikz-core (make-backend-tikz :filename "vicentino-arbore-core.tex"))
-       (btikz-simple (make-backend-tikz :filename "vicentino-arbore-simple.tex"))
-       (btikz-complex (make-backend-tikz :filename "vicentino-arbore-complex.tex"))
-
+       (btikz-core (make-backend-tikz :filename "vicentino-arbore-core-vocal.tex"))
+       (btikz-simple (make-backend-tikz :filename "vicentino-arbore-simple-vocal.tex"))
+       (btikz-complex (make-backend-tikz :filename "vicentino-arbore-complex-vocal.tex"))
        ;; (max-width 150)
        (x-base 5)
        (origin (pt 0 0))
@@ -36,7 +34,7 @@
                             "semitono maggiore ascendente" "tono ascendente"))
        (bundle-labels-gr (gr (mapcar (lambda (pos text)
                                        (make-text text (pt (+ gen-offset) pos) :h-align :left))
-                                     (sort bundle-intervals #'<)
+                                     (sort (copy-list bundle-intervals) #'<)
                                      bundle-labels)))
        (gen-1-intervals nil))
   (loop for hm in home-intervals
@@ -177,22 +175,28 @@
 
 
 
-(let* ((btikz-super-complex (make-backend-tikz :filename "vicentino-arbore-super-complex.tex"))
-       (btikz-core-complex (make-backend-tikz :filename "vicentino-arbore-core-complex.tex"))
-       (x-base 5)
+
+(let* (
+       (btikz-core (make-backend-tikz :filename "vicentino-arbore-core-instrumental.tex"))
+       (btikz-simple (make-backend-tikz :filename "vicentino-arbore-simple-instrumental.tex"))
+       (btikz-complex (make-backend-tikz :filename "vicentino-arbore-complex-instrumental.tex"))
+       ;; (max-width 150)
+       (upscale 5/3)
+       (x-base (* upscale 5))
        (origin (pt 0 0))
+       ;; (vert-line (ln (pt max-width 0) origin))
        (unisono 0)
-       (comma 5/2)
-       (diesis-minore 10)
-       (semitono-minore 20)
-       (semitono-maggiore 30)
-       (tono 50)
-       (terza-minore 80)
-       (terza-maggiore 100)
-       (quarta 130)
-       (quinta 180)
+       (comma (* upscale 10/8))
+       (diesis-minore (* upscale 10))
+       (semitono-minore (* upscale 20))
+       (semitono-maggiore (* upscale 30))
+       (tono (* upscale 50))
+       (terza-minore (* upscale 80))
+       (terza-maggiore (* upscale 100))
+       (quarta (* upscale 130))
+       (quinta (* upscale 180))
        (interval-dot (circ 0 0 0.65 :style-update '(:fill :fill)))
-       (gen-offset 30)
+       (gen-offset (* upscale 30))
        (home-intervals (list unisono semitono-maggiore tono terza-minore terza-maggiore quarta quinta))
        (bundle-intervals (list comma (- comma) diesis-minore (- diesis-minore) semitono-minore (- semitono-minore) semitono-maggiore (- semitono-maggiore) tono (- tono)))
        (bundle (gr (mapcar (lambda (bundle-interval)
@@ -206,7 +210,7 @@
                             "semitono maggiore ascendente" "tono ascendente"))
        (bundle-labels-gr (gr (mapcar (lambda (pos text)
                                        (make-text text (pt (+ gen-offset) pos) :h-align :left))
-                                     (sort bundle-intervals #'<)
+                                     (sort (copy-list bundle-intervals) #'<)
                                      bundle-labels)))
        (gen-1-intervals nil))
   (loop for hm in home-intervals
@@ -225,8 +229,8 @@
     (remove-duplicates gen-3-dots)
     (flet ((gen-drawer (int x)
              (gr (list ;;(cp interval-dot origin (pt x int))
-                       ;;(cp vert-line origin (pt x int))
-                       (cp bundle origin (pt x int))))))
+                  ;;(cp vert-line origin (pt x int))
+                  (cp bundle origin (pt x int))))))
       (let* ((gen-1 (gr (mapcar (lambda (i) (gen-drawer i x-base)) home-intervals)))
              (gen-1-dots-gr (gr (mapcar (lambda (i)
                                           (cp interval-dot origin (pt x-base i)))
@@ -247,16 +251,51 @@
                                                        :h-align :right))
                                           home-intervals
                                           gen-1-labels)))
+             (gen-2-labels (list nil nil nil nil nil nil "comma" "diesis enarmonico minore"
+                                 "diesis enarmonico maggiore / semitono minore"
+                                 "semitono maggiore propinquissimo (minuendo)" "semitono maggiore"
+                                 "semitono maggiore propinquissimo (aggiugnendo)" "tono minore"
+                                 "tono propinquissimo (minuendo)" "tono naturale / tono accidentale"
+                                 "tono propinquissimo (aggiugnendo)" "tono maggiore"
+                                 "terza manca di minore / terza minima / terza propinqua (minuendo)"
+                                 "terza minore propinquissima (minuendo)"
+                                 "terza minore naturale / terza minore accidentale"
+                                 "terza minore propinquissima (aggiugnendo)"
+                                 "terza più di minore / terza propinqua (aggiugnendo)"
+                                 "terza maggiore propinquissima (minuendo)"
+                                 "terza maggiore naturale / terza maggiore accidentale"
+                                 "terza maggiore propinquissima (aggiugnendo)"
+                                 "terza maggiore propinqua (aggiugnendo)"
+                                 "[quarta minima / quarta propinqua (minuendo)]"
+                                 "quarta propinquissima (minuendo)"
+                                 "quarta naturale / quarta accidentale"
+                                 "quarta propinquissima (aggiugnendo)" "salto della più di quarta"
+                                 "tritono naturale / tritono accidentale"
+                                 "quinta imperfetta naturale / quinta imperfetta accidentale"
+                                 "salto della più di quinta imperfetta"
+                                 "quinta propinquissima (minuendo)"
+                                 "quinta naturale / quinta accidentale"
+                                 "quinta propinquissima (aggiugnendo)" "salto della più di quinta"
+                                 "[quinta maggiore]" "sesta minore" "sesta maggiore"))
+             (gen-2-labels-gr (gr (mapcar (lambda (pos text)
+                                            (make-text text (pt (+ x-base
+                                                                   gen-offset
+                                                                   label-padding)
+                                                                pos)
+                                                       :h-align :left))
+                                          (sort (remove-duplicates gen-1-intervals) #'<)
+                                          gen-2-labels)))
              (gen-3-labels (list nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-                                 nil nil nil nil nil
+                                 nil nil nil nil
                                  "comma"
-                                 "bis-comma"
+                                 "comma propimquissimo (aggiugnendo)"
                                  "diesis enarmonico minore propinquissimo (minuendo)"
                                  "diesis enarmonico minore"
                                  "diesis enarmonico minore propinquissimo (aggiugnendo)"
-                                 "diesis enarmonic maggiore propinquissimo (minuendo)"
+                                 "diesis enarmonico maggiore propinquissimo (minuendo)"
                                  "diesis enarmonico maggiore / semitono minore"
                                  "diesis enarmonico maggiore propinquissimo (aggiugnendo)"
+                                 "semitono maggiore propinquissimo (minuendo) propinquissimo (minuendo)"
                                  "semitono maggiore propinquissimo (minuendo)"
                                  "semitono maggiore"
                                  "semitono maggiore propinquissimo (aggiugnendo)"
@@ -341,9 +380,12 @@
                                                        :h-align :left))
                                           (sort (remove-duplicates gen-3-dots) #'<)
                                           gen-3-labels))))
-        (draw-with-multiple-backends (list btikz-super-complex) (list gen-1 gen-1-dots-gr gen-1-labels-gr
+        (draw-with-multiple-backends (list btikz-simple) (list gen-1 gen-1-dots-gr gen-1-labels-gr
+                                                               gen-2-dots-gr gen-2-labels-gr))
+        (draw-with-multiple-backends (list btikz-complex) (list gen-1 gen-1-dots-gr gen-1-labels-gr
                                                                 gen-2 gen-2-dots-gr gen-3 gen-3-labels-gr))
-        (draw-with-multiple-backends (list btikz-core-complex) (list bundle bundle-labels-gr))
-        (compile-tikz btikz-super-complex)
-        (compile-tikz btikz-core-complex)
+        (draw-with-multiple-backends (list btikz-core) (list bundle bundle-labels-gr))
+        (compile-tikz btikz-simple)
+        (compile-tikz btikz-complex)
+        (compile-tikz btikz-core)
         ))))
