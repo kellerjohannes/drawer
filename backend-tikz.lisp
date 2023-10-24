@@ -3,6 +3,7 @@
 (defparameter *tikz-header*
   "\\documentclass[tikz,border=10pt]{standalone}
 \\usepackage{mathabx}
+\\usepackage{stackengine}
 \\usetikzlibrary{backgrounds}
 \\usepackage{newunicodechar}
 \\newunicodechar{♮}{$\\natural$}
@@ -54,8 +55,9 @@
 
 (defmethod compile-tikz ((backend backend-tikz))
   (when (compilep backend)
-    (uiop:run-program (list "/usr/bin/pdflatex"
+    (uiop:run-program (list ;"/usr/bin/pdflatex"
                             ;"/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
+                            "/usr/local/texlive/2020/bin/x86_64-linux/xelatex"
                             (concatenate 'string "/home/johannes/common-lisp/prototypes/drawer/"
                                            (filename backend))))))
 
