@@ -313,7 +313,10 @@ draw connections between two circles. The connections are stored in `cof-a'."
                          collect (make-text (format nil "~a" num) (below location
                                                                          (* 1/2 bar-thickness)))))
            (bridge (lns (list (pt 0 0) (pt 1 1) (pt -1 1))))
-           (block-lengths (mapcar (lambda (r) (/ (log r) (log 1.01)))
+           (block-unit (expt 2 1/1200)
+                      ;; (/ 2 (* 1/3 string-length))
+                       )
+           (block-lengths (mapcar (lambda (r) (* (/ (/ (log r) (log block-unit)) 1200) (* 2/5 string-length)))
                                   unique-proportions))
            (string-vspace 5)
            (dist (distance-between-points (first locations) (car (last locations))))

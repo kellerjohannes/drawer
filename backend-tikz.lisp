@@ -10,6 +10,7 @@
 \\newunicodechar{♯}{$\\sharp$}
 \\newunicodechar{➚}{$\\nearrow$}
 \\newunicodechar{➘}{$\\searrow$}
+\\newunicodechar{ʼ}{'}
 \\newunicodechar{Ȧ}{\\stackon[0.8pt]{A}{.}}
 \\newunicodechar{Ḃ}{\\stackon[0.8pt]{B}{.}}
 \\newunicodechar{Ċ}{\\stackon[0.8pt]{C}{.}}
