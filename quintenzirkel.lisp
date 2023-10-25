@@ -1,7 +1,7 @@
 (in-package :drawer)
 
 
-
+;; vicentino adaptiv-rein 1/4-komma
 (let* ((center (pt 50 50))
        (origin (pt 0 0))
        (btikz (make-backend-tikz :filename "circle-adaptive-just-quartercomma.tex"))
@@ -39,6 +39,7 @@
 
 
 
+;; vicentino adaptiv-rein 1/3-komma
 (let* ((center (pt 50 50))
        (origin (pt 0 0))
        (btikz (make-backend-tikz :filename "circle-adaptive-just-thirdcomma.tex"))
@@ -81,3 +82,54 @@
 
   (draw-with-multiple-backends (list btikz) (list qz-lower qz-upper leg))
   (compile-tikz btikz))
+
+
+
+(let* ((center (pt 0 -38))
+       (origin (pt 0 0))
+       (tick (circ 0 0 .4 :style-update '(:fill :fill)))
+       (qz (cof (pt 0 0) 30 -15 325 tick
+                '("Ḃ♮" "G♭" "D♭" "A♭" "E♭" "B♭" "F" "C" "G" "D" "A" "E" "B♮" "F♯" "C♯" "G♯" "D♯" "A♯"
+                  "E♯" "B♯" "Ġ♭" "Ḋ♭" "Ȧ♭" "Ė♭" "Ḃ♭" "Ḟ" "Ċ" "Ġ" "Ḋ" "Ȧ" "Ė")
+                -2.5 7))
+       (leg-align (pt -11 2))
+       (leg-vspace (pt 0 -3))
+       (leg1-lbl (make-text "diesis enarmonico minore I" origin :h-align :left))
+       (leg1-line (make-line (left-of origin 4) origin))
+       (leg2-lbl (make-text "diesis enarmonico minore II" origin :h-align :left))
+       (leg2-line (ln (left-of origin 4) origin :style-update '(:line-type :dashed)))
+       (leg (gr (list (cp leg1-lbl origin (add center leg-align))
+                      (cp leg1-line origin (add center leg-align))
+                      (cp leg2-lbl origin (add leg-vspace (add center leg-align)))
+                      (cp leg2-line origin (add leg-vspace (add center leg-align)))
+                      )))
+       (btikz (make-backend-tikz :filename "circle-31--1-4-comma.tex")))
+  (draw-with-multiple-backends (list btikz) (list qz))
+  (compile-tikz btikz)
+
+  (setf btikz (make-backend-tikz :filename "circle-31--1-4-comma-diesis.tex"))
+
+  (add-circle-connections qz 12 -7)
+  (add-circle-connections qz 19 -7 :style-update '(:line-type :dashed))
+
+  (draw-with-multiple-backends (list btikz) (list qz leg))
+  (compile-tikz btikz)
+
+  (setf btikz (make-backend-tikz :filename "circle-31--1-4-comma-terza-maggiore.tex"))
+
+  (setf leg-align (pt -8 2))
+  (setf leg1-lbl (make-text "terza maggiore I" origin :h-align :left))
+  (setf leg2-lbl (make-text "terza maggiore II" origin :h-align :left))
+
+  (setf leg (gr (list (cp leg1-lbl origin (add center leg-align))
+                      (cp leg1-line origin (add center leg-align))
+                      (cp leg2-lbl origin (add leg-vspace (add center leg-align)))
+                      (cp leg2-line origin (add leg-vspace (add center leg-align))))))
+
+  (setf (connection-list qz) nil)
+  (add-circle-connections qz 4 -7)
+  (add-circle-connections qz 27 -7 :style-update '(:line-type :dashed))
+
+  (draw-with-multiple-backends (list btikz) (list qz leg))
+  (compile-tikz btikz)
+  )
