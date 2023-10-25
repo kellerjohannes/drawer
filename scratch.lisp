@@ -246,7 +246,7 @@
 
 
 ;; 1/4-comma, 31 per octave, plus sesto ordine
-(let* ((upscale 8)
+(let* ((upscale 10)
        (note-selection '((:c . -1) (:ċ . 0) (:c♯ . 0) (:d♭ . 0) (:ḋ♭ . 0)
                          (:d . 0) (:ḋ . 0) (:d♯ . 0) (:e♭ . 0) (:ė♭ . 0)
                          (:e . 0) (:ė . 0) (:e♯ . 0)
@@ -290,7 +290,7 @@
        (crossings-gr nil)
        (arcs-gr (gr (do ((remainder tick-positions (rest remainder))
                          (result nil))
-                        ((null remainder) (progn (setf size-list (remove-similar size-list 0.6))
+                        ((null remainder) (progn (setf size-list (remove-similar size-list 0.8))
                                                  result))
                       (loop for el in (rest remainder)
                             do (let* ((a (pt (first remainder) 0))
@@ -355,16 +355,41 @@
                           "terza maggiore I"
                           "terza maggiore II / terza maggiore propinquissima (aggiugnendo)"
 
-                          "terza più di maggiore / terza propinqua (aggiugnendo)"
-                          "[quarta minima]"
-                          "quarta naturale / quarta accidentale"
-                          nil
-                          "salto della più di quarta / quarta propinqua (aggiugnendo) [zwei Stimmungsvarianten]"
-                          "tritono naturale"
-                          "quinta imperfetta naturale"
-                          nil
-                          "salto della più di quinta imperfetta / quinta imperfetta propinqua (aggiugnendo) [zwei Stimmungsvarianten]"
-                          "quinta naturale"))
+                          "terza più di maggiore propinquissima (minuendo)"
+                          "terza più di maggiore I"
+                          "terza più di maggiore II / terza più di maggiore propinquissima (aggiugnendo)"
+
+                          "[quarta minima propinquissima (minuendo)]"
+                          "[quarta minima I]"
+                          "[quarta minima II]"
+                          "[quarta minima propinquissima (aggiugnendo)"
+
+                          "quarta propinquissima (minuendo)"
+                          "quarta I"
+                          "quarta II / quarta propinquissima [klanglich nicht unterscheidbar]"
+
+                          "salto della più di quarta, propinquissima (minuendo)"
+                          "salto della più di quarta I"
+                          "salto della più di quarta II"
+                          "salto della più di quarta, propinquissima (aggiugnendo)"
+
+                          "tritono propinquissimo (minuendo)"
+                          "tritono I"
+                          "tritono II / tritono propinquissimo (aggiugnendo) [klanglich nicht unterscheidbar]"
+
+                          "quinta imperfetta propinquissima (minuendo)"
+                          "quinta imperfetta I"
+                          "quinta imperfetta II / quinta imperfetta propinquissima (aggiugnendo) [klanglich nicht unterscheidbar"
+
+                          "salto della più di quinta imperfetta propinquissimo (minuendo)"
+                          "salto della più di quinta imperfetta I"
+                          "salto della più di quinta imperfetta II"
+                          "salto della più di quinta imperfetta propinquissimo (aggiugnendo)"
+
+                          "quinta propinquissima (minuendo)"
+                          "quinta I"
+                          "quinta II / quinta propinquissima (aggiugnendo)"))
+
        (interval-labels-gr (gr (mapcar (lambda (yy text)
                                          (make-text text
                                                     (pt interval-label-x (* 1/2 yy))
@@ -616,58 +641,21 @@
 
 
 
-;; 1/4-comma, 31 per octave, fifths above every note (ultra-organ)
-(let* ((upscale 5)
-       (note-selection '((:c . -1) (:ċ . 0) (:c♯ . 0) (:d♭ . 0) (:ḋ♭ . 0)
-                         (:d . 0) (:ḋ . 0) (:d♯ . 0) (:e♭ . 0) (:ė♭ . 0)
-                         (:e . 0) (:ė . 0) (:e♯ . 0)
-                         (:f . 0) (:ḟ . 0) (:f♯ . 0) (:g♭ . 0) (:ġ♭ . 0)
-                         (:g . 0) (:ġ . 0) (:g♯ . 0) (:a♭ . 0) (:ȧ♭ . 0)
-                         (:a . 0) (:ȧ . 0) (:a♯ . 0) (:b♭ . 0) (:ḃ♭ . 0)
-                         (:b♮ . 0) (:ḃ♮ . 0) (:b♯ . 0)
-
-                         (:cʼ . 0) (:ċʼ . 0) (:c♯ʼ . 0) (:d♭ʼ . 0) (:ḋ♭ʼ . 0)
-                         (:dʼ . 0) (:ḋʼ . 0) (:d♯ʼ . 0) (:e♭ʼ . 0) (:ė♭ʼ . 0)
-                         (:eʼ . 0) (:ėʼ . 0) (:e♯ʼ . 0)
-                         (:fʼ . 0) (:ḟʼ . 0) (:f♯ʼ . 0) (:g♭ʼ . 0) (:ġ♭ʼ . 0)
-                         (:gʼ . 0) (:ġʼ . 0) (:g♯ʼ . 0) (:a♭ʼ . 0) (:ȧ♭ʼ . 0)
-                         (:aʼ . 0) (:ȧʼ . 0) (:a♯ʼ . 0) (:b♭ʼ . 0) (:ḃ♭ʼ . 0)
-                         (:b♮ʼ . 0) (:ḃ♮ʼ . 0) (:b♯ʼ . 0)
-
-                         (:c . 0) (:ċ . 1) (:c♯ . 1) (:d♭ . 1) (:ḋ♭ . 1)
-                         (:d . 1) (:ḋ . 1) (:d♯ . 1) (:e♭ . 1) (:ė♭ . 1)
-                         (:e . 1) (:ė . 1) (:e♯ . 1)
-                         (:f . 1) (:ḟ . 1) (:f♯ . 1) (:g♭ . 1) (:ġ♭ . 1)
-                         (:g . 1) (:ġ . 1) (:g♯ . 1) (:a♭ . 1) (:ȧ♭ . 1)
-                         (:a . 1) (:ȧ . 1) (:a♯ . 1) (:b♭ . 1) (:ḃ♭ . 1)
-                         (:b♮ . 1) (:ḃ♮ . 1) (:b♯ . 1)
-                         (:c . 1)
-
-                         (:cʼ . 1) (:ċʼ . 1) (:c♯ʼ . 1) (:d♭ʼ . 1) (:ḋ♭ʼ . 1)
-                         (:dʼ . 1) (:ḋʼ . 1) (:d♯ʼ . 1) (:e♭ʼ . 1) (:ė♭ʼ . 1)
-                         (:eʼ . 1) (:ėʼ . 1) (:e♯ʼ . 1)
-                         (:fʼ . 1) (:ḟʼ . 1) (:f♯ʼ . 1) (:g♭ʼ . 1) (:ġ♭ʼ . 1)
-                         (:gʼ . 1) (:ġʼ . 1) (:g♯ʼ . 1) (:a♭ʼ . 1) (:ȧ♭ʼ . 1)
-                         (:aʼ . 1) (:ȧʼ . 1) (:a♯ʼ . 1) (:b♭ʼ . 1) (:ḃ♭ʼ . 1)
-                         (:b♮ʼ . 1) (:ḃ♮ʼ . 1) (:b♯ʼ . 1)
-
-                         (:c . 1)
-                         ))
+;; 1/4-comma, 31, diesis and major thirds only
+(let* ((upscale 4)
+       (note-selection '((:a . 0) (:ȧ . 0) (:a♯ . 0)))
        (note-scale (sort (copy-list note-selection)
                          #'<
                          :key (lambda (id)
                                 (+ (* (cdr id) 1200)
-                                   (vicentino-tunings:interval-size :tuning1
-                                                                    :c
-                                                                    :up
-                                                                    (car id))))))
+                                   (vicentino-tunings:interval-size :tuning1 :c :up (car id))))))
        (tick-positions (mapcar (lambda (id)
                                        (* upscale 0.1
                                           (+ (* (cdr id) 1200)
                                              (vicentino-tunings:interval-size :tuning1 :c :up (car id)))))
                                      note-scale))
        (tick-labels (mapcar (lambda (id) (format nil "~a" (car id))) note-scale))
-       (label-padding (* upscale 1/2))
+       (label-padding (* upscale 0.7))
        (origin (pt 0 0))
        (tick (circ 0 0 (* upscale 0.2) :style-update '(:fill :fill)))
        (ticks-gr (gr (mapcar (lambda (x) (cp tick origin (pt x 0))) tick-positions)))
@@ -678,7 +666,8 @@
        (crossings-gr nil)
        (arcs-gr (gr (do ((remainder tick-positions (rest remainder))
                          (result nil))
-                        ((null remainder) result)
+                        ((null remainder) (progn (setf size-list (remove-similar size-list 0.8))
+                                                 result))
                       (loop for el in (rest remainder)
                             do (let* ((a (pt (first remainder) 0))
                                       (b (pt el 0)))
@@ -691,15 +680,87 @@
                                  (push (arc a (* 1/2 (distance-between-points a b)) 180 0
                                             :mode :point)
                                        result))))))
-       (tangent-start (* upscale -2))
+       (tangent-start (+ (* upscale -2) (first tick-positions)))
        (tangent-end (+ (car (last tick-positions)) (* upscale 2)))
        (tangents-gr (gr (mapcar (lambda (y) (ln (pt tangent-start (* 1/2 y))
                                                 (pt tangent-end (* 1/2 y))
                                                 :style-update '(:line-type :dotted)))
                                 (remove-duplicates size-list))))
-       (btikz (make-backend-tikz :filename "vicentino-map-31-ultra.tex")))
+       (interval-label-x (+ tangent-end 1))
+       (interval-labels '())
+       (interval-labels-gr (gr (mapcar (lambda (yy text)
+                                         (make-text text
+                                                    (pt interval-label-x (* 1/2 yy))
+                                                    :h-align :left))
+                                       (sort (copy-list (remove-similar size-list))
+                                             #'<)
+                                       interval-labels)))
+       (btikz (make-backend-tikz :filename "vicentino-map-diesis.tex")))
   (draw-with-multiple-backends (list btikz) (list ticks-gr tick-labels-gr
                                                   arcs-gr
                                                   tangents-gr
-                                                  (gr crossings-gr)))
+                                                  (gr crossings-gr)
+                                                  interval-labels-gr))
+  (compile-tikz btikz))
+
+
+(let* ((upscale 1)
+       (note-selection '((:ḟ . 0) (:ȧ . 0) (:d♭ . 0)))
+       (note-scale (sort (copy-list note-selection)
+                         #'<
+                         :key (lambda (id)
+                                (+ (* (cdr id) 1200)
+                                   (vicentino-tunings:interval-size :tuning1 :c :up (car id))))))
+       (tick-positions (mapcar (lambda (id)
+                                       (* upscale 0.1
+                                          (+ (* (cdr id) 1200)
+                                             (vicentino-tunings:interval-size :tuning1 :c :up (car id)))))
+                                     note-scale))
+       (tick-labels (mapcar (lambda (id) (format nil "~a" (car id))) note-scale))
+       (label-padding 2)
+       (origin (pt 0 0))
+       (tick (circ 0 0 (* upscale 0.2) :style-update '(:fill :fill)))
+       (ticks-gr (gr (mapcar (lambda (x) (cp tick origin (pt x 0))) tick-positions)))
+       (tick-labels-gr (gr (mapcar (lambda (x text) (make-text text (pt x (- label-padding))))
+                                   tick-positions
+                                   tick-labels)))
+       (size-list nil)
+       (crossings-gr nil)
+       (arcs-gr (gr (do ((remainder tick-positions (rest remainder))
+                         (result nil))
+                        ((null remainder) (progn (setf size-list (remove-similar size-list 0.8))
+                                                 result))
+                      (loop for el in (rest remainder)
+                            do (let* ((a (pt (first remainder) 0))
+                                      (b (pt el 0)))
+                                 (push (distance-between-points a b) size-list)
+                                 (push (circ (+ (value (x a))
+                                                (* 1/2 (distance-between-points a b)))
+                                             (* 1/2 (distance-between-points a b))
+                                             (* upscale .09))
+                                       crossings-gr)
+                                 (push (arc a (* 1/2 (distance-between-points a b)) 180 0
+                                            :mode :point)
+                                       result))))))
+       (tangent-start (+ (* upscale -2) (first tick-positions)))
+       (tangent-end (+ (car (last tick-positions)) (* upscale 2)))
+       (tangents-gr (gr (mapcar (lambda (y) (ln (pt tangent-start (* 1/2 y))
+                                                (pt tangent-end (* 1/2 y))
+                                                :style-update '(:line-type :dotted)))
+                                (remove-duplicates size-list))))
+       (interval-label-x (+ tangent-end 1))
+       (interval-labels '())
+       (interval-labels-gr (gr (mapcar (lambda (yy text)
+                                         (make-text text
+                                                    (pt interval-label-x (* 1/2 yy))
+                                                    :h-align :left))
+                                       (sort (copy-list (remove-similar size-list))
+                                             #'<)
+                                       interval-labels)))
+       (btikz (make-backend-tikz :filename "vicentino-map-terza-maggiore.tex")))
+  (draw-with-multiple-backends (list btikz) (list ticks-gr tick-labels-gr
+                                                  arcs-gr
+                                                  tangents-gr
+                                                  (gr crossings-gr)
+                                                  interval-labels-gr))
   (compile-tikz btikz))
