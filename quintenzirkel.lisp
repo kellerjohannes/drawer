@@ -85,10 +85,11 @@
 
 
 
+;; 31-teiliger Zirkel für PhD
 (let* ((center (pt 0 -38))
        (origin (pt 0 0))
        (tick (circ 0 0 .4 :style-update '(:fill :fill)))
-       (qz (cof (pt 0 0) 30 -15 325 tick
+       (qz (cof (pt 0 0) 30 325 -15 tick
                 '("Ḃ♮" "G♭" "D♭" "A♭" "E♭" "B♭" "F" "C" "G" "D" "A" "E" "B♮" "F♯" "C♯" "G♯" "D♯" "A♯"
                   "E♯" "B♯" "Ġ♭" "Ḋ♭" "Ȧ♭" "Ė♭" "Ḃ♭" "Ḟ" "Ċ" "Ġ" "Ḋ" "Ȧ" "Ė")
                 -2.5 7))
