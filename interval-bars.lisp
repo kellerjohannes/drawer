@@ -5,30 +5,71 @@
 (let* ((btikz (make-backend-tikz :filename "vicentino-bars-thirds.tex"))
        (int-terza-maggiore 5/4)
        (int-terza-minore 6/5)
+       (int-terza-minore-mt (/ 6/5 (expt 81/80 1/4)))
        (int-i 11/9)
        (int-iia 60/49)
        (int-iib 49/40)
        (int-iii (* (sqrt 25/24) 6/5))
-       (int-list (sort (copy-list (list int-terza-maggiore
-                                        int-terza-minore
-                                        int-i
-                                        int-iia
-                                        int-iib
-                                        int-iii))
-                       #'<))
-       (line-padding 3)
+       (int-list (sort (copy-list (list (cons int-terza-maggiore "5:4")
+                                        (cons int-terza-minore "6:5")
+                                        (cons int-terza-minore-mt "IV ($\\frac{6}{5}\\frac{1}{\\sqrt[4]{\\frac{81}{80}}}$)")
+                                        (cons int-i "I (11:9)")
+                                        (cons int-iia "IIa (60:49)")
+                                        (cons int-iib "IIb (49:40)")
+                                        (cons int-iii "III ($\\frac{6}{5}\\sqrt{\\frac{25}{24}}$)")))
+                       #'<
+                       :key #'car))
+       (bar-padding 3.5)
        (scale-factor 1/10)
-       (label-padding 2)
-       (lines-gr (gr (loop for len in int-list
+       (label-padding 1)
+       (bar-thickness 2.5)
+       (bars-gr (gr (loop for len in int-list
                         for i from 0
                            collect
                            (let ((log-len (* scale-factor
-                                             (vicentino-tunings:ratio->length len))))
-                             (gr (list (ln (pt 0 (* i line-padding))
-                                           (pt log-len (* i line-padding)))
-                                       (make-text (format nil "~f" log-len)
+                                             (vicentino-tunings:ratio->length (car len)))))
+                             (gr (list (ln-shape (pt 0 (- (* i bar-padding)
+                                                          (* 1/2 bar-thickness)))
+                                           (list log-len bar-thickness (- log-len)))
+                                       (make-text (format nil "~a" (cdr len))
                                                   (pt (+ log-len label-padding)
-                                                      (* i line-padding))
+                                                      (* i bar-padding))
                                                   :h-align :left))))))))
-  (draw-with-multiple-backends (list btikz) (list lines-gr))
+  (draw-with-multiple-backends (list btikz) (list bars-gr))
+  (compile-tikz btikz))
+
+(let* ((btikz (make-backend-tikz :filename "vicentino-bars-thirds-major.tex"))
+       (int-terza-maggiore 5/4)
+       (int-quarta 4/3)
+       (int-quarta-mt (* 4/3 (expt 81/80 1/4)))
+       (int-i 9:7)
+       (int-iia 31/30)
+       (int-iib 31/30)
+       (int-iii (/ (sqrt 16/15)))
+       (int-list (sort (copy-list (list (cons int-terza-maggiore "5:4")
+                                        (cons int-terza-minore "6:5")
+                                        (cons int-terza-minore-mt "IV ($\\frac{6}{5}\\frac{1}{\\sqrt[4]{\\frac{81}{80}}}$)")
+                                        (cons int-i "I (11:9)")
+                                        (cons int-iia "IIa (60:49)")
+                                        (cons int-iib "IIb (49:40)")
+                                        (cons int-iii "III ($\\frac{6}{5}\\sqrt{\\frac{25}{24}}$)")))
+                       #'<
+                       :key #'car))
+       (bar-padding 3.5)
+       (scale-factor 1/10)
+       (label-padding 1)
+       (bar-thickness 2.5)
+       (bars-gr (gr (loop for len in int-list
+                        for i from 0
+                           collect
+                           (let ((log-len (* scale-factor
+                                             (vicentino-tunings:ratio->length (car len)))))
+                             (gr (list (ln-shape (pt 0 (- (* i bar-padding)
+                                                          (* 1/2 bar-thickness)))
+                                           (list log-len bar-thickness (- log-len)))
+                                       (make-text (format nil "~a" (cdr len))
+                                                  (pt (+ log-len label-padding)
+                                                      (* i bar-padding))
+                                                  :h-align :left))))))))
+  (draw-with-multiple-backends (list btikz) (list bars-gr))
   (compile-tikz btikz))
