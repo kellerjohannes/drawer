@@ -1,0 +1,50 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{mathabx}
+\usetikzlibrary{backgrounds}
+\usepackage{newunicodechar}
+\newunicodechar{♮}{$\natural$}
+\newunicodechar{♭}{$\flat$}
+\newunicodechar{♯}{$\sharp$}
+\newunicodechar{➚}{$\nearrow$}
+\newunicodechar{➘}{$\searrow$}
+\newunicodechar{ʼ}{'}
+\newunicodechar{Ȧ}{\stackon[0.8pt]{A}{.}}
+\newunicodechar{Ḃ}{\stackon[0.8pt]{B}{.}}
+\newunicodechar{Ċ}{\stackon[0.8pt]{C}{.}}
+\newunicodechar{Ḋ}{\stackon[0.8pt]{D}{.}}
+\newunicodechar{Ė}{\stackon[0.8pt]{E}{.}}
+\newunicodechar{Ḟ}{\stackon[0.8pt]{F}{.}}
+\newunicodechar{Ġ}{\stackon[0.8pt]{G}{.}}
+
+
+\def\centerarc[#1](#2)(#3:#4:#5);%
+{
+  \draw[#1]([shift=(#3:#5)]#2) arc (#3:#4:#5);
+}
+
+
+\begin{document}
+\begin{tikzpicture}
+
+\draw (0.0,0.0) -- (10.0,0.41666666);
+\draw (0.0,0.0) -- (10.0,-0.41666666);
+\draw (0.0,0.0) -- (10.0,3.3333333);
+\draw (0.0,0.0) -- (10.0,-3.3333333);
+\draw (0.0,0.0) -- (10.0,6.6666665);
+\draw (0.0,0.0) -- (10.0,-6.6666665);
+\draw (0.0,0.0) -- (10.0,10.0);
+\draw (0.0,0.0) -- (10.0,-10.0);
+\draw (0.0,0.0) -- (10.0,16.666668);
+\draw (0.0,0.0) -- (10.0,-16.666668);
+\node[anchor=west] at (10.0, -16.666668) { \large tono discendente };
+\node[anchor=west] at (10.0, -10.0) { \large semitono maggiore discendente };
+\node[anchor=west] at (10.0, -6.6666665) { \large diesis enarmonico maggiore discendente / semitono minore discendente };
+\node[anchor=west] at (10.0, -3.3333333) { \large diesis enarmonico minore discendente };
+\node[anchor=west] at (10.0, -0.41666666) { \large comma discendente };
+\node[anchor=west] at (10.0, 0.41666666) { \large comma ascendente };
+\node[anchor=west] at (10.0, 3.3333333) { \large diesis enarmonico minore ascendente };
+\node[anchor=west] at (10.0, 6.6666665) { \large diesis enarmonico maggiore ascendente / semitono minore ascendente };
+\node[anchor=west] at (10.0, 10.0) { \large semitono maggiore ascendente };
+\node[anchor=west] at (10.0, 16.666668) { \large tono ascendente };
+\end{tikzpicture}
+\end{document}

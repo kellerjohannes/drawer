@@ -1,0 +1,104 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{mathabx}
+\usetikzlibrary{backgrounds}
+\usepackage{newunicodechar}
+\newunicodechar{♮}{$\natural$}
+\newunicodechar{♭}{$\flat$}
+\newunicodechar{♯}{$\sharp$}
+\newunicodechar{➚}{$\nearrow$}
+\newunicodechar{➘}{$\searrow$}
+\newunicodechar{Ȧ}{\stackon[0.8pt]{A}{.}}
+\newunicodechar{Ḃ}{\stackon[0.8pt]{B}{.}}
+\newunicodechar{Ċ}{\stackon[0.8pt]{C}{.}}
+\newunicodechar{Ḋ}{\stackon[0.8pt]{D}{.}}
+\newunicodechar{Ė}{\stackon[0.8pt]{E}{.}}
+\newunicodechar{Ḟ}{\stackon[0.8pt]{F}{.}}
+\newunicodechar{Ġ}{\stackon[0.8pt]{G}{.}}
+
+
+\def\centerarc[#1](#2)(#3:#4:#5);%
+{
+  \draw[#1]([shift=(#3:#5)]#2) arc (#3:#4:#5);
+}
+
+
+\begin{document}
+\begin{tikzpicture}
+
+\draw (0.0,0.0) -- (30.0,0.0);
+\draw (0.0,-0.44000003) -- (30.0,-0.44000003);
+\draw (30.0,-0.44000003) -- (30.0,0.0);
+\draw[fill=white] (20.0,0.0) arc[start angle=168.69007234725063, end angle=11.309932661705695, radius=1.2747549] arc[start angle=40.03025657439484, end angle=139.9697416043723, radius=1.6324828] -- cycle;
+\node[align=center] at (21.25,0.80361885) { \tiny 4:3 };
+\draw[fill=white] (16.666668,0.0) arc[start angle=168.69004502649395, end angle=11.309932661705695, radius=2.9744275] arc[start angle=25.374320106232034, end angle=154.62567807253512, radius=3.228088] -- cycle;
+\node[align=center] at (19.583334,2.1179245) { \tiny 16:9 };
+\draw[fill=white] (16.666668,0.0) arc[start angle=168.69004502649395, end angle=11.309932661705695, radius=1.6996726] arc[start angle=34.21570628867923, end angle=145.78427139952043, radius=2.015495] -- cycle;
+\node[align=center] at (18.333334,1.1242507) { \tiny 4:3 };
+\draw[fill=white] (15.0,0.0) arc[start angle=168.69007234725063, end angle=11.309932661705695, radius=3.8242645] arc[start angle=22.456937990949903, end angle=157.5430533576281, radius=4.0577087] -- cycle;
+\node[align=center] at (18.75,2.7909865) { \tiny 2:1 };
+\draw[fill=white] (15.0,0.0) arc[start angle=168.69007234725063, end angle=11.309932661705695, radius=2.5495098] arc[start angle=27.474430813734415, end angle=152.52556394993815, radius=2.8178005] -- cycle;
+\node[align=center] at (17.5,1.7836552) { \tiny 3:2 };
+\draw[fill=white] (15.0,0.0) arc[start angle=168.6901141821593, end angle=11.30993351547934, radius=0.8498372] arc[start angle=49.23638168870989, end angle=130.76363015043563, radius=1.2762798] -- cycle;
+\node[align=center] at (15.833334,0.49639168) { \tiny 9:8 };
+\draw[fill=white] (10.0,0.0) arc[start angle=168.69004502649395, end angle=11.309932661705695, radius=6.3737745] arc[start angle=18.15949054065731, end angle=161.8405247135828, radius=6.5776134] -- cycle;
+\node[align=center] at (16.25,4.825694) { \tiny 8:3 };
+\draw[fill=white] (10.0,0.0) arc[start angle=168.69007234725063, end angle=11.309932661705695, radius=5.0990195] arc[start angle=19.798875960338354, end angle=160.20111880333423, radius=5.314132] -- cycle;
+\node[align=center] at (15.0,3.8065758) { \tiny 2:1 };
+\draw[fill=white] (10.0,0.0) arc[start angle=168.69004502649395, end angle=11.309932661705695, radius=3.399347] arc[start angle=23.74949152721958, end angle=156.250503236453, radius=3.6417341] -- cycle;
+\node[align=center] at (13.333334,2.4538739) { \tiny 3:2 };
+\draw[fill=white] (10.0,0.0) arc[start angle=168.69007234725063, end angle=11.309932661705695, radius=2.5495098] arc[start angle=27.474430813734415, end angle=152.52556394993815, radius=2.8178005] -- cycle;
+\node[align=center] at (12.5,1.7836552) { \tiny 4:3 };
+\draw[fill=white] (0.0,0.0) arc[start angle=168.69007234725063, end angle=11.309932661705695, radius=11.472794] arc[start angle=15.168893920114519, end angle=164.83108376808514, radius=11.656115] -- cycle;
+\node[align=center] at (11.25,8.9144535) { \tiny 4:1 };
+\draw[fill=white] (0.0,0.0) arc[start angle=168.69007234725063, end angle=11.309932661705695, radius=10.198039] arc[start angle=15.642246520163912, end angle=164.35777214917078, radius=10.3846035] -- cycle;
+\node[align=center] at (10.0,7.891321) { \tiny 3:1 };
+\draw[fill=white] (0.0,0.0) arc[start angle=168.6900732010243, end angle=11.30993351547934, radius=8.498366] arc[start angle=16.488752845138613, end angle=163.51122484306103, radius=8.690737] -- cycle;
+\node[align=center] at (8.333334,6.5278845) { \tiny 9:4 };
+\draw[fill=white] (0.0,0.0) arc[start angle=168.69007234725063, end angle=11.309932661705695, radius=7.648529] arc[start angle=17.049029847660172, end angle=162.9509410103503, radius=7.8447437] -- cycle;
+\node[align=center] at (7.5,5.8466363) { \tiny 2:1 };
+\draw[fill=white] (0.0,0.0) arc[start angle=168.69007234725063, end angle=11.309932661705695, radius=5.0990195] arc[start angle=19.798875960338354, end angle=160.20111880333423, radius=5.314132] -- cycle;
+\node[align=center] at (5.0,3.8065758) { \tiny 3:2 };
+\node[align=center] at (0.0, -0.22000001) { \large 36 };
+\node[align=center] at (10.0, -0.22000001) { \large 24 };
+\node[align=center] at (15.0, -0.22000001) { \large 18 };
+\node[align=center] at (16.666668, -0.22000001) { \large 16 };
+\node[align=center] at (20.0, -0.22000001) { \large 12 };
+\node[align=center] at (22.5, -0.22000001) { \large 9 };
+\draw (0.0,-1.4399999) -- (30.0,-1.4399999);
+\draw[thick] (0.0, -1.4399999) -- (0.2, -1.24) -- (-0.2, -1.24) --  cycle;
+\draw[thick] (30.0, -1.4399999) -- (30.2, -1.24) -- (29.800001, -1.24) --  cycle;
+\draw (0.0,-1.9599999) -- (30.0,-1.9599999);
+\draw[thick] (10.0, -1.9599999) -- (10.2, -1.7599999) -- (9.8, -1.7599999) --  cycle;
+\draw[thick] (30.0, -1.9599999) -- (30.2, -1.7599999) -- (29.800001, -1.7599999) --  cycle;
+\draw (0.0,-2.48) -- (30.0,-2.48);
+\draw[thick] (15.0, -2.48) -- (15.2, -2.28) -- (14.8, -2.28) --  cycle;
+\draw[thick] (30.0, -2.48) -- (30.2, -2.28) -- (29.800001, -2.28) --  cycle;
+\draw (0.0,-3.0) -- (30.0,-3.0);
+\draw[thick] (16.666668, -3.0) -- (16.866667, -2.8) -- (16.466667, -2.8) --  cycle;
+\draw[thick] (30.0, -3.0) -- (30.2, -2.8) -- (29.800001, -2.8) --  cycle;
+\draw (0.0,-3.5199997) -- (30.0,-3.5199997);
+\draw[thick] (20.0, -3.5199997) -- (20.2, -3.3199997) -- (19.800001, -3.3199997) --  cycle;
+\draw[thick] (30.0, -3.5199997) -- (30.2, -3.3199997) -- (29.800001, -3.3199997) --  cycle;
+\draw (0.0,-4.0400004) -- (30.0,-4.0400004);
+\draw[thick] (22.5, -4.0400004) -- (22.7, -3.8400002) -- (22.300001, -3.8400002) --  cycle;
+\draw[thick] (30.0, -4.0400004) -- (30.2, -3.8400002) -- (29.800001, -3.8400002) --  cycle;
+\draw[thick] (0.0, -5.16) -- (23.999256, -5.16) -- (23.999256, -5.52) -- (0.0, -5.52) --  cycle;
+\node[anchor=west] at (24.059256, -5.3399997) { \large 4:1 };
+\draw[thick] (0.0, -5.68) -- (19.01896, -5.68) -- (19.01896, -6.04) -- (0.0, -6.04) --  cycle;
+\node[anchor=west] at (19.078962, -5.86) { \large 3:1 };
+\draw[thick] (0.0, -6.2000003) -- (16.979925, -6.2000003) -- (16.979925, -6.56) -- (0.0, -6.56) --  cycle;
+\node[anchor=west] at (17.039925, -6.38) { \large 8:3 };
+\draw[thick] (0.0, -6.72) -- (14.038665, -6.72) -- (14.038665, -7.0799994) -- (0.0, -7.0799994) --  cycle;
+\node[anchor=west] at (14.098665, -6.9) { \large 9:4 };
+\draw[thick] (0.0, -7.2399993) -- (11.999628, -7.2399993) -- (11.999628, -7.5999994) -- (0.0, -7.5999994) --  cycle;
+\node[anchor=west] at (12.059628, -7.4199996) { \large 2:1 };
+\draw[thick] (0.0, -7.7599998) -- (9.960592, -7.7599998) -- (9.960592, -8.12) -- (0.0, -8.12) --  cycle;
+\node[anchor=west] at (10.020592, -7.94) { \large 16:9 };
+\draw[thick] (0.0, -8.28) -- (7.0193324, -8.28) -- (7.0193324, -8.639999) -- (0.0, -8.639999) --  cycle;
+\node[anchor=west] at (7.079332, -8.46) { \large 3:2 };
+\draw[thick] (0.0, -8.8) -- (4.980296, -8.8) -- (4.980296, -9.16) -- (0.0, -9.16) --  cycle;
+\node[anchor=west] at (5.040296, -8.9800005) { \large 4:3 };
+\draw[thick] (0.0, -9.32) -- (2.039037, -9.32) -- (2.039037, -9.679999) -- (0.0, -9.679999) --  cycle;
+\node[anchor=west] at (2.099037, -9.5) { \large 9:8 };
+\end{tikzpicture}
+\end{document}
