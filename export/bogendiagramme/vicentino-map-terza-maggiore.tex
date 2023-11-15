@@ -1,0 +1,46 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{mathabx}
+\usepackage{stackengine}
+\usetikzlibrary{backgrounds}
+\usepackage{newunicodechar}
+\newunicodechar{♮}{$\natural$}
+\newunicodechar{♭}{$\flat$}
+\newunicodechar{♯}{$\sharp$}
+\newunicodechar{➚}{$\nearrow$}
+\newunicodechar{➘}{$\searrow$}
+\newunicodechar{ʼ}{'}
+\newunicodechar{Ȧ}{\stackon[0.8pt]{A}{.}}
+\newunicodechar{Ḃ}{\stackon[0.8pt]{B}{.}}
+\newunicodechar{Ċ}{\stackon[0.8pt]{C}{.}}
+\newunicodechar{Ḋ}{\stackon[0.8pt]{D}{.}}
+\newunicodechar{Ė}{\stackon[0.8pt]{E}{.}}
+\newunicodechar{Ḟ}{\stackon[0.8pt]{F}{.}}
+\newunicodechar{Ġ}{\stackon[0.8pt]{G}{.}}
+
+
+\def\centerarc[#1](#2)(#3:#4:#5);%
+{
+  \draw[#1]([shift=(#3:#5)]#2) arc (#3:#4:#5);
+}
+
+
+\begin{document}
+\begin{tikzpicture}
+
+\draw[fill] (10.767913,0.0) circle (0.040000003);
+\draw[fill] (18.493952,0.0) circle (0.040000003);
+\draw[fill] (26.342085,0.0) circle (0.040000003);
+\node[align=center] at (10.767913, -0.4) { \large Ḟ };
+\node[align=center] at (18.493952, -0.4) { \large Ȧ };
+\node[align=center] at (26.342085, -0.4) { \large D♭ };
+\draw (18.493952,0.0) arc (180:0:3.9240663);
+\draw (10.767913,0.0) arc (180:0:7.787085);
+\draw (10.767913,0.0) arc (180:0:3.8630192);
+\draw[dotted] (10.367913,3.8630192) -- (26.742085,3.8630192);
+\draw[dotted] (10.367913,3.9240663) -- (26.742085,3.9240663);
+\draw[dotted] (10.367913,7.787085) -- (26.742085,7.787085);
+\draw[fill] (22.418018,3.9240663) circle (0.018000001);
+\draw[fill] (18.554998,7.787085) circle (0.018000001);
+\draw[fill] (14.630933,3.8630192) circle (0.018000001);
+\end{tikzpicture}
+\end{document}
