@@ -56,9 +56,9 @@
 (defmethod compile-tikz ((backend backend-tikz))
   (when (compilep backend)
     (uiop:run-program (list ;"/usr/bin/pdflatex"
-                            "/usr/bin/xelatex"
+                            ;"/usr/bin/xelatex"
                             ;"/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
-                            ;"/usr/local/texlive/2020/bin/x86_64-linux/xelatex"
+                            "/usr/local/texlive/2020/bin/x86_64-linux/xelatex"
                             (concatenate 'string "/home/johannes/common-lisp/prototypes/drawer/"
                                            (filename backend))))))
 
