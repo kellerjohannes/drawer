@@ -24,7 +24,16 @@
                                                       (value (y point))))))))
     (gr (list central-line tick-gr label-gr))))
 
-(defun make-spectrum (origin y-scale))
+(defun make-spectrum (origin y-scale number-of-partials interval-offset)
+  (make-scale (loop for i from 1 to number-of-partials
+                    collect i)
+              (loop for i from 1 to number-of-partials
+                    collect (format nil "~a:~a" i 1))
+              (pt (value (x origin)) (+ (value (y origin))
+                                        (* (vicentino-tunings:ratio->length interval-offset)
+                                           y-scale)))
+              y-scale))
+
 (defun expand-interval-list (notename-list octaves)
   (let ((result nil))
     (dotimes (i octaves result)
@@ -79,7 +88,8 @@
                                                     '("Cʼ$^{1}$" "C♯ʼ$^{1}$" "D♭ʼ$^{1}$"
                                                       "Dʼ$^{1}$" "D♯ʼ$^{1}$" "E♭ʼ$^{1}$"
                                                       "Eʼ$^{1}$" "B♯$^{4}$")))
-                                     (pt 10 0)
+                                     (pt 10 (* (vicentino-tunings:interval-size :tuning1 :c :up :d)
+                                            0.35))
                                      0.35))
        (scale-clave (make-scale (cons 1/1 (mapcar (lambda (pitch)
                                                          (* (vicentino-tunings:interval :tuning1
@@ -101,7 +111,45 @@
                                 (cons "C$^1$" (expand-name-list piano-names 4))
                                 (pt 0 0)
                                 0.35))
+       (scale-pape-g (make-spectrum (pt -10 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :up :g)))
+       (scale-pape-b♭ (make-spectrum (pt -20 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :down :b♭)))
+       (scale-pape-c (make-spectrum (pt -30 0) 0.35 16 1/1))
+       (scale-pape-d (make-spectrum (pt -40 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :up :d)))
+       (scale-pape-a (make-spectrum (pt -50 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :up :a)))
+       (scale-pape-b♮ (make-spectrum (pt -60 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :down :b♮)))
+       (scale-pape-e (make-spectrum (pt -70 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :up :e)))
+       (scale-pape-f♯ (make-spectrum (pt -80 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :up :f♯)))
+       (scale-pape-d♭ (make-spectrum (pt -90 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :up :d♭)))
+       (scale-pape-e♭ (make-spectrum (pt -100 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :up :e♭)))
+       (scale-pape-a♭ (make-spectrum (pt -110 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :up :a♭)))
+       (scale-pape-f (make-spectrum (pt -120 0) 0.35 16
+                                    (vicentino-tunings:interval :12ed2 :c :up :f)))
        (btikz (make-backend-tikz :filename "scale-test.tex")))
   (format t "~&~a" (length clave-names))
-  (draw-with-multiple-backends (list btikz) (list scale-arciorgano scale-clave scale-piano))
+  (draw-with-multiple-backends (list btikz) (list scale-pape-g
+                                                  scale-pape-b♭
+                                                  scale-pape-c
+                                                  scale-pape-d
+                                                  scale-pape-a
+                                                  scale-pape-b♮
+                                                  scale-pape-e
+                                                  scale-pape-f♯
+                                                  scale-pape-d♭
+                                                  scale-pape-e♭
+                                                  scale-pape-a♭
+                                                  scale-pape-f
+                                                  scale-piano
+                                                  scale-arciorgano
+                                                  scale-clave
+                                                  ))
   (compile-tikz btikz))
