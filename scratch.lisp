@@ -2,29 +2,39 @@
 
 (ql:quickload :vicentino-tunings)
 
-(defun make-scale (interval-list label-list origin y-scale)
+(defun make-scale (interval-list label-list origin y-scale &key helper-line-endpoint)
+  (format t "~&~a" helper-line-endpoint)
   (let* ((tick-length 2)
-         (label-offset 3)
+         (label-offset 0.5)
          (point-list (mapcar (lambda (interval)
                                (add origin (pt 0 (* y-scale
                                                     (vicentino-tunings:ratio->length interval)))))
                              interval-list))
          (local-origin (pt 0 0))
+         (helper-lines (when helper-line-endpoint
+                         (gr (mapcar (lambda (point)
+                                       (ln point
+                                           (pt helper-line-endpoint (value (y point)))
+                                           :style-update '(:line-type :dotted)))
+                                     point-list))))
          (tick (ln local-origin (right-of local-origin tick-length)))
          (tick-gr (gr (mapcar (lambda (point)
-                              (cp tick local-origin point))
-                            point-list)))
+                                (cp tick local-origin point))
+                              point-list)))
          (label-gr (gr (mapcar (lambda (label point)
-                                 (make-text label (right-of point label-offset) :h-align :left))
+                                 (make-text label (left-of point label-offset) :h-align :right))
                                label-list
                                point-list)))
          (central-line (ln origin (first (sort (copy-list point-list)
                                                #'>
                                                :key (lambda (point)
-                                                      (value (y point))))))))
-    (gr (list central-line tick-gr label-gr))))
+                                                      (value (y point)))))))
+         (scale-list (gr (list central-line tick-gr label-gr))))
+    (if helper-line-endpoint
+        (gr (list helper-lines scale-list))
+        scale-list)))
 
-(defun make-spectrum (origin y-scale number-of-partials interval-offset)
+(defun make-spectrum (origin y-scale number-of-partials interval-offset helper-line-endpoint)
   (make-scale (loop for i from 1 to number-of-partials
                     collect i)
               (loop for i from 1 to number-of-partials
@@ -32,7 +42,8 @@
               (pt (value (x origin)) (+ (value (y origin))
                                         (* (vicentino-tunings:ratio->length interval-offset)
                                            y-scale)))
-              y-scale))
+              y-scale
+              :helper-line-endpoint helper-line-endpoint))
 
 (defun expand-interval-list (notename-list octaves)
   (let ((result nil))
@@ -59,19 +70,19 @@
 
 (let* ((piano-names (list :c♯ :d :e♭ :e :f :f♯ :g :g♯ :a :b♭ :b♮ :c))
        (arci-names (list :cʼ :c♯ :c♯ʼ
-                         :d♭ :d♭ʼ :d :dʼ :d♯ :d♯ʼ
-                         :e♭ :e♭ʼ :e :eʼ :e♯
+                             :d♭ :d♭ʼ :d :dʼ :d♯ :d♯ʼ
+                             :e♭ :e♭ʼ :e :eʼ :e♯
                          :f :fʼ :f♯ :f♯ʼ
                          :g♭ :g♭ʼ :g :gʼ :g♯ :g♯ʼ
                          :a♭ :a♭ʼ :a :aʼ :a♯ :a♯ʼ
                          :b♭ :b♭ʼ :b♮ :b♮ʼ :b♯ :c))
        (clave-names (list :ċ :c♯
                           :d♭ :ḋ♭ :d :ḋ :d♯
-                          :e♭ :ė♭ :e :ė :e♯
+                             :e♭ :ė♭ :e :ė :e♯
                           :f :ḟ :f♯
-                          :g♭ :ġ♭ :g :ġ :g♯
+                             :g♭ :ġ♭ :g :ġ :g♯
                           :a♭ :ȧ♭ :a :ȧ :a♯
-                          :b♭ :ḃ♭ :b♮ :ḃ♮ :b♯ :c))
+                             :b♭ :ḃ♭ :b♮ :ḃ♮ :b♯ :c))
        (scale-arciorgano (make-scale (cons 1/1 (mapcar (lambda (pitch)
                                                          (* (vicentino-tunings:interval :tuning1
                                                                                         :c
@@ -89,18 +100,18 @@
                                                       "Dʼ$^{1}$" "D♯ʼ$^{1}$" "E♭ʼ$^{1}$"
                                                       "Eʼ$^{1}$" "B♯$^{4}$")))
                                      (pt 10 (* (vicentino-tunings:interval-size :tuning1 :c :up :d)
-                                            0.35))
+                                               0.35))
                                      0.35))
        (scale-clave (make-scale (cons 1/1 (mapcar (lambda (pitch)
-                                                         (* (vicentino-tunings:interval :tuning1
-                                                                                        :c
-                                                                                        :up
-                                                                                        (car pitch))
-                                                            (expt 2 (cdr pitch))))
-                                                       (expand-interval-list clave-names 4)))
-                                     (cons "C$^1$" (expand-name-list clave-names 4))
-                                     (pt 20 0)
-                                     0.35))
+                                                    (* (vicentino-tunings:interval :tuning1
+                                                                                   :c
+                                                                                   :up
+                                                                                   (car pitch))
+                                                       (expt 2 (cdr pitch))))
+                                                  (expand-interval-list clave-names 4)))
+                                (cons "C$^1$" (expand-name-list clave-names 4))
+                                (pt 20 0)
+                                0.35))
        (scale-piano (make-scale (cons 1/1 (mapcar (lambda (pitch)
                                                     (* (vicentino-tunings:interval :12ed2
                                                                                    :c
@@ -111,31 +122,42 @@
                                 (cons "C$^1$" (expand-name-list piano-names 4))
                                 (pt 0 0)
                                 0.35))
+       (helper-lines-endpoint 30)
        (scale-pape-g (make-spectrum (pt -10 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :up :g)))
+                                    (vicentino-tunings:interval :12ed2 :c :up :g)
+                                    helper-lines-endpoint))
        (scale-pape-b♭ (make-spectrum (pt -20 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :down :b♭)))
-       (scale-pape-c (make-spectrum (pt -30 0) 0.35 16 1/1))
+                                     (vicentino-tunings:interval :12ed2 :c :down :b♭)
+                                     helper-lines-endpoint))
+       (scale-pape-c (make-spectrum (pt -30 0) 0.35 16 1/1 helper-lines-endpoint))
        (scale-pape-d (make-spectrum (pt -40 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :up :d)))
+                                    (vicentino-tunings:interval :12ed2 :c :up :d)
+                                    helper-lines-endpoint))
        (scale-pape-a (make-spectrum (pt -50 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :up :a)))
+                                    (vicentino-tunings:interval :12ed2 :c :up :a)
+                                    helper-lines-endpoint))
        (scale-pape-b♮ (make-spectrum (pt -60 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :down :b♮)))
+                                     (vicentino-tunings:interval :12ed2 :c :down :b♮)
+                                     helper-lines-endpoint))
        (scale-pape-e (make-spectrum (pt -70 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :up :e)))
+                                    (vicentino-tunings:interval :12ed2 :c :up :e)
+                                    helper-lines-endpoint))
        (scale-pape-f♯ (make-spectrum (pt -80 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :up :f♯)))
+                                     (vicentino-tunings:interval :12ed2 :c :up :f♯)
+                                     helper-lines-endpoint))
        (scale-pape-d♭ (make-spectrum (pt -90 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :up :d♭)))
+                                     (vicentino-tunings:interval :12ed2 :c :up :d♭)
+                                     helper-lines-endpoint))
        (scale-pape-e♭ (make-spectrum (pt -100 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :up :e♭)))
+                                     (vicentino-tunings:interval :12ed2 :c :up :e♭)
+                                     helper-lines-endpoint))
        (scale-pape-a♭ (make-spectrum (pt -110 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :up :a♭)))
+                                     (vicentino-tunings:interval :12ed2 :c :up :a♭)
+                                     helper-lines-endpoint))
        (scale-pape-f (make-spectrum (pt -120 0) 0.35 16
-                                    (vicentino-tunings:interval :12ed2 :c :up :f)))
+                                    (vicentino-tunings:interval :12ed2 :c :up :f)
+                                    helper-lines-endpoint))
        (btikz (make-backend-tikz :filename "scale-test.tex")))
-  (format t "~&~a" (length clave-names))
   (draw-with-multiple-backends (list btikz) (list scale-pape-g
                                                   scale-pape-b♭
                                                   scale-pape-c
