@@ -2,7 +2,8 @@
 
 (ql:quickload :vicentino-tunings)
 
-(defun make-scale (interval-list label-list origin y-scale &key helper-line-endpoint)
+(defun make-scale (interval-list label-list origin y-scale &key helper-line-endpoint
+                                                             (main-label ""))
   (let* ((tick-length 1.3)
          (label-offset 0.5)
          (point-list (mapcar (lambda (interval)
@@ -28,7 +29,8 @@
                                                #'>
                                                :key (lambda (point)
                                                       (value (y point)))))))
-         (scale-list (gr (list central-line tick-gr label-gr))))
+         (main-label (make-text main-label (below origin 3) :v-align :top))
+         (scale-list (gr (list central-line tick-gr label-gr main-label))))
     (if helper-line-endpoint
         (gr (list helper-lines scale-list))
         scale-list)))
@@ -42,7 +44,8 @@
                                         (* (vicentino-tunings:ratio->length interval-offset)
                                            y-scale)))
               y-scale
-              :helper-line-endpoint helper-line-endpoint))
+              :helper-line-endpoint helper-line-endpoint
+              :main-label (format nil "Pape ~a" prefix)))
 
 (defun expand-interval-list (notename-list octaves)
   (let ((result nil))
@@ -67,16 +70,6 @@
                                                                                  (1+ i))))
                                           notename-list))))))
 
-;; probably not needed
-(defparameter *clave-synonyms*
-  '((:ċ . :d♭♭) (:ḋ♭ . :c♯♯)
-    (:ḋ . :e♭♭) (:ė♭ . :d♯♯)
-    (:ė . :f♭)
-    (:ḟ . :g♭♭) (:ġ♭ . :f♯♯)
-    (:ġ . :a♭♭) (:ȧ♭ . :g♯♯)
-    (:ȧ . :b♭♭) (:ḃ♭ . :a♯♯)
-    (:ḃ . :c♭)))
-
 (let* ((piano-names (list :c♯ :d :e♭ :e :f :f♯ :g :g♯ :a :b♭ :b♮ :c))
        (arci-names (list :cʼ :c♯ :c♯ʼ
                              :d♭ :d♭ʼ :d :dʼ :d♯ :d♯ʼ
@@ -85,13 +78,13 @@
                          :g♭ :g♭ʼ :g :gʼ :g♯ :g♯ʼ
                          :a♭ :a♭ʼ :a :aʼ :a♯ :a♯ʼ
                          :b♭ :b♭ʼ :b♮ :b♮ʼ :b♯ :c))
-       (clave-names (list :ċ :c♯
-                          :d♭ :ḋ♭ :d :ḋ :d♯
-                             :e♭ :ė♭ :e :ė :e♯
-                          :f :ḟ :f♯
-                             :g♭ :ġ♭ :g :ġ :g♯
-                          :a♭ :ȧ♭ :a :ȧ :a♯
-                             :b♭ :ḃ♭ :b♮ :ḃ♮ :b♯ :c))
+       (clave-names (list :d♭♭ :c♯
+                          :d♭ :c♯♯ :d :e♭♭ :d♯
+                               :e♭ :d♯♯ :e :f♭ :e♯
+                          :f :g♭♭ :f♯
+                               :g♭ :f♯♯ :g :a♭♭ :g♯
+                          :a♭ :g♯♯ :a :b♭♭ :a♯
+                               :b♭ :a♯♯ :b♮ :c♭ :b♯ :c))
        (scale-arciorgano (make-scale (cons 1/1 (mapcar (lambda (pitch)
                                                          (* (vicentino-tunings:interval :tuning1
                                                                                         :c
@@ -110,9 +103,10 @@
                                                       "Eʼ$^{1}$" "B♯$^{4}$")))
                                      (pt 10 (* (vicentino-tunings:interval-size :tuning1 :c :up :d)
                                                0.35))
-                                     0.35))
+                                     0.35
+                                     :main-label "Arciorgano"))
        (scale-clave (make-scale (cons 1/1 (mapcar (lambda (pitch)
-                                                    (* (vicentino-tunings:interval :tuning1
+                                                    (* (vicentino-tunings:interval :31ed2
                                                                                    :c
                                                                                    :up
                                                                                    (car pitch))
@@ -120,7 +114,8 @@
                                                   (expand-interval-list clave-names 4)))
                                 (cons "C$^1$" (expand-name-list clave-names 4))
                                 (pt 20 0)
-                                0.35))
+                                0.35
+                                :main-label "Clavemusicum"))
        (scale-piano (make-scale (cons 1/1 (mapcar (lambda (pitch)
                                                     (* (vicentino-tunings:interval :12ed2
                                                                                    :c
@@ -130,7 +125,8 @@
                                                   (expand-interval-list piano-names 4)))
                                 (cons "C$^1$" (expand-name-list piano-names 4))
                                 (pt 0 0)
-                                0.35))
+                                0.35
+                                :main-label "Piano"))
        (helper-lines-endpoint 30)
        (pape-padding -13)
        (scale-pape-g (make-spectrum (pt (* 1 pape-padding) 0) 0.35 16 "G"
@@ -168,7 +164,7 @@
        (scale-pape-f (make-spectrum (pt (* 12 pape-padding) 0) 0.35 16 "F"
                                     (vicentino-tunings:interval :12ed2 :c :up :f)
                                     helper-lines-endpoint))
-       (btikz (make-backend-tikz :filename "scale-test.tex")))
+       (btikz (make-backend-tikz :filename "studio31-pape-tuning.tex")))
   (draw-with-multiple-backends (list btikz) (list scale-pape-g
                                                   scale-pape-b♭
                                                   scale-pape-c
