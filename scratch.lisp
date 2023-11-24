@@ -3,8 +3,7 @@
 (ql:quickload :vicentino-tunings)
 
 (defun make-scale (interval-list label-list origin y-scale &key helper-line-endpoint)
-  (format t "~&~a" helper-line-endpoint)
-  (let* ((tick-length 2)
+  (let* ((tick-length 1.3)
          (label-offset 0.5)
          (point-list (mapcar (lambda (interval)
                                (add origin (pt 0 (* y-scale
@@ -34,11 +33,11 @@
         (gr (list helper-lines scale-list))
         scale-list)))
 
-(defun make-spectrum (origin y-scale number-of-partials interval-offset helper-line-endpoint)
+(defun make-spectrum (origin y-scale number-of-partials prefix interval-offset helper-line-endpoint)
   (make-scale (loop for i from 1 to number-of-partials
                     collect i)
               (loop for i from 1 to number-of-partials
-                    collect (format nil "~a:~a" i 1))
+                    collect (format nil "(~a) ~a:~a" prefix i 1))
               (pt (value (x origin)) (+ (value (y origin))
                                         (* (vicentino-tunings:ratio->length interval-offset)
                                            y-scale)))
@@ -67,6 +66,16 @@
                                                                                  (+ 2 i)
                                                                                  (1+ i))))
                                           notename-list))))))
+
+;; probably not needed
+(defparameter *clave-synonyms*
+  '((:ċ . :d♭♭) (:ḋ♭ . :c♯♯)
+    (:ḋ . :e♭♭) (:ė♭ . :d♯♯)
+    (:ė . :f♭)
+    (:ḟ . :g♭♭) (:ġ♭ . :f♯♯)
+    (:ġ . :a♭♭) (:ȧ♭ . :g♯♯)
+    (:ȧ . :b♭♭) (:ḃ♭ . :a♯♯)
+    (:ḃ . :c♭)))
 
 (let* ((piano-names (list :c♯ :d :e♭ :e :f :f♯ :g :g♯ :a :b♭ :b♮ :c))
        (arci-names (list :cʼ :c♯ :c♯ʼ
@@ -123,38 +132,40 @@
                                 (pt 0 0)
                                 0.35))
        (helper-lines-endpoint 30)
-       (scale-pape-g (make-spectrum (pt -10 0) 0.35 16
+       (pape-padding -13)
+       (scale-pape-g (make-spectrum (pt (* 1 pape-padding) 0) 0.35 16 "G"
                                     (vicentino-tunings:interval :12ed2 :c :up :g)
                                     helper-lines-endpoint))
-       (scale-pape-b♭ (make-spectrum (pt -20 0) 0.35 16
+       (scale-pape-b♭ (make-spectrum (pt (* 2 pape-padding) 0) 0.35 16 "B♭"
                                      (vicentino-tunings:interval :12ed2 :c :down :b♭)
                                      helper-lines-endpoint))
-       (scale-pape-c (make-spectrum (pt -30 0) 0.35 16 1/1 helper-lines-endpoint))
-       (scale-pape-d (make-spectrum (pt -40 0) 0.35 16
+       (scale-pape-c (make-spectrum (pt (* 3 pape-padding) 0) 0.35 16 "C" 1/1
+                                    helper-lines-endpoint))
+       (scale-pape-d (make-spectrum (pt (* 4 pape-padding) 0) 0.35 16 "D"
                                     (vicentino-tunings:interval :12ed2 :c :up :d)
                                     helper-lines-endpoint))
-       (scale-pape-a (make-spectrum (pt -50 0) 0.35 16
+       (scale-pape-a (make-spectrum (pt (* 5 pape-padding) 0) 0.35 16 "A"
                                     (vicentino-tunings:interval :12ed2 :c :up :a)
                                     helper-lines-endpoint))
-       (scale-pape-b♮ (make-spectrum (pt -60 0) 0.35 16
+       (scale-pape-b♮ (make-spectrum (pt (* 6 pape-padding) 0) 0.35 16 "B♮"
                                      (vicentino-tunings:interval :12ed2 :c :down :b♮)
                                      helper-lines-endpoint))
-       (scale-pape-e (make-spectrum (pt -70 0) 0.35 16
+       (scale-pape-e (make-spectrum (pt (* 7 pape-padding) 0) 0.35 16 "E"
                                     (vicentino-tunings:interval :12ed2 :c :up :e)
                                     helper-lines-endpoint))
-       (scale-pape-f♯ (make-spectrum (pt -80 0) 0.35 16
+       (scale-pape-f♯ (make-spectrum (pt (* 8 pape-padding) 0) 0.35 16 "F♯"
                                      (vicentino-tunings:interval :12ed2 :c :up :f♯)
                                      helper-lines-endpoint))
-       (scale-pape-d♭ (make-spectrum (pt -90 0) 0.35 16
+       (scale-pape-d♭ (make-spectrum (pt (* 9 pape-padding) 0) 0.35 16 "D♭"
                                      (vicentino-tunings:interval :12ed2 :c :up :d♭)
                                      helper-lines-endpoint))
-       (scale-pape-e♭ (make-spectrum (pt -100 0) 0.35 16
+       (scale-pape-e♭ (make-spectrum (pt (* 10 pape-padding) 0) 0.35 16 "E♭"
                                      (vicentino-tunings:interval :12ed2 :c :up :e♭)
                                      helper-lines-endpoint))
-       (scale-pape-a♭ (make-spectrum (pt -110 0) 0.35 16
+       (scale-pape-a♭ (make-spectrum (pt (* 11 pape-padding) 0) 0.35 16 "A♭"
                                      (vicentino-tunings:interval :12ed2 :c :up :a♭)
                                      helper-lines-endpoint))
-       (scale-pape-f (make-spectrum (pt -120 0) 0.35 16
+       (scale-pape-f (make-spectrum (pt (* 12 pape-padding) 0) 0.35 16 "F"
                                     (vicentino-tunings:interval :12ed2 :c :up :f)
                                     helper-lines-endpoint))
        (btikz (make-backend-tikz :filename "scale-test.tex")))
