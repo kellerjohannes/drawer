@@ -103,11 +103,32 @@
                                                    '("Cʼ$^{1}$" "C♯ʼ$^{1}$" "D♭ʼ$^{1}$"
                                                      "Dʼ$^{1}$" "D♯ʼ$^{1}$" "E♭ʼ$^{1}$"
                                                      "Eʼ$^{1}$" "B♯$^{4}$")))
-                                    (pt 10 0)
-                                    0.2
+                                    (pt 10 (* (- (vicentino-tunings:interval-size :12ed2
+                                                                                  :c :up :a)
+                                                 (vicentino-tunings:interval-size :tuning1
+                                                                                  :g :down :c))
+                                              0.36))
+                                    0.36
                                     :main-label "Arciorgano"))
-      (dreyblatt-scale (make-scale (cons 2/1 *dreyblatt-octave*)
-                                   (cons "(2)" *dreyblatt-numbers*)
-                                   (pt 0 0) .2 :main-label "Dreyblatt")))
-  (draw-with-multiple-backends (list btikz) (list scale-arciorgano dreyblatt-scale))
+       (piano-names (list :c♯ :d :e♭ :e :f :f♯ :g :g♯ :a :b♭ :b♮ :c))
+       (scale-piano (make-scale (cons 1/1 (mapcar (lambda (pitch)
+                                                    (* (vicentino-tunings:interval :12ed2
+                                                                                   :c
+                                                                                   :up
+                                                                                   (car pitch))
+                                                       (expt 2 (cdr pitch))))
+                                                  (expand-interval-list piano-names 4)))
+                                (cons "C$^1$" (expand-name-list piano-names 4))
+                                (pt -10 0)
+                                0.36
+                                :main-label "Piano, a'=440 Hz"))
+      (dreyblatt-scale (make-scale (mapcar (lambda (interval)
+                                             (* (car interval) (expt 2 (cdr interval))))
+                                           (expand-interval-list *dreyblatt-octave* 4))
+                                   (expand-name-list *dreyblatt-numbers* 4)
+                                   (pt 0 (* (vicentino-tunings:interval-size :12ed2 :c :up :f)
+                                            0.36))
+                                   .36
+                                   :main-label "Dreyblatt")))
+  (draw-with-multiple-backends (list btikz) (list scale-piano scale-arciorgano dreyblatt-scale))
   (compile-tikz btikz))
