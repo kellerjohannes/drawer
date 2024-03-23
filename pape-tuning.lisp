@@ -129,39 +129,39 @@
                                 :main-label "Piano"))
        (helper-lines-endpoint 30)
        (pape-padding -13)
-       (scale-pape-g (make-spectrum (pt (* 1 pape-padding) -3) 0.35 16 "G"
+       (scale-pape-g (make-spectrum (pt (* 1 pape-padding) -1) 0.35 16 "G"
                                     (vicentino-tunings:interval :12ed2 :c :up :g)
                                     helper-lines-endpoint))
-       (scale-pape-b♭ (make-spectrum (pt (* 2 pape-padding) 0) 0.35 16 "B♭"
+       (scale-pape-b♭ (make-spectrum (pt (* 2 pape-padding) 0.8) 0.35 16 "B♭"
                                      (vicentino-tunings:interval :12ed2 :c :down :b♭)
                                      helper-lines-endpoint))
-       (scale-pape-c (make-spectrum (pt (* 3 pape-padding) 0) 0.35 16 "C" 1/1
+       (scale-pape-c (make-spectrum (pt (* 3 pape-padding) -2) 0.35 16 "C" 1/1
                                     helper-lines-endpoint))
-       (scale-pape-d (make-spectrum (pt (* 4 pape-padding) 0) 0.35 16 "D"
+       (scale-pape-d (make-spectrum (pt (* 4 pape-padding) -0.6) 0.35 16 "D"
                                     (vicentino-tunings:interval :12ed2 :c :up :d)
                                     helper-lines-endpoint))
        (scale-pape-a (make-spectrum (pt (* 5 pape-padding) 0) 0.35 16 "A"
                                     (vicentino-tunings:interval :12ed2 :c :up :a)
                                     helper-lines-endpoint))
-       (scale-pape-b♮ (make-spectrum (pt (* 6 pape-padding) 0) 0.35 16 "B♮"
+       (scale-pape-b♮ (make-spectrum (pt (* 6 pape-padding) 1.5) 0.35 16 "B♮"
                                      (vicentino-tunings:interval :12ed2 :c :down :b♮)
                                      helper-lines-endpoint))
-       (scale-pape-e (make-spectrum (pt (* 7 pape-padding) 0) 0.35 16 "E"
+       (scale-pape-e (make-spectrum (pt (* 7 pape-padding) 0.8) 0.35 16 "E"
                                     (vicentino-tunings:interval :12ed2 :c :up :e)
                                     helper-lines-endpoint))
-       (scale-pape-f♯ (make-spectrum (pt (* 8 pape-padding) 0) 0.35 16 "F♯"
+       (scale-pape-f♯ (make-spectrum (pt (* 8 pape-padding) 1.8) 0.35 16 "F♯"
                                      (vicentino-tunings:interval :12ed2 :c :up :f♯)
                                      helper-lines-endpoint))
-       (scale-pape-d♭ (make-spectrum (pt (* 9 pape-padding) 0) 0.35 16 "D♭"
+       (scale-pape-d♭ (make-spectrum (pt (* 9 pape-padding) 2) 0.35 16 "D♭"
                                      (vicentino-tunings:interval :12ed2 :c :up :d♭)
                                      helper-lines-endpoint))
        (scale-pape-e♭ (make-spectrum (pt (* 10 pape-padding) 0) 0.35 16 "E♭"
                                      (vicentino-tunings:interval :12ed2 :c :up :e♭)
                                      helper-lines-endpoint))
-       (scale-pape-a♭ (make-spectrum (pt (* 11 pape-padding) 0) 0.35 16 "A♭"
+       (scale-pape-a♭ (make-spectrum (pt (* 11 pape-padding) 3) 0.35 16 "A♭"
                                      (vicentino-tunings:interval :12ed2 :c :up :a♭)
                                      helper-lines-endpoint))
-       (scale-pape-f (make-spectrum (pt (* 12 pape-padding) 0) 0.35 16 "F"
+       (scale-pape-f (make-spectrum (pt (* 12 pape-padding) -2.8) 0.35 16 "F"
                                     (vicentino-tunings:interval :12ed2 :c :up :f)
                                     helper-lines-endpoint))
        (btikz (make-backend-tikz :filename "studio31-pape-tuning.tex")))
@@ -177,7 +177,7 @@
                                                   scale-pape-e♭
                                                   scale-pape-a♭
                                                   scale-pape-f
-                                                  scale-piano
+                                                  ;; scale-piano
                                                   scale-arciorgano
                                                   scale-clave
                                                   ))
