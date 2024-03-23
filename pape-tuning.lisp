@@ -129,7 +129,7 @@
                                 :main-label "Piano"))
        (helper-lines-endpoint 30)
        (pape-padding -13)
-       (scale-pape-g (make-spectrum (pt (* 1 pape-padding) 0) 0.35 16 "G"
+       (scale-pape-g (make-spectrum (pt (* 1 pape-padding) -3) 0.35 16 "G"
                                     (vicentino-tunings:interval :12ed2 :c :up :g)
                                     helper-lines-endpoint))
        (scale-pape-b♭ (make-spectrum (pt (* 2 pape-padding) 0) 0.35 16 "B♭"
