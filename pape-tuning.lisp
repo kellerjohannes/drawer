@@ -78,6 +78,7 @@
                          :g♭ :g♭ʼ :g :gʼ :g♯ :g♯ʼ
                          :a♭ :a♭ʼ :a :aʼ :a♯ :a♯ʼ
                          :b♭ :b♭ʼ :b♮ :b♮ʼ :b♯ :c))
+       (arci-keynames (list :C♯1 :D♭1 :D1 :D♯1 :E♭1 :E1 :E♯1 :F1 :Ḟ1 :F♯1 :Ḟ♯1 :G♭1 :Ġ♭1 :G1 :Ġ1 :G♯1 :Ġ♯1 :A♭1 :Ȧ♭1 :A1 :Ȧ1 :A♯1 :Ȧ♯1 :B♭1 :Ḃ♭1 :B♮1 :Ḃ♮1 :B♯1 :C2 :Ċ2 :C♯2 :Ċ♯2 :D♭2 :Ḋ♭2 :D2 :Ḋ2 :D♯2 :Ḋ♯2 :E♭2 :Ė♭2 :E2 :Ė2 :E♯2 :F2 :Ḟ2 :F♯2 :Ḟ♯2 :G♭2 :Ġ♭2 :G2 :Ġ2 :G♯2 :Ġ♯2 :A♭2 :Ȧ♭2 :A2 :Ȧ2 :A♯2 :Ȧ♯2 :B♭2 :Ḃ♭2 :B♮2 :Ḃ♮2 :B♯2 :C3 :Ċ3 :C♯3 :Ċ♯3 :D♭3 :Ḋ♭3 :D3 :Ḋ3 :D♯3 :Ḋ♯3 :E♭3 :Ė♭3 :E3 :Ė3 :E♯3 :F3 :Ḟ3 :F♯3 :Ḟ♯3 :G♭3 :Ġ♭3 :G3 :Ġ3 :G♯3 :Ġ♯3 :A♭3 :Ȧ♭3 :A3 :Ȧ3 :A♯3 :Ȧ♯3 :B♭3 :Ḃ♭3 :B♮3 :Ḃ♮3 :B♯3 :C4 :Ċ4 :C♯4 :Ċ♯4 :D♭4 :Ḋ♭4 :D4 :Ḋ4 :D♯4 :Ḋ♯4 :E♭4 :Ė♭4 :E4 :Ė4 :E♯4 :F4 :Ḟ4 :F♯4 :Ḟ♯4 :G♭4 :Ġ♭4 :G4 :Ġ4 :G♯4 :Ġ♯4 :A♭4 :Ȧ♭4 :A4 :Ȧ4 :A♯4 :Ȧ♯4 :B♭4 :Ḃ♭4 :B♮4 :Ḃ♮4 :C5 :Ċ5))
        (clave-names (list :d♭♭ :c♯
                           :d♭ :c♯♯ :d :e♭♭ :d♯
                                :e♭ :d♯♯ :e :f♭ :e♯
@@ -101,10 +102,22 @@
                                                     '("Cʼ$^{1}$" "C♯ʼ$^{1}$" "D♭ʼ$^{1}$"
                                                       "Dʼ$^{1}$" "D♯ʼ$^{1}$" "E♭ʼ$^{1}$"
                                                       "Eʼ$^{1}$" "B♯$^{4}$")))
-                                     (pt 10 (* (vicentino-tunings:interval-size :tuning1 :c :up :d)
+                                     (pt 30 (* (vicentino-tunings:interval-size :tuning1 :c :up :d)
                                                0.35))
                                      0.35
                                      :main-label "Arciorgano"))
+       (scale-custom-arciorgano (make-scale
+                                 (cons 1/1 (mapcar (lambda (pitch)
+                                                     (vicentino-tunings:interval :pape-arciorgano
+                                                                                 :c1
+                                                                                 :up
+                                                                                 pitch))
+                                                   arci-keynames))
+                                 (cons "C$^1$" arci-keynames)
+                                 (pt 10 (* 198.5 ; in cent
+                                           0.35))
+                                 0.35
+                                 :main-label "Arciorgano custom"))
        (scale-clave (make-scale (cons 1/1 (mapcar (lambda (pitch)
                                                     (* (vicentino-tunings:interval :31ed2
                                                                                    :c
@@ -113,7 +126,7 @@
                                                        (expt 2 (cdr pitch))))
                                                   (expand-interval-list clave-names 4)))
                                 (cons "C$^1$" (expand-name-list clave-names 4))
-                                (pt 20 0)
+                                (pt 40 0)
                                 0.35
                                 :main-label "Clavemusicum"))
        (scale-piano (make-scale (cons 1/1 (mapcar (lambda (pitch)
@@ -178,6 +191,7 @@
                                                   scale-pape-a♭
                                                   scale-pape-f
                                                   ;; scale-piano
+                                                  scale-custom-arciorgano
                                                   scale-arciorgano
                                                   scale-clave
                                                   ))
