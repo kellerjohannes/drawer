@@ -178,6 +178,7 @@
                                     (vicentino-tunings:interval :12ed2 :c :up :f)
                                     helper-lines-endpoint))
        (btikz (make-backend-tikz :filename "studio31-pape-tuning.tex")))
+  (declare (ignore scale-piano))
   (draw-with-multiple-backends (list btikz) (list scale-pape-g
                                                   scale-pape-b♭
                                                   scale-pape-c
