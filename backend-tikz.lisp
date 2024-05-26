@@ -59,7 +59,7 @@
                             ;"/usr/bin/xelatex"
                             ;"/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
                             "/usr/local/texlive/2020/bin/x86_64-linux/xelatex"
-                            (concatenate 'string "/home/johannes/common-lisp/prototypes/drawer/"
+                            (concatenate 'string "/home/johannes/common-lisp/arcimoog/lisp/"
                                            (filename backend))))))
 
 (defparameter *tikz-dictionary*
