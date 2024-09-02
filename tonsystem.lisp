@@ -29,6 +29,7 @@
 (defmethod make-tonnetz (dimension-list offset-list)
   (make-instance 'tonnetz :dimensions dimension-list :offsets offset-list))
 
+
 (defun construct-subscripts (dimension-mask index)
   (let ((result (copy-list dimension-mask)))
     (setf (elt result (position nil result)) index)
@@ -51,6 +52,9 @@
 (defmethod get-node-0 ((system tonnetz) subscripts)
   (apply #'aref (nodes system) subscripts))
 
+(defmethod set-node ((system tonnetz) subscripts label-string)
+  (setf (label (get-node system subscripts)) label-string))
+
 (defmethod init-row ((system tonnetz) dimension-mask start-position label-list)
   (loop for lbl in label-list
         for i from start-position
@@ -67,7 +71,7 @@
 (defmethod find-connection ((system tonnetz) location-a location-b)
   (find (list location-a location-b) (connection-list system) :test #'connection-hit-p))
 
-(defparameter *testnetz* (make-tonnetz '(5 4 3) '(2 2 1)))
+;; (defparameter *testnetz* (make-tonnetz '(5 4 3) '(2 2 1)))
 
 (defmethod in-range ((system tonnetz) location)
   (loop for element in (mapcar (lambda (coordinate dimension offset)
