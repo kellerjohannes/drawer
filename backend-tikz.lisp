@@ -59,8 +59,14 @@
                             "/usr/bin/xelatex"
                             ;"/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
                             ;"/usr/local/texlive/2020/bin/x86_64-linux/xelatex"
-                            (concatenate 'string "/home/johannes/common-lisp/prototypes/drawer/"
-                                           (filename backend))))))
+                            (namestring
+                             (merge-pathnames (filename backend)
+                                              (merge-pathnames "export/"
+                                                               (asdf/system:system-source-directory :drawer))))
+                            ;; (concatenate 'string "/home/johannes/common-lisp/prototypes/drawer/"
+                            ;;              (filename backend))
+                            ))
+    (format t "~&TIKZ compiled.")))
 
 (defparameter *tikz-dictionary*
   '((:normal . nil)

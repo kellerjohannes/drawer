@@ -8,7 +8,10 @@
 (defgeneric write-file (drawer-backend))
 
 (defmethod write-file :around ((backend drawer-backend))
-  (setf (filestream backend) (open (filename backend)
+  (setf (filestream backend) (open (merge-pathnames (filename backend)
+                                                    (merge-pathnames
+                                                     "export/"
+                                                     (asdf/system:system-source-directory :drawer)))
                                    :direction :output
                                    :if-exists :supersede
                                    :if-does-not-exist :create))

@@ -746,3 +746,147 @@
                                   ))))
   (draw-with-multiple-backends (list btikz) (list keyboard keyboard-labels))
   (compile-tikz btikz))
+
+
+;; Arciorgano keyboard, with standard shorthand notenames, for the Vicentino21 edition
+;; (Editionsrichtlinien). Key mapping for 'tuning2'.
+
+(let* ((btikz (make-backend-tikz :filename "vicentino21-arciorgano-shorthand-tuning2.tex"))
+       (white-width 10)
+       (white-width-2 (* 1/2 white-width))
+       (white-front 12)
+       (white-front-2 (* 1/2 white-front))
+       (black-width 7)
+       (black-width-2 (* 1/2 black-width))
+       (black-a-length 9)
+       (black-b-length 9)
+       (tastino-width 5)
+       (tastino-width-2 (* 1/2 tastino-width))
+       (tastino-length 9)
+       (origin (pt 0 0))
+       (anchor (pt 12 12))
+       (air .3)
+       (white-shift-pt (pt white-width-2 white-front-2))
+       (manual-separation (+ white-front black-a-length black-b-length air))
+       (lowest-shape (ln-shape origin (list white-width
+                                            white-front
+                                            (- black-width-2)
+                                            (+ black-a-length black-b-length)
+                                            (- (- white-width black-width-2)))
+                               :shift air :shift-pt white-shift-pt))
+       (highest-shape (ln-shape origin (list white-width
+                                             (+ white-front (+ black-a-length black-b-length))
+                                             (- (- white-width black-width-2))
+                                             (- (+ black-a-length black-b-length))
+                                             (- black-width-2))
+                                :shift air :shift-pt white-shift-pt))
+       (mid-shape (ln-shape origin (list white-width
+                                         white-front
+                                         (- black-width-2)
+                                         (+ black-a-length black-b-length)
+                                         (- (- white-width black-width))
+                                         (- (+ black-a-length black-b-length))
+                                         (- black-width-2))
+                            :shift air :shift-pt white-shift-pt))
+       (left-tastino-shape (ln-shape origin (list white-width
+                                                  (- (+ white-front (+ black-a-length black-b-length))
+                                                     tastino-length)
+                                                  (- tastino-width-2)
+                                                  tastino-length
+                                                  (- (- white-width black-width-2 tastino-width-2))
+                                                  (- (+ black-a-length black-b-length))
+                                                  (- black-width-2))
+                                     :shift air :shift-pt white-shift-pt))
+       (right-tastino-shape (ln-shape origin (list white-width
+                                                   white-front
+                                                   (- black-width-2)
+                                                   (+ black-a-length black-b-length)
+                                                   (- (- white-width black-width-2 tastino-width-2))
+                                                   (- tastino-length)
+                                                   (- tastino-width-2))
+                                      :shift air :shift-pt white-shift-pt))
+       (black-a (ln-shape origin (list black-width
+                                       black-a-length
+                                       (- black-width))
+                          :shift air :shift-pt (pt black-width-2 (* 1/2 black-a-length))))
+       (black-b (ln-shape origin (list black-width
+                                       black-b-length
+                                       (- black-width))
+                          :shift air :shift-pt (pt black-width-2 (* 1/2 black-b-length))))
+       (tastino (ln-shape origin (list tastino-width
+                                       tastino-length
+                                       (- tastino-width))
+                          :shift air :shift-pt (pt tastino-width-2 (* 1/2 tastino-length))))
+       (first-tastino (cp tastino origin
+                          (add anchor (pt (- (* 3 white-width) tastino-width-2)
+                                          (- (+ white-front (+ black-a-length black-b-length))
+                                             tastino-length)))))
+       (black-pair (gr (list (cp black-a origin (pt (- white-width black-width-2)
+                                                    white-front))
+                             (cp black-b origin (pt (- white-width
+                                                       black-width-2)
+                                                    (+ white-front black-a-length))))))
+       (octave-c-c-lower (gr (list
+                              (cp right-tastino-shape origin anchor)
+                              (cp black-pair origin anchor)
+                              (cp mid-shape origin (right-of anchor white-width))
+                              (cp black-pair origin (right-of anchor white-width))
+                              (cp left-tastino-shape origin (right-of anchor (* 2 white-width)))
+                              first-tastino
+                              (cp right-tastino-shape origin (right-of anchor (* 3 white-width)))
+                              (cp black-pair origin (right-of anchor (* 3 white-width)))
+                              (cp mid-shape origin (right-of anchor (* 4 white-width)))
+                              (cp black-pair origin (right-of anchor (* 4 white-width)))
+                              (cp mid-shape origin (right-of anchor (* 5 white-width)))
+                              (cp black-pair origin (right-of anchor (* 5 white-width)))
+                              (cp left-tastino-shape origin (right-of anchor (* 6 white-width)))
+                              (cp first-tastino anchor (right-of anchor (* 4 white-width)))
+                              )))
+       (octave-c-c-upper (gr (list
+                              (cp lowest-shape origin anchor)
+                              (cp black-pair origin anchor)
+                              (cp mid-shape origin (right-of anchor white-width))
+                              (cp black-pair origin (right-of anchor white-width))
+                              (cp highest-shape origin (right-of anchor (* 2 white-width)))
+                              (cp lowest-shape origin (right-of anchor (* 3 white-width)))
+                              (cp black-pair origin (right-of anchor (* 3 white-width)))
+                              (cp mid-shape origin (right-of anchor (* 4 white-width)))
+                              (cp black-pair origin (right-of anchor (* 4 white-width)))
+                              (cp mid-shape origin (right-of anchor (* 5 white-width)))
+                              (cp black-pair origin (right-of anchor (* 5 white-width)))
+                              (cp highest-shape origin (right-of anchor (* 6 white-width)))
+                              )))
+       (keyboard (gr (list octave-c-c-lower
+                           (cp octave-c-c-upper anchor (above anchor manual-separation)))))
+       (lbl-white-lower (make-text-array '("C" "D" "E" "F" "G" "A" "B♮")
+                                   white-shift-pt (pt white-width 0)))
+       (lbl-black-front-lower (make-text-array '("C♯" "E♭" nil "F♯" "G♯" "B♭")
+                                         (pt white-width (+ white-front (* 1/2 black-a-length)))
+                                         (pt white-width 0)))
+       (lbl-black-back-lower (make-text-array '("D♭" "D♯" nil "G♭" "A♭" "A♯")
+                                        (pt white-width (+ white-front (+ black-a-length
+                                                                          (* 1/2 black-b-length))))
+                                        (pt white-width 0)))
+       (lbl-tastini-lower (make-text-array '(nil nil "E♯" nil nil nil "B♯" )
+                                     (pt white-width (- (+ white-front (+ black-a-length black-b-length))
+                                                        (* 1/2 tastino-length)))
+                                     (pt white-width 0)))
+       (lbl-white-upper (make-text-array '("C'" "D'" "E'" "F'" "G'" "A'" "B♮'")
+                                         white-shift-pt (pt white-width 0)))
+       (lbl-black-front-upper (make-text-array '("C♯'" "E♭'" nil "F♯'" "G♯'" "B♭'")
+                                         (pt white-width (+ white-front (* 1/2 black-a-length)))
+                                         (pt white-width 0)))
+       (lbl-black-back-upper (make-text-array '("D♭'" "D♯'" nil "G♭'" "A♭'" "A♯'")
+                                        (pt white-width (+ white-front (+ black-a-length
+                                                                          (* 1/2 black-b-length))))
+                                        (pt white-width 0)))
+       (keyboard-labels (gr (list (cp lbl-white-lower origin anchor)
+                                  (cp lbl-black-front-lower origin anchor)
+                                  (cp lbl-black-back-lower origin anchor)
+                                  (cp lbl-tastini-lower origin anchor)
+                                  (cp lbl-white-upper origin (above anchor manual-separation))
+                                  (cp lbl-black-front-upper origin (above anchor manual-separation))
+                                  (cp lbl-black-back-upper origin (above anchor manual-separation))
+                                  ))))
+  (draw-with-multiple-backends (list btikz) (list keyboard keyboard-labels))
+  (compile-tikz btikz))
