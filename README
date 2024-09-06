@@ -1,0 +1,32 @@
+#-*- mode: org -*-
+#+title: Documentation of DRAWER
+#+author: Johannes Keller
+
+* Intention
+DRAWER is a common lisp system. It is a wild collection of
+abstractions to generate drawings with TIKZ (LaTeX code), Cairo or
+SVG. The drawings are described and calculated in some sort of domain
+specific language. The goal is that drawings can be exported with all
+three backends.
+
+The Cairo and SVG backends are currently incomplete.
+
+I use DRAWER to generate all kinds of diagrams and drawings for
+various publications or to study certain contexts. Most of it is
+related to musical tunings. I used DRAWER heavily to generate figures
+in my PhD thesis. But I also used it in various other scholarly
+publications and for research.
+
+* Use
+There are not public functions in the package, the user is meant to
+work withing the :DRAWER package. A drawing is usually just an
+S-expression containing the description of the drawings and some
+commands to render it. Evaluating this expression would call the
+generation of export files.
+
+* Maintenance
+This is a personal project. I keep all drawings I ever generated in
+this repository, for future reference. Whenever I need an additional
+feature, I implement it for that specific drawing. I'm careful to keep
+everything backwards compatible, so that all drawings can be rendered
+with any state of the backend code.
