@@ -121,13 +121,9 @@
 ;; playground
 
 (let ((mon (make-monochord '(1))))
-  (add-ratio mon 2/3 0)
-  (add-ratio mon 3/4 0)
-  (add-ratio mon 4/5 0)
-  (add-ratio mon 6/5 2)
-  (add-ratio mon 4/3 4)
+  (add-ratio mon 81/80 0)
 
   (let ((m-pyth (render-monochord mon 350 2.2 0.2 0.6 :up))
-        (btikz (make-backend-tikz :filename "monochord-live-5-ji.tex")))
+        (btikz (make-backend-tikz :filename "monochord-live.tex")))
     (draw-with-multiple-backends (list btikz) (list m-pyth))
     (compile-tikz btikz)))
