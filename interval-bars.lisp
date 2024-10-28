@@ -251,3 +251,52 @@
                                                   :h-align :left))))))))
   (draw-with-multiple-backends (list btikz) (list bars-gr))
   (compile-tikz btikz))
+
+
+
+(let* ((btikz (make-backend-tikz :filename "basic-just-intervals.tex"))
+       (int-ottava 2/1)
+       (int-quinta 3/2)
+       (int-quarta 4/3)
+       (int-terza-maggiore 5/4)
+       (int-terza-minore 6/5)
+       (int-tono-maggiore 9/8)
+       (int-tono-minore 10/9)
+       (int-semitono-maggiore 16/15)
+       (int-semitono-minore 25/24)
+       (int-diesis 128/125)
+       (int-comma 81/80)
+       (int-list
+         (sort
+          (copy-list
+           (list (cons int-ottava "2:1, ottava, diapason")
+                 (cons int-quinta "3:2, quinta, diapente")
+                 (cons int-quarta "4:3, quarta, diatessaron")
+                 (cons int-terza-maggiore "5:4, terza maggiore, ditonus")
+                 (cons int-terza-minore "6:5, terza minore, semiditonus")
+                 (cons int-tono-maggiore "9:8, tono (major second), tonus major")
+                 (cons int-tono-minore "10:9, tono (major second), tonus minor")
+                 (cons int-semitono-maggiore "16:15, semitono maggiore (minor second, diatonic semitone)")
+                 (cons int-semitono-minore "25:24, semitono minore (augmented prime, chromatic semitone)")
+                 (cons int-diesis "128:125, diesis (diminished second)")
+                 (cons int-comma "81:80, comma (syntonic comma)")))
+               #'<
+               :key #'car))
+       (bar-padding 3.5)
+       (scale-factor 1/10)
+       (label-padding 1)
+       (bar-thickness 2.5)
+       (bars-gr (gr (loop for len in int-list
+                        for i from 0
+                           collect
+                           (let ((log-len (* scale-factor
+                                             (vicentino-tunings:ratio->length (car len)))))
+                             (gr (list (ln-shape (pt 0 (- (* i bar-padding)
+                                                          (* 1/2 bar-thickness)))
+                                           (list log-len bar-thickness (- log-len)))
+                                       (make-text (format nil "~a" (cdr len))
+                                                  (pt (+ log-len label-padding)
+                                                      (* i bar-padding))
+                                                  :h-align :left))))))))
+  (draw-with-multiple-backends (list btikz) (list bars-gr))
+  (compile-tikz btikz))
