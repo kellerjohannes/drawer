@@ -175,14 +175,16 @@
   ((text-string :initarg :text-string :accessor text-string)
    (anchor :initarg :anchor :accessor anchor)
    (horizontal-alignment :initarg :horizontal-alignment :accessor horizontal-alignment)
-   (vertical-alignment :initarg :vertical-alignment :accessor vertical-alignment)))
+   (vertical-alignment :initarg :vertical-alignment :accessor vertical-alignment)
+   (angle :initform 0 :initarg :angle :accessor angle)))
 
 (defmethod make-text (text-string (anchor point)
-                      &key (h-align :center) (v-align :center) (style *default-style*))
+                      &key (h-align :center) (v-align :center) (angle 0) (style *default-style*))
   (make-instance 'text :text-string text-string
                        :anchor anchor
                        :horizontal-alignment h-align
                        :vertical-alignment v-align
+                       :angle angle
                        :style style))
 
 

@@ -104,6 +104,7 @@
   (make-text (text-string obj) (cp (anchor obj) anchor target)
              :v-align (vertical-alignment obj)
              :h-align (horizontal-alignment obj)
+             :angle (angle obj)
              :style (style obj)))
 
 (defmethod cp ((obj group) (anchor point) (target point))

@@ -184,11 +184,11 @@
 (defmethod draw ((obj text) (backend backend-tikz))
   (when (text-string obj)
     (let ((*global-scale-factor* (scale-factor backend)))
-      (add-tikz-line (format nil "\\node[~a] at (~f, ~f) { \\large ~a };"
+      (add-tikz-line (format nil "\\node[~a] at (~f, ~f) { \\rotatebox{~f}{\\large ~a} };"
                              (lookup-h-align (horizontal-alignment obj))
                              (value (x (anchor obj)))
                              (value (y (anchor obj)))
-                             (text-string obj))
+                             (angle obj) (text-string obj))
                      backend))))
 
 
