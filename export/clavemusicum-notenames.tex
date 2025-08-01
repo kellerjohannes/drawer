@@ -1,0 +1,93 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{mathabx}
+\usepackage{stackengine}
+\usetikzlibrary{backgrounds}
+\usepackage{newunicodechar}
+\newunicodechar{♮}{$\natural$}
+\newunicodechar{♭}{$\flat$}
+\newunicodechar{♯}{$\sharp$}
+\newunicodechar{➚}{$\nearrow$}
+\newunicodechar{➘}{$\searrow$}
+\newunicodechar{ʼ}{'}
+\newunicodechar{Ȧ}{\stackon[0.8pt]{A}{.}}
+\newunicodechar{Ḃ}{\stackon[0.8pt]{B}{.}}
+\newunicodechar{Ċ}{\stackon[0.8pt]{C}{.}}
+\newunicodechar{Ḋ}{\stackon[0.8pt]{D}{.}}
+\newunicodechar{Ė}{\stackon[0.8pt]{E}{.}}
+\newunicodechar{Ḟ}{\stackon[0.8pt]{F}{.}}
+\newunicodechar{Ġ}{\stackon[0.8pt]{G}{.}}
+
+
+\def\centerarc[#1](#2)(#3:#4:#5);%
+{
+  \draw[#1]([shift=(#3:#5)]#2) arc (#3:#4:#5);
+}
+
+
+\begin{document}
+\begin{tikzpicture}
+
+\draw[thick] (2.46, 2.46) -- (4.34, 2.46) -- (4.34, 5.5400004) -- (3.7400002, 5.5400004) -- (3.7400002, 13.54) -- (2.8600001, 13.54) -- (2.8600001, 8.34) -- (2.46, 8.34) --  cycle;
+\draw[thick] (3.86, 5.66) -- (4.94, 5.66) -- (4.94, 7.5400004) -- (3.86, 7.5400004) --  cycle;
+\draw[thick] (3.86, 7.66) -- (4.94, 7.66) -- (4.94, 9.54) -- (3.86, 9.54) --  cycle;
+\draw[thick] (3.86, 9.66) -- (4.94, 9.66) -- (4.94, 11.54) -- (3.86, 11.54) --  cycle;
+\draw[thick] (3.86, 11.66) -- (4.94, 11.66) -- (4.94, 13.54) -- (3.86, 13.54) --  cycle;
+\draw[thick] (4.46, 2.46) -- (6.34, 2.46) -- (6.34, 5.5400004) -- (5.7400002, 5.5400004) -- (5.7400002, 13.54) -- (5.06, 13.54) -- (5.06, 5.5400004) -- (4.46, 5.5400004) --  cycle;
+\draw[thick] (5.86, 5.66) -- (6.94, 5.66) -- (6.94, 7.5400004) -- (5.86, 7.5400004) --  cycle;
+\draw[thick] (5.86, 7.66) -- (6.94, 7.66) -- (6.94, 9.54) -- (5.86, 9.54) --  cycle;
+\draw[thick] (5.86, 9.66) -- (6.94, 9.66) -- (6.94, 11.54) -- (5.86, 11.54) --  cycle;
+\draw[thick] (5.86, 11.66) -- (6.94, 11.66) -- (6.94, 13.54) -- (5.86, 13.54) --  cycle;
+\draw[thick] (6.46, 2.46) -- (8.34, 2.46) -- (8.34, 8.34) -- (7.94, 8.34) -- (7.94, 13.54) -- (7.06, 13.54) -- (7.06, 5.5400004) -- (6.46, 5.5400004) --  cycle;
+\draw[thick] (8.06, 11.06) -- (8.740001, 11.06) -- (8.740001, 13.54) -- (8.06, 13.54) --  cycle;
+\draw[thick] (8.06, 8.46) -- (8.740001, 8.46) -- (8.740001, 10.940001) -- (8.06, 10.940001) --  cycle;
+\draw[thick] (8.46, 2.46) -- (10.34, 2.46) -- (10.34, 5.5400004) -- (9.740001, 5.5400004) -- (9.740001, 13.54) -- (8.86, 13.54) -- (8.86, 8.34) -- (8.46, 8.34) --  cycle;
+\draw[thick] (9.86, 5.66) -- (10.940001, 5.66) -- (10.940001, 7.5400004) -- (9.86, 7.5400004) --  cycle;
+\draw[thick] (9.86, 7.66) -- (10.940001, 7.66) -- (10.940001, 9.54) -- (9.86, 9.54) --  cycle;
+\draw[thick] (9.86, 9.66) -- (10.940001, 9.66) -- (10.940001, 11.54) -- (9.86, 11.54) --  cycle;
+\draw[thick] (9.86, 11.66) -- (10.940001, 11.66) -- (10.940001, 13.54) -- (9.86, 13.54) --  cycle;
+\draw[thick] (10.46, 2.46) -- (12.34, 2.46) -- (12.34, 5.5400004) -- (11.740001, 5.5400004) -- (11.740001, 13.54) -- (11.06, 13.54) -- (11.06, 5.5400004) -- (10.46, 5.5400004) --  cycle;
+\draw[thick] (11.86, 5.66) -- (12.94, 5.66) -- (12.94, 7.5400004) -- (11.86, 7.5400004) --  cycle;
+\draw[thick] (11.86, 7.66) -- (12.94, 7.66) -- (12.94, 9.54) -- (11.86, 9.54) --  cycle;
+\draw[thick] (11.86, 9.66) -- (12.94, 9.66) -- (12.94, 11.54) -- (11.86, 11.54) --  cycle;
+\draw[thick] (11.86, 11.66) -- (12.94, 11.66) -- (12.94, 13.54) -- (11.86, 13.54) --  cycle;
+\draw[thick] (12.46, 2.46) -- (14.339999, 2.46) -- (14.339999, 5.5400004) -- (13.74, 5.5400004) -- (13.74, 13.54) -- (13.06, 13.54) -- (13.06, 5.5400004) -- (12.46, 5.5400004) --  cycle;
+\draw[thick] (13.860001, 5.66) -- (14.94, 5.66) -- (14.94, 7.5400004) -- (13.860001, 7.5400004) --  cycle;
+\draw[thick] (13.860001, 7.66) -- (14.94, 7.66) -- (14.94, 9.54) -- (13.860001, 9.54) --  cycle;
+\draw[thick] (13.860001, 9.66) -- (14.94, 9.66) -- (14.94, 11.54) -- (13.860001, 11.54) --  cycle;
+\draw[thick] (13.860001, 11.66) -- (14.94, 11.66) -- (14.94, 13.54) -- (13.860001, 13.54) --  cycle;
+\draw[thick] (14.460001, 2.46) -- (16.34, 2.46) -- (16.34, 8.34) -- (15.94, 8.34) -- (15.94, 13.54) -- (15.06, 13.54) -- (15.06, 5.5400004) -- (14.460001, 5.5400004) --  cycle;
+\draw[thick] (16.060001, 11.06) -- (16.74, 11.06) -- (16.74, 13.54) -- (16.060001, 13.54) --  cycle;
+\draw[thick] (16.060001, 8.46) -- (16.74, 8.46) -- (16.74, 10.940001) -- (16.060001, 10.940001) --  cycle;
+\node[align=center] at (3.4599998, 4.0) { \large C };
+\node[align=center] at (5.46, 4.0) { \large D };
+\node[align=center] at (7.46, 4.0) { \large E };
+\node[align=center] at (9.46, 4.0) { \large F };
+\node[align=center] at (11.46, 4.0) { \large G };
+\node[align=center] at (13.460001, 4.0) { \large A };
+\node[align=center] at (15.460001, 4.0) { \large B♮ };
+\node[align=center] at (4.46, 6.6) { \large C♯ };
+\node[align=center] at (6.46, 6.6) { \large E♭ };
+\node[align=center] at (10.46, 6.6) { \large F♯ };
+\node[align=center] at (12.46, 6.6) { \large G♯ };
+\node[align=center] at (14.460001, 6.6) { \large B♭ };
+\node[align=center] at (4.46, 8.6) { \large D♭ };
+\node[align=center] at (6.46, 8.6) { \large D♯ };
+\node[align=center] at (10.46, 8.6) { \large G♭ };
+\node[align=center] at (12.46, 8.6) { \large A♭ };
+\node[align=center] at (14.460001, 8.6) { \large A♯ };
+\node[align=center] at (4.46, 10.6) { \large C♯♯ };
+\node[align=center] at (6.46, 10.6) { \large E♭♭ };
+\node[align=center] at (10.46, 10.6) { \large F♯♯ };
+\node[align=center] at (12.46, 10.6) { \large G♯♯ };
+\node[align=center] at (14.460001, 10.6) { \large B♭♭ };
+\node[align=center] at (4.46, 12.6) { \large D♭♭ };
+\node[align=center] at (6.46, 12.6) { \large D♯♯ };
+\node[align=center] at (10.46, 12.6) { \large G♭♭ };
+\node[align=center] at (12.46, 12.6) { \large A♭♭ };
+\node[align=center] at (14.460001, 12.6) { \large A♯♯ };
+\node[align=center] at (8.46, 12.3) { \large F♭ };
+\node[align=center] at (16.460001, 12.3) { \large C♭ };
+\node[align=center] at (8.46, 9.7) { \large E♯ };
+\node[align=center] at (16.460001, 9.7) { \large B♯ };
+\end{tikzpicture}
+\end{document}
