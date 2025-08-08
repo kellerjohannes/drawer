@@ -1,0 +1,303 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{mathabx}
+\usepackage{stackengine}
+\usetikzlibrary{backgrounds}
+\usepackage{newunicodechar}
+\newunicodechar{♮}{$\natural$}
+\newunicodechar{♭}{$\flat$}
+\newunicodechar{♯}{$\sharp$}
+\newunicodechar{➚}{$\nearrow$}
+\newunicodechar{➘}{$\searrow$}
+\newunicodechar{ʼ}{'}
+\newunicodechar{Ả}{\stackon[0.8pt]{A}{,}}
+\newunicodechar{Ɓ}{\stackon[0.8pt]{B}{,}}
+\newunicodechar{Ƈ}{\stackon[0.8pt]{C}{,}}
+\newunicodechar{Ɗ}{\stackon[0.8pt]{D}{,}}
+\newunicodechar{Ẻ}{\stackon[0.8pt]{E}{,}}
+\newunicodechar{Ƒ}{\stackon[0.8pt]{F}{,}}
+\newunicodechar{Ɠ}{\stackon[0.8pt]{G}{,}}
+\newunicodechar{Ȧ}{\stackon[0.8pt]{A}{.}}
+\newunicodechar{Ḃ}{\stackon[0.8pt]{B}{.}}
+\newunicodechar{Ċ}{\stackon[0.8pt]{C}{.}}
+\newunicodechar{Ḋ}{\stackon[0.8pt]{D}{.}}
+\newunicodechar{Ė}{\stackon[0.8pt]{E}{.}}
+\newunicodechar{Ḟ}{\stackon[0.8pt]{F}{.}}
+\newunicodechar{Ġ}{\stackon[0.8pt]{G}{.}}
+
+
+\def\centerarc[#1](#2)(#3:#4:#5);%
+{
+  \draw[#1]([shift=(#3:#5)]#2) arc (#3:#4:#5);
+}
+
+
+\begin{document}
+\begin{tikzpicture}
+
+\draw[dotted] (-2.6000001,0.030000001) -- (3.0,0.030000001);
+\draw[dotted] (-2.6000001,0.15) -- (3.0,0.15);
+\draw[dotted] (-2.6000001,2.3400002) -- (3.0,2.3400002);
+\draw[dotted] (-2.6000001,2.4900002) -- (3.0,2.4900002);
+\draw[dotted] (-2.6000001,3.4800003) -- (3.0,3.4800003);
+\draw[dotted] (-2.6000001,4.8) -- (3.0,4.8);
+\draw[dotted] (-2.6000001,5.82) -- (3.0,5.82);
+\draw[dotted] (-2.6000001,5.9700003) -- (3.0,5.9700003);
+\draw[dotted] (-2.6000001,8.280001) -- (3.0,8.280001);
+\draw[dotted] (-2.6000001,8.13) -- (3.0,8.13);
+\draw[dotted] (-2.6000001,9.3) -- (3.0,9.3);
+\draw[dotted] (-2.6000001,9.45) -- (3.0,9.45);
+\draw[dotted] (-2.6000001,11.610001) -- (3.0,11.610001);
+\draw[dotted] (-2.6000001,11.760001) -- (3.0,11.760001);
+\draw[dotted] (-2.6000001,13.920001) -- (3.0,13.920001);
+\draw[dotted] (-2.6000001,14.1) -- (3.0,14.1);
+\draw[dotted] (-2.6000001,15.090001) -- (3.0,15.090001);
+\draw[dotted] (-2.6000001,15.240001) -- (3.0,15.240001);
+\draw[dotted] (-2.6000001,17.43) -- (3.0,17.43);
+\draw[dotted] (-2.6000001,17.58) -- (3.0,17.58);
+\draw[dotted] (-2.6000001,19.740002) -- (3.0,19.740002);
+\draw[dotted] (-2.6000001,19.890001) -- (3.0,19.890001);
+\draw[dotted] (-2.6000001,20.910002) -- (3.0,20.910002);
+\draw[dotted] (-2.6000001,21.060001) -- (3.0,21.060001);
+\draw[dotted] (-2.6000001,23.220001) -- (3.0,23.220001);
+\draw[dotted] (-2.6000001,23.400002) -- (3.0,23.400002);
+\draw[dotted] (-2.6000001,24.390001) -- (3.0,24.390001);
+\draw[dotted] (-2.6000001,24.54) -- (3.0,24.54);
+\draw[dotted] (-2.6000001,26.7) -- (3.0,26.7);
+\draw[dotted] (-2.6000001,26.880003) -- (3.0,26.880003);
+\draw[dotted] (-2.6000001,29.040003) -- (3.0,29.040003);
+\draw[dotted] (-2.6000001,29.190002) -- (3.0,29.190002);
+\draw[dotted] (-2.6000001,30.180002) -- (3.0,30.180002);
+\draw[dotted] (-2.6000001,30.36) -- (3.0,30.36);
+\draw[dotted] (-2.6000001,32.52) -- (3.0,32.52);
+\draw[dotted] (-2.6000001,32.670002) -- (3.0,32.670002);
+\draw[dotted] (-2.6000001,34.83) -- (3.0,34.83);
+\draw[dotted] (-2.6000001,34.980003) -- (3.0,34.980003);
+\draw[dotted] (-2.6000001,36.0) -- (3.0,36.0);
+\draw (-2.6000001,0.0) -- (-2.6000001,36.0);
+\draw (-2.6000001,0.030000001) -- (-2.34,0.030000001);
+\draw (-2.6000001,0.15) -- (-2.34,0.15);
+\draw (-2.6000001,2.3400002) -- (-2.34,2.3400002);
+\draw (-2.6000001,2.4900002) -- (-2.34,2.4900002);
+\draw (-2.6000001,3.4800003) -- (-2.34,3.4800003);
+\draw (-2.6000001,4.8) -- (-2.34,4.8);
+\draw (-2.6000001,5.82) -- (-2.34,5.82);
+\draw (-2.6000001,5.9700003) -- (-2.34,5.9700003);
+\draw (-2.6000001,8.280001) -- (-2.34,8.280001);
+\draw (-2.6000001,8.13) -- (-2.34,8.13);
+\draw (-2.6000001,9.3) -- (-2.34,9.3);
+\draw (-2.6000001,9.45) -- (-2.34,9.45);
+\draw (-2.6000001,11.610001) -- (-2.34,11.610001);
+\draw (-2.6000001,11.760001) -- (-2.34,11.760001);
+\draw (-2.6000001,13.920001) -- (-2.34,13.920001);
+\draw (-2.6000001,14.1) -- (-2.34,14.1);
+\draw (-2.6000001,15.090001) -- (-2.34,15.090001);
+\draw (-2.6000001,15.240001) -- (-2.34,15.240001);
+\draw (-2.6000001,17.43) -- (-2.34,17.43);
+\draw (-2.6000001,17.58) -- (-2.34,17.58);
+\draw (-2.6000001,19.740002) -- (-2.34,19.740002);
+\draw (-2.6000001,19.890001) -- (-2.34,19.890001);
+\draw (-2.6000001,20.910002) -- (-2.34,20.910002);
+\draw (-2.6000001,21.060001) -- (-2.34,21.060001);
+\draw (-2.6000001,23.220001) -- (-2.34,23.220001);
+\draw (-2.6000001,23.400002) -- (-2.34,23.400002);
+\draw (-2.6000001,24.390001) -- (-2.34,24.390001);
+\draw (-2.6000001,24.54) -- (-2.34,24.54);
+\draw (-2.6000001,26.7) -- (-2.34,26.7);
+\draw (-2.6000001,26.880003) -- (-2.34,26.880003);
+\draw (-2.6000001,29.040003) -- (-2.34,29.040003);
+\draw (-2.6000001,29.190002) -- (-2.34,29.190002);
+\draw (-2.6000001,30.180002) -- (-2.34,30.180002);
+\draw (-2.6000001,30.36) -- (-2.34,30.36);
+\draw (-2.6000001,32.52) -- (-2.34,32.52);
+\draw (-2.6000001,32.670002) -- (-2.34,32.670002);
+\draw (-2.6000001,34.83) -- (-2.34,34.83);
+\draw (-2.6000001,34.980003) -- (-2.34,34.980003);
+\draw (-2.6000001,36.0) -- (-2.34,36.0);
+\node[anchor=east] at (-2.7, -0.15) { \rotatebox{0.0}{\large 1F} };
+\node[anchor=east] at (-2.7, 0.33) { \rotatebox{0.0}{\large 4Ḟ} };
+\node[anchor=east] at (-2.7, 2.1600003) { \rotatebox{0.0}{\large 2F♯} };
+\node[anchor=east] at (-2.7, 2.67) { \rotatebox{0.0}{\large 5Ġ♭} };
+\node[anchor=east] at (-2.7, 3.4800003) { \rotatebox{0.0}{\large 3G♭} };
+\node[anchor=east] at (-2.7, 4.8) { \rotatebox{0.0}{\large 6Ɠ} };
+\node[anchor=east] at (-2.7, 5.6400003) { \rotatebox{0.0}{\large 1G} };
+\node[anchor=east] at (-2.7, 6.15) { \rotatebox{0.0}{\large 4Ġ} };
+\node[anchor=east] at (-2.7, 7.9) { \rotatebox{0.0}{\large 5Ȧ♭} };
+\node[anchor=east] at (-2.7, 8.31) { \rotatebox{0.0}{\large 2G♯} };
+\node[anchor=east] at (-2.7, 9.12) { \rotatebox{0.0}{\large 3A♭} };
+\node[anchor=east] at (-2.7, 9.63) { \rotatebox{0.0}{\large 6Ả} };
+\node[anchor=east] at (-2.7, 11.43) { \rotatebox{0.0}{\large 1A} };
+\node[anchor=east] at (-2.7, 11.9400015) { \rotatebox{0.0}{\large 4Ȧ} };
+\node[anchor=east] at (-2.7, 13.740001) { \rotatebox{0.0}{\large 3A♯} };
+\node[anchor=east] at (-2.7, 14.280001) { \rotatebox{0.0}{\large 6Ɓ} };
+\node[anchor=east] at (-2.7, 14.910001) { \rotatebox{0.0}{\large 2B♭} };
+\node[anchor=east] at (-2.7, 15.420001) { \rotatebox{0.0}{\large 5Ḃ♭} };
+\node[anchor=east] at (-2.7, 17.25) { \rotatebox{0.0}{\large 1B} };
+\node[anchor=east] at (-2.7, 17.76) { \rotatebox{0.0}{\large 4Ḃ} };
+\node[anchor=east] at (-2.7, 19.560001) { \rotatebox{0.0}{\large 3B♯} };
+\node[anchor=east] at (-2.7, 20.070002) { \rotatebox{0.0}{\large [6Ƈ]} };
+\node[anchor=east] at (-2.7, 20.730001) { \rotatebox{0.0}{\large 1C} };
+\node[anchor=east] at (-2.7, 21.240002) { \rotatebox{0.0}{\large 4Ċ} };
+\node[anchor=east] at (-2.7, 23.04) { \rotatebox{0.0}{\large 2C♯} };
+\node[anchor=east] at (-2.7, 23.580002) { \rotatebox{0.0}{\large 5Ḋ♭} };
+\node[anchor=east] at (-2.7, 24.210001) { \rotatebox{0.0}{\large 3D♯} };
+\node[anchor=east] at (-2.7, 24.720001) { \rotatebox{0.0}{\large 6Ɗ} };
+\node[anchor=east] at (-2.7, 26.520002) { \rotatebox{0.0}{\large 1D} };
+\node[anchor=east] at (-2.7, 27.060001) { \rotatebox{0.0}{\large 4Ḋ} };
+\node[anchor=east] at (-2.7, 28.860004) { \rotatebox{0.0}{\large 3D♯} };
+\node[anchor=east] at (-2.7, 29.37) { \rotatebox{0.0}{\large 5Ė♭} };
+\node[anchor=east] at (-2.7, 30.000004) { \rotatebox{0.0}{\large 2E♭} };
+\node[anchor=east] at (-2.7, 30.539999) { \rotatebox{0.0}{\large 6Ẻ} };
+\node[anchor=east] at (-2.7, 32.340004) { \rotatebox{0.0}{\large 1E} };
+\node[anchor=east] at (-2.7, 32.850002) { \rotatebox{0.0}{\large 4Ė} };
+\node[anchor=east] at (-2.7, 34.650005) { \rotatebox{0.0}{\large 3E♯} };
+\node[anchor=east] at (-2.7, 35.16) { \rotatebox{0.0}{\large [6Ƒ]} };
+\node[anchor=east] at (-2.7, 36.0) { \rotatebox{0.0}{\large 1F} };
+\node[align=center] at (-2.6000001, -0.8) { \rotatebox{0.0}{\large Maniates} };
+\draw (0.0,0.0) -- (0.0,35.998882);
+\draw (0.0,0.0) -- (0.26,0.0);
+\draw (0.0,0.16128966) -- (0.26,0.16128966);
+\draw (0.0,2.281406) -- (0.26,2.281406);
+\draw (0.0,2.4426973) -- (0.26,2.4426973);
+\draw (0.0,3.5131245) -- (0.26,3.5131245);
+\draw (0.0,3.6744137) -- (0.26,3.6744137);
+\draw (0.0,5.7945333) -- (0.26,5.7945333);
+\draw (0.0,5.955824) -- (0.26,5.955824);
+\draw (0.0,8.075938) -- (0.26,8.075938);
+\draw (0.0,8.237228) -- (0.26,8.237228);
+\draw (0.0,9.307655) -- (0.26,9.307655);
+\draw (0.0,9.468947) -- (0.26,9.468947);
+\draw (0.0,11.589058) -- (0.26,11.589058);
+\draw (0.0,11.750353) -- (0.26,11.750353);
+\draw (0.0,13.870465) -- (0.26,13.870465);
+\draw (0.0,14.031756) -- (0.26,14.031756);
+\draw (0.0,15.102182) -- (0.26,15.102182);
+\draw (0.0,15.263469) -- (0.26,15.263469);
+\draw (0.0,17.383589) -- (0.26,17.383589);
+\draw (0.0,17.54488) -- (0.26,17.54488);
+\draw (0.0,19.664995) -- (0.26,19.664995);
+\draw (0.0,19.826288) -- (0.26,19.826288);
+\draw (0.0,20.896708) -- (0.26,20.896708);
+\draw (0.0,21.057997) -- (0.26,21.057997);
+\draw (0.0,23.178114) -- (0.26,23.178114);
+\draw (0.0,23.339405) -- (0.26,23.339405);
+\draw (0.0,24.409834) -- (0.26,24.409834);
+\draw (0.0,24.571123) -- (0.26,24.571123);
+\draw (0.0,26.691238) -- (0.26,26.691238);
+\draw (0.0,26.852528) -- (0.26,26.852528);
+\draw (0.0,28.972645) -- (0.26,28.972645);
+\draw (0.0,29.13394) -- (0.26,29.13394);
+\draw (0.0,30.204361) -- (0.26,30.204361);
+\draw (0.0,30.365652) -- (0.26,30.365652);
+\draw (0.0,32.485767) -- (0.26,32.485767);
+\draw (0.0,32.647057) -- (0.26,32.647057);
+\draw (0.0,34.767178) -- (0.26,34.767178);
+\draw (0.0,34.928467) -- (0.26,34.928467);
+\draw (0.0,35.998882) -- (0.26,35.998882);
+\node[anchor=east] at (-0.1, -0.17999999) { \rotatebox{0.0}{\large F [1F]} };
+\node[anchor=east] at (-0.1, 0.34128967) { \rotatebox{0.0}{\large F’ [4Ḟ]} };
+\node[anchor=east] at (-0.1, 2.1014059) { \rotatebox{0.0}{\large F♯ [2F♯]} };
+\node[anchor=east] at (-0.1, 2.622697) { \rotatebox{0.0}{\large F♯’ [5Ġ♭]} };
+\node[anchor=east] at (-0.1, 3.3331246) { \rotatebox{0.0}{\large G♭ [3G♭]} };
+\node[anchor=east] at (-0.1, 3.8544137) { \rotatebox{0.0}{\large G♭’ [6Ɠ]} };
+\node[anchor=east] at (-0.1, 5.6145334) { \rotatebox{0.0}{\large G [1G]} };
+\node[anchor=east] at (-0.1, 6.1358237) { \rotatebox{0.0}{\large G’ [4Ġ]} };
+\node[anchor=east] at (-0.1, 7.8959374) { \rotatebox{0.0}{\large G♯ [2G♯]} };
+\node[anchor=east] at (-0.1, 8.417229) { \rotatebox{0.0}{\large G♯’ [5Ȧ♭]} };
+\node[anchor=east] at (-0.1, 9.127655) { \rotatebox{0.0}{\large A♭ [3A♭]} };
+\node[anchor=east] at (-0.1, 9.648948) { \rotatebox{0.0}{\large A♭’ [6Ả]} };
+\node[anchor=east] at (-0.1, 11.409058) { \rotatebox{0.0}{\large A [1A]} };
+\node[anchor=east] at (-0.1, 11.930353) { \rotatebox{0.0}{\large A’ [4Ḟ]} };
+\node[anchor=east] at (-0.1, 13.690465) { \rotatebox{0.0}{\large A♯ [3A♯]} };
+\node[anchor=east] at (-0.1, 14.211757) { \rotatebox{0.0}{\large A♯’ [6Ɓ]} };
+\node[anchor=east] at (-0.1, 14.922182) { \rotatebox{0.0}{\large B♭ [2B♭]} };
+\node[anchor=east] at (-0.1, 15.443469) { \rotatebox{0.0}{\large B♭’ [5Ḃ♭]} };
+\node[anchor=east] at (-0.1, 17.203588) { \rotatebox{0.0}{\large B♮ [1B]} };
+\node[anchor=east] at (-0.1, 17.72488) { \rotatebox{0.0}{\large B♮ʼ [4Ḃ]} };
+\node[anchor=east] at (-0.1, 19.484995) { \rotatebox{0.0}{\large B♯ [3B♯]} };
+\node[anchor=east] at (-0.1, 20.006289) { \rotatebox{0.0}{\large B♯’ [6Ƈ]} };
+\node[anchor=east] at (-0.1, 20.716707) { \rotatebox{0.0}{\large C [1C]} };
+\node[anchor=east] at (-0.1, 21.237997) { \rotatebox{0.0}{\large C’ [4Ċ]} };
+\node[anchor=east] at (-0.1, 22.998114) { \rotatebox{0.0}{\large C♯ [2C♯]} };
+\node[anchor=east] at (-0.1, 23.519405) { \rotatebox{0.0}{\large C♯’ [5Ḋ♭]} };
+\node[anchor=east] at (-0.1, 24.229834) { \rotatebox{0.0}{\large D♭ [3D♭]} };
+\node[anchor=east] at (-0.1, 24.751123) { \rotatebox{0.0}{\large D♭’ [6Ɗ]} };
+\node[anchor=east] at (-0.1, 26.51124) { \rotatebox{0.0}{\large D [1D]} };
+\node[anchor=east] at (-0.1, 27.032526) { \rotatebox{0.0}{\large D’ [4Ḋ]} };
+\node[anchor=east] at (-0.1, 28.792646) { \rotatebox{0.0}{\large D♯ [3D♯]} };
+\node[anchor=east] at (-0.1, 29.313938) { \rotatebox{0.0}{\large D♯’ [6Ẻ]} };
+\node[anchor=east] at (-0.1, 30.024363) { \rotatebox{0.0}{\large E♭ [2E♭]} };
+\node[anchor=east] at (-0.1, 30.545652) { \rotatebox{0.0}{\large E♭’ [5Ė♭]} };
+\node[anchor=east] at (-0.1, 32.305767) { \rotatebox{0.0}{\large E [1E]} };
+\node[anchor=east] at (-0.1, 32.827053) { \rotatebox{0.0}{\large E’ [4Ė]} };
+\node[anchor=east] at (-0.1, 34.587177) { \rotatebox{0.0}{\large E♯ [3E♯]} };
+\node[anchor=east] at (-0.1, 35.108467) { \rotatebox{0.0}{\large E♯’ [6Ƒ]} };
+\node[anchor=east] at (-0.1, 35.998882) { \rotatebox{0.0}{\large F [F1]} };
+\node[align=center] at (0.0, -0.8) { \rotatebox{0.0}{\large [1/4-MT]} };
+\draw (2.6000001,0.0) -- (2.6000001,35.998882);
+\draw (2.6000001,0.0) -- (2.8600001,0.0);
+\draw (2.6000001,12.773797) -- (2.8600001,12.773797);
+\draw (2.6000001,13.935053) -- (2.8600001,13.935053);
+\draw (2.6000001,15.096308) -- (2.8600001,15.096308);
+\draw (2.6000001,16.257559) -- (2.8600001,16.257559);
+\draw (2.6000001,17.418818) -- (2.8600001,17.418818);
+\draw (2.6000001,18.580069) -- (2.8600001,18.580069);
+\draw (2.6000001,19.741325) -- (2.8600001,19.741325);
+\draw (2.6000001,20.902578) -- (2.8600001,20.902578);
+\draw (2.6000001,22.063831) -- (2.8600001,22.063831);
+\draw (2.6000001,23.22509) -- (2.8600001,23.22509);
+\draw (2.6000001,24.386341) -- (2.8600001,24.386341);
+\draw (2.6000001,25.547594) -- (2.8600001,25.547594);
+\draw (2.6000001,26.70885) -- (2.8600001,26.70885);
+\draw (2.6000001,27.870108) -- (2.8600001,27.870108);
+\draw (2.6000001,29.03136) -- (2.8600001,29.03136);
+\draw (2.6000001,30.192616) -- (2.8600001,30.192616);
+\draw (2.6000001,31.35387) -- (2.8600001,31.35387);
+\draw (2.6000001,32.515125) -- (2.8600001,32.515125);
+\draw (2.6000001,33.67638) -- (2.8600001,33.67638);
+\draw (2.6000001,34.837627) -- (2.8600001,34.837627);
+\draw (2.6000001,35.998882) -- (2.8600001,35.998882);
+\draw (2.6000001,1.1612576) -- (2.8600001,1.1612576);
+\draw (2.6000001,2.3225095) -- (2.8600001,2.3225095);
+\draw (2.6000001,3.4837625) -- (2.8600001,3.4837625);
+\draw (2.6000001,4.6450157) -- (2.8600001,4.6450157);
+\draw (2.6000001,5.806271) -- (2.8600001,5.806271);
+\draw (2.6000001,6.9675264) -- (2.8600001,6.9675264);
+\draw (2.6000001,8.128779) -- (2.8600001,8.128779);
+\draw (2.6000001,9.290034) -- (2.8600001,9.290034);
+\draw (2.6000001,10.451292) -- (2.8600001,10.451292);
+\draw (2.6000001,11.612545) -- (2.8600001,11.612545);
+\node[anchor=east] at (2.5, 0.0) { \rotatebox{0.0}{\large F} };
+\node[anchor=east] at (2.5, 12.773797) { \rotatebox{0.0}{\large Ȧ} };
+\node[anchor=east] at (2.5, 13.935053) { \rotatebox{0.0}{\large A♯} };
+\node[anchor=east] at (2.5, 15.096308) { \rotatebox{0.0}{\large B♭} };
+\node[anchor=east] at (2.5, 16.257559) { \rotatebox{0.0}{\large Ḃ♭} };
+\node[anchor=east] at (2.5, 17.418818) { \rotatebox{0.0}{\large B♮} };
+\node[anchor=east] at (2.5, 18.580069) { \rotatebox{0.0}{\large Ḃ♮} };
+\node[anchor=east] at (2.5, 19.741325) { \rotatebox{0.0}{\large B♯} };
+\node[anchor=east] at (2.5, 20.902578) { \rotatebox{0.0}{\large C} };
+\node[anchor=east] at (2.5, 22.063831) { \rotatebox{0.0}{\large Ċ} };
+\node[anchor=east] at (2.5, 23.22509) { \rotatebox{0.0}{\large C♯} };
+\node[anchor=east] at (2.5, 24.386341) { \rotatebox{0.0}{\large D♭} };
+\node[anchor=east] at (2.5, 25.547594) { \rotatebox{0.0}{\large Ḋ♭} };
+\node[anchor=east] at (2.5, 26.70885) { \rotatebox{0.0}{\large D} };
+\node[anchor=east] at (2.5, 27.870108) { \rotatebox{0.0}{\large Ḋ} };
+\node[anchor=east] at (2.5, 29.03136) { \rotatebox{0.0}{\large D♯} };
+\node[anchor=east] at (2.5, 30.192616) { \rotatebox{0.0}{\large E♭} };
+\node[anchor=east] at (2.5, 31.35387) { \rotatebox{0.0}{\large Ė♭} };
+\node[anchor=east] at (2.5, 32.515125) { \rotatebox{0.0}{\large E} };
+\node[anchor=east] at (2.5, 33.67638) { \rotatebox{0.0}{\large Ė} };
+\node[anchor=east] at (2.5, 34.837627) { \rotatebox{0.0}{\large E♯} };
+\node[anchor=east] at (2.5, 35.998882) { \rotatebox{0.0}{\large F} };
+\node[anchor=east] at (2.5, 1.1612576) { \rotatebox{0.0}{\large Ḟ} };
+\node[anchor=east] at (2.5, 2.3225095) { \rotatebox{0.0}{\large F♯} };
+\node[anchor=east] at (2.5, 3.4837625) { \rotatebox{0.0}{\large G♭} };
+\node[anchor=east] at (2.5, 4.6450157) { \rotatebox{0.0}{\large Ġ♭} };
+\node[anchor=east] at (2.5, 5.806271) { \rotatebox{0.0}{\large G} };
+\node[anchor=east] at (2.5, 6.9675264) { \rotatebox{0.0}{\large Ġ} };
+\node[anchor=east] at (2.5, 8.128779) { \rotatebox{0.0}{\large G♯} };
+\node[anchor=east] at (2.5, 9.290034) { \rotatebox{0.0}{\large A♭} };
+\node[anchor=east] at (2.5, 10.451292) { \rotatebox{0.0}{\large Ȧ♭} };
+\node[anchor=east] at (2.5, 11.612545) { \rotatebox{0.0}{\large A} };
+\node[align=center] at (2.6000001, -0.8) { \rotatebox{0.0}{\large [31ed2]} };
+\end{tikzpicture}
+\end{document}

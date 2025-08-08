@@ -12,6 +12,13 @@
 \\newunicodechar{➚}{$\\nearrow$}
 \\newunicodechar{➘}{$\\searrow$}
 \\newunicodechar{ʼ}{'}
+\\newunicodechar{Ả}{\\stackon[0.8pt]{A}{,}}
+\\newunicodechar{Ɓ}{\\stackon[0.8pt]{B}{,}}
+\\newunicodechar{Ƈ}{\\stackon[0.8pt]{C}{,}}
+\\newunicodechar{Ɗ}{\\stackon[0.8pt]{D}{,}}
+\\newunicodechar{Ẻ}{\\stackon[0.8pt]{E}{,}}
+\\newunicodechar{Ƒ}{\\stackon[0.8pt]{F}{,}}
+\\newunicodechar{Ɠ}{\\stackon[0.8pt]{G}{,}}
 \\newunicodechar{Ȧ}{\\stackon[0.8pt]{A}{.}}
 \\newunicodechar{Ḃ}{\\stackon[0.8pt]{B}{.}}
 \\newunicodechar{Ċ}{\\stackon[0.8pt]{C}{.}}
