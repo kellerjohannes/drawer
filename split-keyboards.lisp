@@ -1,7 +1,242 @@
 (in-package :drawer)
 
+;; For PhD, second tuning after Maniates 1996 (translation L'antica musica, Appendix VIII
+
+(let* ((btikz (make-backend-tikz :filename "keyboard-second-tuning-maniates-1996.tex"))
+       (white-width 10)
+       (white-width-2 (* 1/2 white-width))
+       (white-front 12)
+       (white-front-2 (* 1/2 white-front))
+       (black-width 7)
+       (black-width-2 (* 1/2 black-width))
+       (black-a-length 9)
+       (black-b-length 9)
+       (tastino-width 5)
+       (tastino-width-2 (* 1/2 tastino-width))
+       (tastino-length 9)
+       (origin (pt 0 0))
+       (anchor (pt 12 12))
+       (air .3)
+       (white-shift-pt (pt white-width-2 white-front-2))
+       (manual-separation (+ white-front black-a-length black-b-length air))
+       (lowest-shape (ln-shape origin (list white-width
+                                            white-front
+                                            (- black-width-2)
+                                            (+ black-a-length black-b-length)
+                                            (- (- white-width black-width-2)))
+                               :shift air :shift-pt white-shift-pt))
+       (highest-shape (ln-shape origin (list white-width
+                                             (+ white-front (+ black-a-length black-b-length))
+                                             (- (- white-width black-width-2))
+                                             (- (+ black-a-length black-b-length))
+                                             (- black-width-2))
+                                :shift air :shift-pt white-shift-pt))
+       (mid-shape (ln-shape origin (list white-width
+                                         white-front
+                                         (- black-width-2)
+                                         (+ black-a-length black-b-length)
+                                         (- (- white-width black-width))
+                                         (- (+ black-a-length black-b-length))
+                                         (- black-width-2))
+                            :shift air :shift-pt white-shift-pt))
+       (left-tastino-shape (ln-shape origin (list white-width
+                                                  (- (+ white-front (+ black-a-length black-b-length))
+                                                     tastino-length)
+                                                  (- tastino-width-2)
+                                                  tastino-length
+                                                  (- (- white-width black-width-2 tastino-width-2))
+                                                  (- (+ black-a-length black-b-length))
+                                                  (- black-width-2))
+                                     :shift air :shift-pt white-shift-pt))
+       (right-tastino-shape (ln-shape origin (list white-width
+                                                   white-front
+                                                   (- black-width-2)
+                                                   (+ black-a-length black-b-length)
+                                                   (- (- white-width black-width-2 tastino-width-2))
+                                                   (- tastino-length)
+                                                   (- tastino-width-2))
+                                      :shift air :shift-pt white-shift-pt))
+       (black-a (ln-shape origin (list black-width
+                                       black-a-length
+                                       (- black-width))
+                          :shift air :shift-pt (pt black-width-2 (* 1/2 black-a-length))))
+       (black-b (ln-shape origin (list black-width
+                                       black-b-length
+                                       (- black-width))
+                          :shift air :shift-pt (pt black-width-2 (* 1/2 black-b-length))))
+       (tastino (ln-shape origin (list tastino-width
+                                       tastino-length
+                                       (- tastino-width))
+                          :shift air :shift-pt (pt tastino-width-2 (* 1/2 tastino-length))))
+       (first-tastino (cp tastino origin
+                          (add anchor (pt (- (* 3 white-width) tastino-width-2)
+                                          (- (+ white-front (+ black-a-length black-b-length))
+                                             tastino-length)))))
+       (black-pair (gr (list (cp black-a origin (pt (- white-width black-width-2)
+                                                    white-front))
+                             (cp black-b origin (pt (- white-width
+                                                       black-width-2)
+                                                    (+ white-front black-a-length))))))
+       (octave-c-c-lower (gr (list
+                              (cp right-tastino-shape origin anchor)
+                              (cp black-pair origin anchor)
+                              (cp mid-shape origin (right-of anchor white-width))
+                              (cp black-pair origin (right-of anchor white-width))
+                              (cp left-tastino-shape origin (right-of anchor (* 2 white-width)))
+                              first-tastino
+                              (cp right-tastino-shape origin (right-of anchor (* 3 white-width)))
+                              (cp black-pair origin (right-of anchor (* 3 white-width)))
+                              (cp mid-shape origin (right-of anchor (* 4 white-width)))
+                              (cp black-pair origin (right-of anchor (* 4 white-width)))
+                              (cp mid-shape origin (right-of anchor (* 5 white-width)))
+                              (cp black-pair origin (right-of anchor (* 5 white-width)))
+                              (cp left-tastino-shape origin (right-of anchor (* 6 white-width)))
+                              (cp first-tastino anchor (right-of anchor (* 4 white-width)))
+                              )))
+       (octave-c-c-upper (gr (list
+                              (cp lowest-shape origin anchor)
+                              (cp black-pair origin anchor)
+                              (cp mid-shape origin (right-of anchor white-width))
+                              (cp black-pair origin (right-of anchor white-width))
+                              (cp left-tastino-shape origin (right-of anchor (* 2 white-width)))
+                              first-tastino
+                              (cp right-tastino-shape origin (right-of anchor (* 3 white-width)))
+                              (cp black-pair origin (right-of anchor (* 3 white-width)))
+                              (cp mid-shape origin (right-of anchor (* 4 white-width)))
+                              (cp black-pair origin (right-of anchor (* 4 white-width)))
+                              (cp mid-shape origin (right-of anchor (* 5 white-width)))
+                              (cp black-pair origin (right-of anchor (* 5 white-width)))
+                              (cp left-tastino-shape origin (right-of anchor (* 6 white-width)))
+                              (cp first-tastino anchor (right-of anchor (* 4 white-width)))
+                              )))
+       (keyboard (gr (list octave-c-c-lower
+                           (cp octave-c-c-upper anchor (above anchor manual-separation)))))
+       (alt-shift 1.2)
+       (label-x-offset 0.3)
+       (lbl-white-lower (make-text-array '("1C" "1D" "1E" "1F" "1G" "1A" "1B")
+                                         (cp white-shift-pt origin (pt 0 alt-shift))
+                                         (pt white-width 0)
+                                         :x-offset label-x-offset))
+       (lbl-white-lower-alt (make-text-array '("[C]" "[D]" "[E]" "[F]" "[G]" "[A]" "[B♮]")
+                                             (cp white-shift-pt origin (pt 0 (- alt-shift)))
+                                             (pt white-width 0)
+                                             :x-offset label-x-offset))
+       (lbl-black-front-lower (make-text-array '("2C♯" "2E♭" nil "2F♯" "2G♯" "2B♭")
+                                               (pt white-width
+                                                   (+ alt-shift
+                                                      white-front
+                                                      (* 1/2 black-a-length)))
+                                               (pt white-width 0)
+                                               :x-offset label-x-offset))
+       (lbl-black-front-lower-alt (make-text-array '("[C♯]" "[E♭]" nil "[F♯]" "[G♯]" "[B♭]")
+                                                   (pt white-width
+                                                       (+ (- alt-shift)
+                                                          white-front
+                                                          (* 1/2 black-a-length)))
+                                                   (pt white-width 0)
+                                                   :x-offset label-x-offset))
+       (lbl-black-back-lower (make-text-array '("3D♭" "3D♯" nil "3G♭" "3A♭" "3A♯")
+                                              (pt white-width
+                                                  (+ alt-shift
+                                                     white-front
+                                                     (+ black-a-length (* 1/2 black-b-length))))
+                                              (pt white-width 0)
+                                              :x-offset label-x-offset))
+       (lbl-black-back-lower-alt (make-text-array '("[D♭]" "[D♯]" nil "[G♭]" "[A♭]" "[A♯]")
+                                                  (pt white-width
+                                                      (+ (- alt-shift)
+                                                         white-front
+                                                         (+ black-a-length (* 1/2 black-b-length))))
+                                              (pt white-width 0)
+                                              :x-offset label-x-offset))
+       (lbl-tastini-lower (make-text-array '(nil nil "3E♯" nil nil nil "3B♯" )
+                                           (pt white-width
+                                               (- (+ alt-shift
+                                                     white-front
+                                                     (+ black-a-length black-b-length))
+                                                  (* 1/2 tastino-length)))
+                                           (pt white-width 0)
+                                           :x-offset label-x-offset))
+       (lbl-tastini-lower-alt (make-text-array '(nil nil "[E♯]" nil nil nil "[B♯]" )
+                                               (pt white-width
+                                                   (- (+ (- alt-shift)
+                                                         white-front
+                                                         (+ black-a-length black-b-length))
+                                                      (* 1/2 tastino-length)))
+                                               (pt white-width 0)
+                                               :x-offset label-x-offset))
+       (lbl-white-upper (make-text-array '("4Ċ" "4Ḋ" "4Ė" "4Ḟ" "4Ġ" "4Ȧ" "4Ḃ")
+                                         (cp white-shift-pt origin (pt 0 alt-shift))
+                                         (pt white-width 0)
+                                         :x-offset label-x-offset))
+       (lbl-white-upper-alt (make-text-array '("[C’]" "[D’]" "[E’]" "[F’]" "[G’]" "[A’]" "[B♮’]")
+                                             (cp white-shift-pt origin (pt 0 (- alt-shift)))
+                                             (pt white-width 0)
+                                             :x-offset label-x-offset))
+       (lbl-black-front-upper (make-text-array '("5Ḋ♭" "5Ė♭" nil "5Ġ♭" "5Ȧ♭" "5Ḃ♭")
+                                               (pt white-width
+                                                   (+ alt-shift
+                                                      white-front (* 1/2 black-a-length)))
+                                               (pt white-width 0)
+                                               :x-offset label-x-offset))
+       (lbl-black-front-upper-alt (make-text-array '("[C♯’]" "[D♯’]" nil "[F♯’]" "[G♯’]" "[B♭’]")
+                                                   (pt white-width
+                                                       (+ (- alt-shift)
+                                                          white-front (* 1/2 black-a-length)))
+                                                   (pt white-width 0)
+                                                   :x-offset label-x-offset))
+       (lbl-black-back-upper (make-text-array '("6Ɗ" "6Ẻ" nil "6Ɠ" "6Ả" "6Ɓ")
+                                              (pt white-width
+                                                  (+ alt-shift
+                                                     white-front
+                                                     (+ black-a-length (* 1/2 black-b-length))))
+                                              (pt white-width 0)
+                                              :x-offset label-x-offset))
+       (lbl-black-back-upper-alt (make-text-array '("[D♭’]" "[E♭’]" nil "[F♯♯’]" "[A♭’]" "[A♯’]")
+                                                  (pt white-width
+                                                      (+ (- alt-shift)
+                                                         white-front
+                                                         (+ black-a-length (* 1/2 black-b-length))))
+                                                  (pt white-width 0)
+                                                  :x-offset label-x-offset))
+       (lbl-tastini-upper (make-text-array '(nil nil "6Ƒ" nil nil nil "6Ƈ" )
+                                           (pt white-width
+                                               (- (+ alt-shift
+                                                     white-front
+                                                     (+ black-a-length black-b-length))
+                                                  (* 1/2 tastino-length)))
+                                           (pt white-width 0)
+                                           :x-offset label-x-offset))
+       (lbl-tastini-upper-alt (make-text-array '(nil nil "[E♯’]" nil nil nil "[B♯’]" )
+                                               (pt white-width
+                                                   (- (+ (- alt-shift)
+                                                         white-front
+                                                         (+ black-a-length black-b-length))
+                                                      (* 1/2 tastino-length)))
+                                               (pt white-width 0)
+                                               :x-offset label-x-offset))
+       (keyboard-labels (gr (list (cp lbl-white-lower origin anchor)
+                                  (cp lbl-white-lower-alt origin anchor)
+                                  (cp lbl-black-front-lower origin anchor)
+                                  (cp lbl-black-front-lower-alt origin anchor)
+                                  (cp lbl-black-back-lower origin anchor)
+                                  (cp lbl-black-back-lower-alt origin anchor)
+                                  (cp lbl-tastini-lower origin anchor)
+                                  (cp lbl-tastini-lower-alt origin anchor)
+                                  (cp lbl-white-upper origin (above anchor manual-separation))
+                                  (cp lbl-white-upper-alt origin (above anchor manual-separation))
+                                  (cp lbl-black-front-upper origin (above anchor manual-separation))
+                                  (cp lbl-black-front-upper-alt origin (above anchor manual-separation))
+                                  (cp lbl-black-back-upper origin (above anchor manual-separation))
+                                  (cp lbl-black-back-upper-alt origin (above anchor manual-separation))
+                                  (cp lbl-tastini-upper origin (above anchor manual-separation))
+                                  (cp lbl-tastini-upper-alt origin (above anchor manual-separation))
+                                  ))))
+  (draw-with-multiple-backends (list btikz) (list keyboard keyboard-labels))
+  (compile-tikz btikz))
+
 ;; For PhD, second tuning after Maniates 1975
-(let* ((btikz (make-backend-tikz :filename "keyboard-second-tuning-maniates.tex"))
+(let* ((btikz (make-backend-tikz :filename "keyboard-second-tuning-maniates-1975.tex"))
        (white-width 10)
        (white-width-2 (* 1/2 white-width))
        (white-front 12)
@@ -108,35 +343,93 @@
                               )))
        (keyboard (gr (list octave-c-c-lower
                            (cp octave-c-c-upper anchor (above anchor manual-separation)))))
+       (alt-shift 1.2)
        (lbl-white-lower (make-text-array '("1c" "1d" "1e" "1f" "1g" "1a" "1b")
-                                         white-shift-pt (pt white-width 0)))
+                                         (cp white-shift-pt origin (pt 0 alt-shift))
+                                         (pt white-width 0)))
+       (lbl-white-lower-alt (make-text-array '("[C]" "[D]" "[E]" "[F]" "[G]" "[A]" "[B♮]")
+                                             (cp white-shift-pt origin (pt 0 (- alt-shift)))
+                                             (pt white-width 0)))
        (lbl-black-front-lower (make-text-array '("2c♯" "2e♭" nil "2f♯" "2g♯" "2b♭")
-                                               (pt white-width (+ white-front (* 1/2 black-a-length)))
+                                               (pt white-width
+                                                   (+ alt-shift
+                                                      white-front
+                                                      (* 1/2 black-a-length)))
                                                (pt white-width 0)))
+       (lbl-black-front-lower-alt (make-text-array '("[C♯]" "[E♭]" nil "[F♯]" "[G♯]" "[B♭]")
+                                                   (pt white-width
+                                                       (+ (- alt-shift)
+                                                          white-front
+                                                          (* 1/2 black-a-length)))
+                                                   (pt white-width 0)))
        (lbl-black-back-lower (make-text-array '("3d♭" "3d♯" nil "3g♭" "3a♭" "3a♯")
-                                              (pt white-width (+ white-front (+ black-a-length
-                                                                                (* 1/2 black-b-length))))
+                                              (pt white-width
+                                                  (+ alt-shift
+                                                     white-front
+                                                     (+ black-a-length (* 1/2 black-b-length))))
+                                              (pt white-width 0)))
+       (lbl-black-back-lower-alt (make-text-array '("[D♭]" "[D♯]" nil "[G♭]" "[A♭]" "[A♯]")
+                                                  (pt white-width
+                                                      (+ (- alt-shift)
+                                                         white-front
+                                                         (+ black-a-length (* 1/2 black-b-length))))
                                               (pt white-width 0)))
        (lbl-tastini-lower (make-text-array '(nil nil "3e♯" nil nil nil "3b♯" )
-                                           (pt white-width (- (+ white-front (+ black-a-length black-b-length))
-                                                              (* 1/2 tastino-length)))
+                                           (pt white-width
+                                               (- (+ alt-shift
+                                                     white-front
+                                                     (+ black-a-length black-b-length))
+                                                  (* 1/2 tastino-length)))
                                            (pt white-width 0)))
-       (lbl-white-upper (make-text-array '("4c" "4d" "4e" "4f" "4g" "4a" "4b")
-                                         white-shift-pt (pt white-width 0)))
-       (lbl-black-front-upper (make-text-array '("5d♭" "5e♭" nil "5g♭" "5a♭" "5b♭")
-                                               (pt white-width (+ white-front (* 1/2 black-a-length)))
+       (lbl-tastini-lower-alt (make-text-array '(nil nil "[E♯]" nil nil nil "[B♯]" )
+                                               (pt white-width
+                                                   (- (+ (- alt-shift)
+                                                         white-front
+                                                         (+ black-a-length black-b-length))
+                                                      (* 1/2 tastino-length)))
                                                (pt white-width 0)))
+       (lbl-white-upper (make-text-array '("4c" "4d" "4e" "4f" "4g" "4a" "4b")
+                                         (cp white-shift-pt origin (pt 0 alt-shift))
+                                         (pt white-width 0)))
+       (lbl-white-upper-alt (make-text-array '("[C’]" "[D’]" "[E’]" "[F’]" "[G’]" "[A’]" "[B♮’]")
+                                             (cp white-shift-pt origin (pt 0 (- alt-shift)))
+                                             (pt white-width 0)))
+       (lbl-black-front-upper (make-text-array '("5d♭" "5e♭" nil "5g♭" "5a♭" "5b♭")
+                                               (pt white-width
+                                                   (+ alt-shift
+                                                      white-front (* 1/2 black-a-length)))
+                                               (pt white-width 0)))
+       (lbl-black-front-upper-alt (make-text-array '("[D♭’]" "[E♭’]" nil "[F♯’]" "[A♭’]" "[B♭’]")
+                                                   (pt white-width
+                                                       (+ (- alt-shift)
+                                                          white-front (* 1/2 black-a-length)))
+                                                   (pt white-width 0)))
        (lbl-black-back-upper (make-text-array '("6b♯" "6d♯" nil "6e♯" "6g♯" "6a♯")
-                                              (pt white-width (+ white-front (+ black-a-length
-                                                                                (* 1/2 black-b-length))))
+                                              (pt white-width
+                                                  (+ alt-shift
+                                                     white-front
+                                                     (+ black-a-length (* 1/2 black-b-length))))
                                               (pt white-width 0)))
+       (lbl-black-back-upper-alt (make-text-array '("[B♯’]" "[D♯’]" nil "[E♯’]" "[G♯’]" "[A♯’]")
+                                                  (pt white-width
+                                                      (+ (- alt-shift)
+                                                         white-front
+                                                         (+ black-a-length (* 1/2 black-b-length))))
+                                                  (pt white-width 0)))
        (keyboard-labels (gr (list (cp lbl-white-lower origin anchor)
+                                  (cp lbl-white-lower-alt origin anchor)
                                   (cp lbl-black-front-lower origin anchor)
+                                  (cp lbl-black-front-lower-alt origin anchor)
                                   (cp lbl-black-back-lower origin anchor)
+                                  (cp lbl-black-back-lower-alt origin anchor)
                                   (cp lbl-tastini-lower origin anchor)
+                                  (cp lbl-tastini-lower-alt origin anchor)
                                   (cp lbl-white-upper origin (above anchor manual-separation))
+                                  (cp lbl-white-upper-alt origin (above anchor manual-separation))
                                   (cp lbl-black-front-upper origin (above anchor manual-separation))
+                                  (cp lbl-black-front-upper-alt origin (above anchor manual-separation))
                                   (cp lbl-black-back-upper origin (above anchor manual-separation))
+                                  (cp lbl-black-back-upper-alt origin (above anchor manual-separation))
                                   ))))
   (draw-with-multiple-backends (list btikz) (list keyboard keyboard-labels))
   (compile-tikz btikz))

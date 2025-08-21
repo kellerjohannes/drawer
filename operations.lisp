@@ -11,8 +11,10 @@
   (make-line a-point b-point
              :style (if style-update (update-style *default-style* style-update) *default-style*)))
 
-(defun lns (point-list)
-  (make-line-strip point-list))
+(defun lns (point-list &key (style-update nil))
+  (make-line-strip point-list
+                   :style (if style-update (update-style *default-style* style-update)
+                              *default-style*)))
 
 (defun make-shifted-point (x y shift-amount shift-pt)
   (if (and shift-amount shift-pt)
@@ -169,16 +171,18 @@
 
 
 (defmethod make-text-array (text-string-list (first-position point) (delta point)
-                            &key (h-align :center) (v-align :center))
+                            &key (h-align :center) (v-align :center) (x-offset 0))
   (let ((result (make-array (length text-string-list))))
     (loop for text-string in text-string-list
           for i from 0
           do (setf (aref result i)
                    (make-text text-string
-                              (make-point (make-scalar (+ (get-value (get-x first-position))
-                                                          (* i (get-value (get-x delta)))))
-                                  (make-scalar (+ (get-value (get-y first-position))
-                                                  (* i (get-value (get-y delta))))))
+                              (make-point
+                               (make-scalar (+ x-offset
+                                               (get-value (get-x first-position))
+                                               (* i (get-value (get-x delta)))))
+                               (make-scalar (+ (get-value (get-y first-position))
+                                               (* i (get-value (get-y delta))))))
                               :v-align v-align :h-align h-align)))
     result))
 

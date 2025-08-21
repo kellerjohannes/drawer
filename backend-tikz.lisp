@@ -108,9 +108,14 @@
   (let ((*global-scale-factor* (scale-factor backend)))
     (with-accessors ((points point-list))
         obj
-      (add-tikz-line (format nil "\\draw[thick] ~{(~f, ~f) -- ~} cycle;"
-                             (extract-value-list points))
-                     backend))))
+      (if (eq (getf (style obj) :fill) :cancel)
+          (add-tikz-line (format nil "\\fill[white] ~{(~f, ~f) -- ~} cycle;"
+                                 (extract-value-list points))
+                         backend)
+          (add-tikz-line (format nil "\\draw[~a] ~{(~f, ~f) -- ~} cycle;"
+                                 (combine-line-styles (style obj))
+                                 (extract-value-list points))
+                         backend)))))
 
 (defmethod draw ((obj circle) (backend backend-tikz))
   (let ((*global-scale-factor* (scale-factor backend)))
