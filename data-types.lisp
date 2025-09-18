@@ -46,6 +46,8 @@
 (defmethod scale ((s scalar) factor)
   (make-scalar (* factor (value s))))
 
+(defmethod power ((s scalar) exponent)
+  (make-scalar (expt (value s) exponent)))
 
 
 (defparameter *global-point-transformer* (lambda (x) x))
@@ -69,15 +71,19 @@
 
 (defmethod add ((a point) (b point))
   (make-point (add (x a) (x b))
-      (add (y a) (y b))))
+              (add (y a) (y b))))
+
+(defmethod midpoint ((a point) (b point))
+  (make-point (scale (add (x a) (x b)) 1/2)
+              (scale (add (y a) (y b)) 1/2)))
 
 (defmethod subtract ((a point) (b point))
   (make-point (subtract (x b) (x a))
-      (subtract (y b) (y a))))
+              (subtract (y b) (y a))))
 
 (defmethod scale ((p point) factor)
   (make-point (scale (x p) factor)
-      (scale (y p) factor)))
+              (scale (y p) factor)))
 
 
 
@@ -99,7 +105,14 @@
 (defmethod make-line (origin destination &key (style *default-style*))
   (make-instance 'line :origin origin :destination destination :style style))
 
+(defmethod get-length ((object line))
+  (power (add (power (subtract (x (destination object)) (x (origin object))) 2)
+              (power (subtract (y (destination object)) (y (origin object))) 2))
+         1/2))
 
+(defmethod set-length ((object line) len)
+  (make-line (origin object)
+             (scale (scale (destination object) (value (get-length object))) len)))
 
 
 (defun extract-value-list (point-list)

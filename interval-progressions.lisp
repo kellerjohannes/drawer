@@ -1,0 +1,47 @@
+(in-package :drawer)
+
+(defun rad->deg (rad)
+  (/ (* rad 180.0) PI))
+
+(defun make-voice-leading (x1 x2 ratio1 ratio-delta label y-scale label-padding)
+  (let ((a (pt x1 (* y-scale (vicentino-tunings:ratio->length ratio1))))
+        (h (- (* y-scale (vicentino-tunings:ratio->length (* ratio1 ratio-delta)))
+              (* y-scale (vicentino-tunings:ratio->length ratio1))))
+        (b (pt x2 (* y-scale (vicentino-tunings:ratio->length (* ratio1 ratio-delta))))))
+    (gr (list (ln a b :style-update '(:line-type :thick))
+              (make-text label
+                         (cp (midpoint a b)
+                             (pt 0 0)
+                             (let* ((x (- h))
+                                    (y (- x2 x1))
+                                    (len (sqrt (+ (* x x) (* y y)))))
+                               (pt (* (/ x len) label-padding)
+                                   (* (/ y len) label-padding))))
+                         :angle (rad->deg (atan (/ h (- x2 x1)))))))))
+
+(defun make-consonance (x ratio1 ratio2 label y-scale label-padding)
+  (let ((a (pt x (* y-scale (vicentino-tunings:ratio->length ratio1))))
+        (b (pt x (* y-scale (vicentino-tunings:ratio->length (* ratio1 ratio2))))))
+    (gr (list (ln a b :style-update '(:line-type :dotted))
+              (make-text label
+                         (cp (midpoint a b)
+                             (pt 0 0)
+                             (pt label-padding 0))
+                         :angle 90)))))
+
+(defparameter intervals '((:tono-ascendente 9/8 "tono")
+                          (:tono-discendente 8/9 "tono")
+                          (:semitono-maggiore-ascendente 16/15 "semitono maggiore")))
+
+(defun make-2-constellation (cons1 voice1 voice2 cons2))
+
+(let* ((btikz (make-backend-tikz :filename "tono-ascendente-1.tex"))
+       (v-factor 1/25)
+       (t1 0)
+       (t2 20)
+       (canto (make-voice-leading t1 t2 4/3 9/8 "tono ascendente" v-factor 1.3))
+       (basso (make-voice-leading t1 t2 16/15 15/16 "semitono maggiore" v-factor -1.3))
+       (c1 (make-consonance t1 16/15 5/4 "terza maggiore" v-factor -1.3))
+       (c2 (make-consonance t2 1/1 3/2 "quinta" v-factor 1.6)))
+  (draw-with-multiple-backends (list btikz) (list canto basso c1 c2))
+  (compile-tikz btikz))

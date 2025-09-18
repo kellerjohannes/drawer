@@ -1,0 +1,77 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{mathabx}
+\usepackage{stackengine}
+\usetikzlibrary{backgrounds}
+\usepackage{newunicodechar}
+\newunicodechar{♮}{$\natural$}
+\newunicodechar{♭}{$\flat$}
+\newunicodechar{♯}{$\sharp$}
+\newunicodechar{➚}{$\nearrow$}
+\newunicodechar{➘}{$\searrow$}
+\newunicodechar{ʼ}{'}
+\newunicodechar{Ȧ}{\stackon[0.8pt]{A}{.}}
+\newunicodechar{Ḃ}{\stackon[0.8pt]{B}{.}}
+\newunicodechar{Ċ}{\stackon[0.8pt]{C}{.}}
+\newunicodechar{Ḋ}{\stackon[0.8pt]{D}{.}}
+\newunicodechar{Ė}{\stackon[0.8pt]{E}{.}}
+\newunicodechar{Ḟ}{\stackon[0.8pt]{F}{.}}
+\newunicodechar{Ġ}{\stackon[0.8pt]{G}{.}}
+
+
+\def\centerarc[#1](#2)(#3:#4:#5);%
+{
+  \draw[#1]([shift=(#3:#5)]#2) arc (#3:#4:#5);
+}
+
+
+\begin{document}
+\begin{tikzpicture}
+
+\node[anchor=east] at (-1.2, -4.6) { \rotatebox{0.0}{\large F} };
+\draw[dotted] (-1.2,-4.6) -- (20.0,-4.6);
+\node[anchor=east] at (-1.2, -3.6000001) { \rotatebox{0.0}{\large G} };
+\draw[dotted] (-1.2,-3.6000001) -- (20.0,-3.6000001);
+\node[anchor=east] at (-1.2, -2.6000001) { \rotatebox{0.0}{\large A} };
+\draw[dotted] (-1.2,-2.6000001) -- (20.0,-2.6000001);
+\node[anchor=east] at (-1.2, -1.6) { \rotatebox{0.0}{\large B♮} };
+\draw[dotted] (-1.2,-1.6) -- (20.0,-1.6);
+\node[anchor=east] at (-1.2, -1.0) { \rotatebox{0.0}{\large C} };
+\draw[dotted] (-1.2,-1.0) -- (20.0,-1.0);
+\node[anchor=east] at (-1.2, 0.0) { \rotatebox{0.0}{\large D} };
+\draw[dotted] (-1.2,0.0) -- (20.0,0.0);
+\node[anchor=east] at (-1.2, 1.0) { \rotatebox{0.0}{\large E} };
+\draw[dotted] (-1.2,1.0) -- (20.0,1.0);
+\node[anchor=east] at (-1.2, 1.6) { \rotatebox{0.0}{\large F} };
+\draw[dotted] (-1.2,1.6) -- (20.0,1.6);
+\node[anchor=east] at (-1.2, 2.6000001) { \rotatebox{0.0}{\large G} };
+\draw[dotted] (-1.2,2.6000001) -- (20.0,2.6000001);
+\node[anchor=east] at (-1.2, 3.6000001) { \rotatebox{0.0}{\large A} };
+\draw[dotted] (-1.2,3.6000001) -- (20.0,3.6000001);
+\node[anchor=east] at (-1.2, 4.6) { \rotatebox{0.0}{\large B♮} };
+\draw[dotted] (-1.2,4.6) -- (20.0,4.6);
+\node[anchor=east] at (-1.2, 5.2000003) { \rotatebox{0.0}{\large C} };
+\draw[dotted] (-1.2,5.2000003) -- (20.0,5.2000003);
+\node[anchor=east] at (-1.2, 6.2000003) { \rotatebox{0.0}{\large D} };
+\draw[dotted] (-1.2,6.2000003) -- (20.0,6.2000003);
+\node[anchor=east] at (-1.2, 7.2000003) { \rotatebox{0.0}{\large E} };
+\draw[dotted] (-1.2,7.2000003) -- (20.0,7.2000003);
+\node[anchor=east] at (-1.2, 7.8) { \rotatebox{0.0}{\large F} };
+\draw[dotted] (-1.2,7.8) -- (20.0,7.8);
+\node[anchor=east] at (-1.2, 8.8) { \rotatebox{0.0}{\large G} };
+\draw[dotted] (-1.2,8.8) -- (20.0,8.8);
+\node[anchor=east] at (-1.2, 9.8) { \rotatebox{0.0}{\large A} };
+\draw[dotted] (-1.2,9.8) -- (20.0,9.8);
+\draw[thick] (0.0, -2.6000001) -- (1.0, -2.6000001) -- (1.0, 0.0) -- (0.0, 0.0) --  cycle;
+\node[align=center] at (0.5, -1.3000001) { \rotatebox{90.0}{\large prima} };
+\draw[thick] (0.0, 0.0) -- (1.0, 0.0) -- (1.0, 3.6000001) -- (0.0, 3.6000001) --  cycle;
+\node[align=center] at (0.5, 1.8000001) { \rotatebox{90.0}{\large prima} };
+\draw[thick] (1.5, -1.6) -- (2.5, -1.6) -- (2.5, 1.0) -- (1.5, 1.0) --  cycle;
+\node[align=center] at (2.0, -0.3) { \rotatebox{0.0}{\large seconda} };
+\draw[thick] (1.5, 1.0) -- (2.5, 1.0) -- (2.5, 4.6) -- (1.5, 4.6) --  cycle;
+\node[align=center] at (2.0, 2.8) { \rotatebox{0.0}{\large seconda} };
+\draw[thick] (3.0, -1.0) -- (4.0, -1.0) -- (4.0, 1.6) -- (3.0, 1.6) --  cycle;
+\node[align=center] at (3.5, 0.3) { \rotatebox{0.0}{\large terza} };
+\draw[thick] (3.0, 1.6) -- (4.0, 1.6) -- (4.0, 5.2000003) -- (3.0, 5.2000003) --  cycle;
+\node[align=center] at (3.5, 3.4) { \rotatebox{0.0}{\large terza} };
+\end{tikzpicture}
+\end{document}
