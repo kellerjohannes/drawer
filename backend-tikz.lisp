@@ -77,6 +77,7 @@
 (defparameter *tikz-dictionary*
   '((:normal . nil)
     (:thick . "thick")
+    (:very-thick . "very thick")
     (:thin . "very thin")
     (:dotted . "dotted")
     (:dashed . "dashed")
