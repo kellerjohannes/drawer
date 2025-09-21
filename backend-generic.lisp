@@ -2,6 +2,7 @@
 
 (defclass drawer-backend ()
   ((filename :initarg :filename :accessor filename)
+   (path :initarg :path :accessor path)
    (filestream :accessor filestream)
    (scale-factor :initform 1 :accessor scale-factor)))
 
@@ -9,9 +10,7 @@
 
 (defmethod write-file :around ((backend drawer-backend))
   (setf (filestream backend) (open (merge-pathnames (filename backend)
-                                                    (merge-pathnames
-                                                     "export/"
-                                                     (asdf/system:system-source-directory :drawer)))
+                                                    (path backend))
                                    :direction :output
                                    :if-exists :supersede
                                    :if-does-not-exist :create))

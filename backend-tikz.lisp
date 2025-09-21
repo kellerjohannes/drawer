@@ -54,24 +54,34 @@
   (setf (scale-factor backend) 0.2)
   (setf (scene backend) *tikz-header*))
 
-(defun make-backend-tikz (&key (width 1200) (height 800) (filename "default.tex"))
-  (make-instance 'backend-tikz :width width :height height :filename filename))
+(defun make-backend-tikz (&key (width 1200) (height 800) (filename "default.tex")
+                            (path (merge-pathnames "export/"
+                                                   (asdf/system:system-source-directory :drawer))))
+  (make-instance 'backend-tikz :width width
+                               :height height
+                               :filename filename
+                               :path path))
 
 (defmethod write-file ((backend backend-tikz))
   (format (filestream backend) "~a~%\\end{tikzpicture}~%\\end{document}" (scene backend)))
 
-(defmethod compile-tikz ((backend backend-tikz))
+(defmethod return-tikz-code ((backend backend-tikz))
+  (format nil "\\begin{tikzpicture}~a%\\end{tikzpicture}" (scene backend)))
+
+(defmethod compile-tikz ((backend backend-tikz)
+                         &optional (path
+                                     (merge-pathnames
+                                      "export/"
+                                      (asdf/system:system-source-directory :drawer))))
   (when (compilep backend)
     (uiop:run-program (list
                        ;; "/usr/bin/pdflatex"
                        "/usr/bin/xelatex"
                        ;; "/usr/local/texlive/2020/bin/x86_64-linux/pdflatex"
                        ;; "/usr/local/texlive/2020/bin/x86_64-linux/xelatex"
-                       (namestring
-                        (merge-pathnames
-                         (filename backend)
-                         (merge-pathnames "export/"
-                                          (asdf/system:system-source-directory :drawer))))))
+                       (format nil "-output-directory=~a" path)
+                       (namestring (merge-pathnames (filename backend) path))
+                       ))
     (format t "~&TIKZ compiled.")))
 
 (defparameter *tikz-dictionary*
