@@ -123,7 +123,7 @@
           (add-tikz-line (format nil "\\fill[white] ~{(~f, ~f) -- ~} cycle;"
                                  (extract-value-list points))
                          backend)
-          (add-tikz-line (format nil "\\draw[~a] ~{(~f, ~f) -- ~} cycle;"
+          (add-tikz-line (format nil "\\draw~@[[~a]~] ~{(~f, ~f) -- ~} cycle;"
                                  (combine-line-styles (style obj))
                                  (extract-value-list points))
                          backend)))))
